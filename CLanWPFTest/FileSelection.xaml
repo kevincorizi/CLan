@@ -1,0 +1,51 @@
+﻿<Window x:Class="CLanWPFTest.FileSelection"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CLanWPFTest"
+        mc:Ignorable="d"
+        Title="CLan - share instantly!" Height="700" Width="900">
+    <Window.Foreground>
+        <ImageBrush>
+            <ImageBrush.ImageSource>
+                <BitmapImage UriSource="images/background.jpg"/>
+            </ImageBrush.ImageSource>
+        </ImageBrush>
+    </Window.Foreground>
+    <Window.Background>
+        <ImageBrush>
+            <ImageBrush.ImageSource>
+                <BitmapImage UriSource="images/background.jpg"/>
+            </ImageBrush.ImageSource>
+        </ImageBrush>
+    </Window.Background>
+    <Grid Width="900" Height="698.7">
+
+        <Button x:Name="uploadButton" HorizontalAlignment="Left" Margin="344,203,0,0" VerticalAlignment="Top" Width="215" Height="218" BorderThickness="0" Click="selectFile_Click">
+
+            <Button.Background>
+                <ImageBrush>
+                    <ImageBrush.ImageSource>
+                        <BitmapImage UriSource="images/upload.png"/>
+                    </ImageBrush.ImageSource>
+                </ImageBrush>
+            </Button.Background>
+
+        </Button>
+        <TextBlock x:Name="selectText" HorizontalAlignment="Left" Margin="402,166,0,0" TextWrapping="Wrap" Text="Select a file" VerticalAlignment="Top" Height="30" Width="100" Foreground="#FFB9B2B2" FontSize="20"/>
+        <Button x:Name="continueButton" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="215" Height="218" Click="continueClick" FontSize="16" BorderThickness="0" Margin="344,203,0,0" IsEnabled="False" RenderTransformOrigin="0.367,1.175" Visibility="Hidden" >
+            <Button.Background>
+                <ImageBrush>
+                    <ImageBrush.ImageSource>
+                        <BitmapImage UriSource="images/forwardButton.png"/>
+                    </ImageBrush.ImageSource>
+                </ImageBrush>
+            </Button.Background>
+        </Button>
+
+        <TextBlock x:Name="continueText" HorizontalAlignment="Left" Margin="394,166,0,0" TextWrapping="Wrap" Text="  Continue" VerticalAlignment="Top" Height="30" Width="100" Foreground="#FFB9B2B2" FontSize="20" Visibility="Hidden"/>
+
+    </Grid>
+
+</Window>
