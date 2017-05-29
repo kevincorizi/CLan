@@ -21,7 +21,6 @@
         </ImageBrush>
     </Window.Background>
     <StackPanel>
-        <ToggleButton x:Name="PrivateMode" Content="Private Mode" Checked="PrivateMode_Checked"/>
         <ListView ItemsSource="{Binding Source={x:Static local:App.OnlineUsers}}" Background="Transparent">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -37,6 +36,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
+        <ToggleButton x:Name="PrivateMode" Content="Private" Height="40" Margin="766,0,0,0" RenderTransformOrigin="0.532,5.488" HorizontalAlignment="Left" Width="126" BorderThickness="0"/>
     </StackPanel>
     <!--
         <Grid>
