@@ -10,10 +10,13 @@ namespace CLanWPFTest
         public string picture { get; set; }
         public IPAddress ip { get; set; }
 
-        public User(string name, string picture, IPAddress ip = null)
+        public User(string name, string picture = "", IPAddress ip = null)
         {
             this.name = name;
-            this.picture = picture;
+            if (picture == "")
+                this.picture = "/images/user.png";
+            else
+                this.picture = picture;
             if(ip == null)
                 this.ip = GetMyIPAddress();
             else

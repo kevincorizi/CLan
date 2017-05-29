@@ -39,7 +39,7 @@ namespace CLanWPFTest
 
             uiDispatcher = Dispatcher.CurrentDispatcher;
 
-            me = new User("Ezgi Akcora", "mypic");           
+            me = new User("Ezgi Akcora");           
         }
         
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)

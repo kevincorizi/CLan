@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLanWPFTest"
         mc:Ignorable="d"
-        Title="CLan - share instantly!" Width="900" Height="700">
+        Title="CLan - Share instantly!" Width="900" Height="700">
     <Window.Foreground>
         <ImageBrush>
             <ImageBrush.ImageSource>
@@ -20,77 +20,71 @@
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Window.Background>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="29*"/>
-            <ColumnDefinition Width="173*"/>
-            <ColumnDefinition Width="17*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="111*"/>
-            <RowDefinition Height="112*"/>
-            <RowDefinition Height="0*"/>
-        </Grid.RowDefinitions>
-
-        <Grid.Background>
-            <ImageBrush Stretch="UniformToFill">
-                <ImageBrush.ImageSource>
-                    <BitmapImage UriSource="images/background.jpg"/>
-                </ImageBrush.ImageSource>
-            </ImageBrush>
-        </Grid.Background>
-        <DockPanel Grid.ColumnSpan="4" Grid.RowSpan="2">
-            <StackPanel Height="650" VerticalAlignment="Center" RenderTransformOrigin="0.377,0.532" Margin="0,8,0,0" Width="900">
-                <StackPanel.Background>
-                    <ImageBrush>
-                        <ImageBrush.ImageSource>
-                            <BitmapImage UriSource="images/background.jpg"/>
-                        </ImageBrush.ImageSource>
-                    </ImageBrush>
-                </StackPanel.Background>
-            </StackPanel>
-        </DockPanel>
-        <DockPanel HorizontalAlignment="Left" Height="100" LastChildFill="False" Margin="-122,0,0,0" VerticalAlignment="Top" Width="100"/>
-        <Label Content="           User1 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="0,246,0,33" HorizontalAlignment="Left" Width="122"/>
-        <Label Content="           User2 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="167,246,403,33" HorizontalAlignment="Center" Width="122"/>
-        <Label Content="            User3 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="332,246,238,33" HorizontalAlignment="Center" Width="122"/>
-        <Label Content="           User4 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="493,246,77,33" HorizontalAlignment="Center" Width="122"/>
-        <Button x:Name="continueButton" Content="" HorizontalAlignment="Left" Margin="16,319,0,0" VerticalAlignment="Top" Width="40" Grid.Column="3" Height="30" Click="continueClick" FontSize="16" BorderThickness="0" Grid.RowSpan="2" Foreground="{x:Null}" BorderBrush="{x:Null}" >
-            <Button.Background>
-                <ImageBrush>
-                    <ImageBrush.ImageSource>
-                        <BitmapImage UriSource="images/forwardButton.png"/>
-                    </ImageBrush.ImageSource>
-                </ImageBrush>
-            </Button.Background>
-        </Button>
-        <ListView ItemsSource="{Binding Path=OnlineUsers}">
+    <StackPanel>
+        <ToggleButton x:Name="PrivateMode" Content="Private Mode" Checked="PrivateMode_Checked"/>
+        <ListView ItemsSource="{Binding Path=OnlineUsers}" Background="Transparent">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ToggleButton>
-                        <ToggleButton.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <Trigger Property="ToggleButton.IsChecked" Value="True">
-                                        <Setter Property="ToggleButton.Foreground" Value="Red"></Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ToggleButton.Style>
-                        <ToggleButton.Background>
-                            <ImageBrush>
-                                <ImageBrush.ImageSource>
-                                    <BitmapImage UriSource="images/user.png"/>
-                                </ImageBrush.ImageSource>
-                            </ImageBrush>
-                        </ToggleButton.Background>
-
-                    </ToggleButton>
+                    <StackPanel>
+                        <Image Source="{Binding picture}"/>
+                        <Label Content="{Binding name}"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Width" Value="200"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
-        <!--
+    </StackPanel>
+    <!--
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="29*"/>
+                <ColumnDefinition Width="173*"/>
+                <ColumnDefinition Width="17*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="111*"/>
+                <RowDefinition Height="112*"/>
+                <RowDefinition Height="0*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.Background>
+                <ImageBrush Stretch="UniformToFill">
+                    <ImageBrush.ImageSource>
+                        <BitmapImage UriSource="images/background.jpg"/>
+                    </ImageBrush.ImageSource>
+                </ImageBrush>
+            </Grid.Background>
+            <DockPanel Grid.ColumnSpan="4" Grid.RowSpan="2">
+                <StackPanel Height="650" VerticalAlignment="Center" RenderTransformOrigin="0.377,0.532" Margin="0,8,0,0" Width="900">
+                    <StackPanel.Background>
+                        <ImageBrush>
+                            <ImageBrush.ImageSource>
+                                <BitmapImage UriSource="images/background.jpg"/>
+                            </ImageBrush.ImageSource>
+                        </ImageBrush>
+                    </StackPanel.Background>
+                </StackPanel>
+            </DockPanel>
+            <DockPanel HorizontalAlignment="Left" Height="100" LastChildFill="False" Margin="-122,0,0,0" VerticalAlignment="Top" Width="100"/>
+            <Label Content="           User1 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="0,246,0,33" HorizontalAlignment="Left" Width="122"/>
+            <Label Content="           User2 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="167,246,403,33" HorizontalAlignment="Center" Width="122"/>
+            <Label Content="            User3 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="332,246,238,33" HorizontalAlignment="Center" Width="122"/>
+            <Label Content="           User4 " RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="493,246,77,33" HorizontalAlignment="Center" Width="122"/>
+            <Button x:Name="continueButton" Content="" HorizontalAlignment="Left" Margin="16,319,0,0" VerticalAlignment="Top" Width="40" Grid.Column="3" Height="30" Click="continueClick" FontSize="16" BorderThickness="0" Grid.RowSpan="2" Foreground="{x:Null}" BorderBrush="{x:Null}" >
+                <Button.Background>
+                    <ImageBrush>
+                        <ImageBrush.ImageSource>
+                            <BitmapImage UriSource="images/forwardButton.png"/>
+                        </ImageBrush.ImageSource>
+                    </ImageBrush>
+                </Button.Background>
+            </Button>
+ 
         <ToggleButton x:Name="user1" Grid.Column="2" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Width="112" Height="116" Checked="user1_Checked" BorderThickness="0" Foreground="Black" Focusable="False">
             
             <ToggleButton.Style>
@@ -175,19 +169,19 @@
                 </ImageBrush>
             </ToggleButton.Background>
         </ToggleButton>
+            <Label Content="           User6&#xD;&#xA;" RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="177,112,0,170" HorizontalAlignment="Left" Width="122" Grid.Row="1"/>
+            <Label Content="           User7" RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="332,112,0,170" HorizontalAlignment="Left" Width="122" Grid.Row="1"/>
+            <Label Content="           User8&#xD;&#xA;" RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="493,112,0,170" HorizontalAlignment="Left" Width="122" Grid.Row="1"/>
+            <Button x:Name="backButton" Content="" HorizontalAlignment="Left" Margin="2,319,0,0" VerticalAlignment="Top" Width="40" Height="30" Click="backClick" FontSize="16" BorderThickness="0" Grid.ColumnSpan="2" Grid.RowSpan="2" >
+                <Button.Background>
+                    <ImageBrush>
+                        <ImageBrush.ImageSource>
+                            <BitmapImage UriSource="images/backwardButton.png"/>
+                        </ImageBrush.ImageSource>
+                    </ImageBrush>
+                </Button.Background>
+            </Button>
+            <ToggleButton x:Name="PrivateMode" Content="Private Mode" HorizontalAlignment="Left" Margin="585,61,0,0" VerticalAlignment="Top" Grid.Column="2" Checked="PrivateMode_Checked"/>
+        </Grid>
         -->
-        <Label Content="           User6&#xD;&#xA;" RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="177,112,0,170" HorizontalAlignment="Left" Width="122" Grid.Row="1"/>
-        <Label Content="           User7" RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="332,112,0,170" HorizontalAlignment="Left" Width="122" Grid.Row="1"/>
-        <Label Content="           User8&#xD;&#xA;" RenderTransformOrigin="0.266,6.648" AllowDrop="True" Grid.Column="2" Margin="493,112,0,170" HorizontalAlignment="Left" Width="122" Grid.Row="1"/>
-        <Button x:Name="backButton" Content="" HorizontalAlignment="Left" Margin="2,319,0,0" VerticalAlignment="Top" Width="40" Height="30" Click="backClick" FontSize="16" BorderThickness="0" Grid.ColumnSpan="2" Grid.RowSpan="2" >
-            <Button.Background>
-                <ImageBrush>
-                    <ImageBrush.ImageSource>
-                        <BitmapImage UriSource="images/backwardButton.png"/>
-                    </ImageBrush.ImageSource>
-                </ImageBrush>
-            </Button.Background>
-        </Button>
-        <ToggleButton x:Name="PrivateMode" Content="Private Mode" HorizontalAlignment="Left" Margin="585,61,0,0" VerticalAlignment="Top" Grid.Column="2" Checked="PrivateMode_Checked"/>
-    </Grid>
 </Window>
