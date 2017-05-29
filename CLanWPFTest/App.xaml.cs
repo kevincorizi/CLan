@@ -32,13 +32,7 @@ namespace CLanWPFTest
         private readonly Dispatcher uiDispatcher = Dispatcher.CurrentDispatcher;
     
         private static ObservableCollection<User> _onlineUsers = new ObservableCollection<User>();
-        public static ObservableCollection<User> OnlineUsers
-        {
-            get
-            {
-                return _onlineUsers;
-            }
-        }
+        public static ObservableCollection<User> OnlineUsers { get { return _onlineUsers; } }
 
         public static void AddUser(User u)
         {
@@ -73,7 +67,7 @@ namespace CLanWPFTest
             ctsAd = new CancellationTokenSource();
             CancellationToken ctAd = ctsAd.Token;
 
-            listener = Task.Run(CLanUDPManager.StartAdListening);
+            listener = Task.Run(() => CLanUDPManager.StartAdListening());
             advertiser = Task.Run(() => CLanUDPManager.StartBroadcastAdvertisement(ctAd), ctAd);
         }
 
