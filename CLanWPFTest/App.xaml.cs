@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -16,6 +17,10 @@ namespace CLanWPFTest
     {
         private System.Windows.Forms.NotifyIcon _notifyIcon;
         private bool _isExit;
+
+        public static Task listener;
+        public static Task advertiser;
+        public static CancellationTokenSource ctsAd;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -30,6 +35,12 @@ namespace CLanWPFTest
             _notifyIcon.Visible = true;
 
             CreateContextMenu();
+
+            ctsAd = new CancellationTokenSource();
+            CancellationToken ctAd = ctsAd.Token;
+
+            listener = Task.Run(CLanUDPManager.StartAdListening);
+            advertiser = Task.Run(() => CLanUDPManager.StartBroadcastAdvertisement(ctAd), ctAd);
         }
 
         private void CreateContextMenu()

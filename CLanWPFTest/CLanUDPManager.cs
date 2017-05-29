@@ -40,7 +40,8 @@ namespace CLanWPFTest
             while (true)
             {
                 UdpReceiveResult res = await inUDP.ReceiveAsync();
-                Console.WriteLine("cıao");
+                Console.WriteLine("Remote IP " + res.RemoteEndPoint.Address.ToString());
+                Console.WriteLine("My IP: " + MainWindow.me.ip.ToString());
                 if (!res.RemoteEndPoint.Address.Equals(MainWindow.me.ip))  // Ignore messages that I sent
                 {
                     byte[] bytes = res.Buffer;
@@ -71,7 +72,7 @@ namespace CLanWPFTest
             byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(bye, CLanJSON.settings()));
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             outUDP.Send(bytes, bytes.Length, ip);
-            MainWindow.ctsAd.Cancel();
+            App.ctsAd.Cancel();
         }
 
         public static void SendFileRequest(User dest, string fileName)

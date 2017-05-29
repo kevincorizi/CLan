@@ -14,10 +14,6 @@ namespace CLanWPFTest
     public partial class MainWindow : Window
     {
         public static User me;
-        public static Task listener;
-        public static Task advertiser;
-        public static CancellationTokenSource ctsAd;
-
         private readonly Dispatcher uiDispatcher;
 
         private static ObservableCollection<User> _onlineUsers = new ObservableCollection<User>();
@@ -43,14 +39,7 @@ namespace CLanWPFTest
 
             uiDispatcher = Dispatcher.CurrentDispatcher;
 
-            me = new User("Ezgi Akcora", "mypic");
-
-            ctsAd = new CancellationTokenSource();
-            CancellationToken ctAd = ctsAd.Token;
-
-            listener = Task.Run(CLanUDPManager.StartAdListening);
-            advertiser = Task.Run(() => CLanUDPManager.StartBroadcastAdvertisement(ctAd), ctAd);
-            
+            me = new User("Ezgi Akcora", "mypic");           
         }
         
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
