@@ -19,7 +19,7 @@ namespace CLanWPFTest
         public static async Task StartBroadcastAdvertisement(CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            Message hello = new Message(MainWindow.me, MessageType.HELLO, "");
+            Message hello = new Message(App.me, MessageType.HELLO, "");
             byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(hello, CLanJSON.settings()));
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             do {
@@ -40,7 +40,7 @@ namespace CLanWPFTest
             while (true)
             {
                 UdpReceiveResult res = await inUDP.ReceiveAsync();
-                if (!res.RemoteEndPoint.Address.Equals(MainWindow.me.ip))  // Ignore messages that I sent
+                if (!res.RemoteEndPoint.Address.Equals(App.me.ip))  // Ignore messages that I sent
                 {
                     byte[] bytes = res.Buffer;
                     Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(bytes), CLanJSON.settings());
@@ -48,10 +48,10 @@ namespace CLanWPFTest
                     switch(m.messageType)
                     {
                         case MessageType.HELLO:
-                            await Application.Current.Dispatcher.BeginInvoke(new Action(() => MainWindow.AddUser(m.sender)));
+                            await Application.Current.Dispatcher.BeginInvoke(new Action(() => App.AddUser(m.sender)));
                             break;
                         case MessageType.BYE:
-                            await Application.Current.Dispatcher.BeginInvoke(new Action(() => MainWindow.RemoveUser(m.sender)));
+                            await Application.Current.Dispatcher.BeginInvoke(new Action(() => App.RemoveUser(m.sender)));
                             break;
                         case MessageType.SEND:
                             Console.WriteLine("Someone wants to send a file");
@@ -66,11 +66,18 @@ namespace CLanWPFTest
         }
         public static void GoOffline()
         {
-            Message bye = new Message(MainWindow.me, MessageType.BYE, "Farewell, cruel world!");
+            Console.WriteLine("Going Offline");
+            Message bye = new Message(App.me, MessageType.BYE, "Farewell, cruel world!");
             byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(bye, CLanJSON.settings()));
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             outUDP.Send(bytes, bytes.Length, ip);
-            App.ctsAd.Cancel();
+            App.DeactivateAdvertising();
+        }
+
+        internal static void GoOnline()
+        {
+            Console.WriteLine("Going Online");
+            App.ActivateAdvertising();
         }
 
         public static void SendFileRequest(User dest, string fileName)

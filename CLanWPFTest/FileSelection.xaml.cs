@@ -12,6 +12,7 @@ namespace CLanWPFTest
     {
         public FileSelection()
         {
+            this.Closing += FileSelection_Closing;
             InitializeComponent();
         }
 
@@ -36,6 +37,15 @@ namespace CLanWPFTest
         {
             MainWindow mw = new MainWindow();
             this.Content = mw.Content;                  // Update the same window with the user selection window     
+        }
+
+        void FileSelection_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Prevent window from closing
+            e.Cancel = true;
+
+            // Hide window
+            this.Hide();
         }
 
     }

@@ -22,7 +22,7 @@
     </Window.Background>
     <StackPanel>
         <ToggleButton x:Name="PrivateMode" Content="Private Mode" Checked="PrivateMode_Checked"/>
-        <ListView ItemsSource="{Binding Path=OnlineUsers}" Background="Transparent">
+        <ListView ItemsSource="{Binding Source={x:Static local:App.OnlineUsers}}" Background="Transparent">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
