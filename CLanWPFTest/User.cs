@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-
+//
 namespace CLanWPFTest
 {
     public class User : IEquatable<User>
