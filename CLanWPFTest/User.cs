@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using Newtonsoft.Json;
 //
 namespace CLanWPFTest
 {
@@ -9,6 +10,9 @@ namespace CLanWPFTest
         public string name { get; set; }
         public string picture { get; set; }
         public IPAddress ip { get; set; }
+
+        [JsonIgnore]
+        public DateTime lastKeepAlive { get; set; }
 
         public User(string name, string picture = "", IPAddress ip = null)
         {

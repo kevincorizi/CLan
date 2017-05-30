@@ -18,18 +18,19 @@ namespace CLanWPFTest
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        private static int KEEP_ALIVE_TIMER_MILLIS = 10 * 1000;
+
         private System.Windows.Forms.NotifyIcon _notifyIcon;
 
         public static Task listener;
         public static Task advertiser;
+        public static Task cleaner;
         private static CancellationTokenSource ctsAd;
 
         public static FileSelection fs = null;
         public static FileTransfer ft;
 
         public static User me;
-
-        private readonly Dispatcher uiDispatcher = Dispatcher.CurrentDispatcher;
     
         private static ObservableCollection<User> _onlineUsers = new ObservableCollection<User>();
         public static ObservableCollection<User> OnlineUsers { get { return _onlineUsers; } }
@@ -37,7 +38,14 @@ namespace CLanWPFTest
         public static void AddUser(User u)
         {
             if (!_onlineUsers.Contains(u))
+            {
+                u.lastKeepAlive = DateTime.Now;
                 _onlineUsers.Add(u);
+            }
+            else
+            {
+                _onlineUsers.Single(user => user.Equals(u)).lastKeepAlive = DateTime.Now;
+            }
         }
 
         public static void RemoveUser(User u)
@@ -60,6 +68,28 @@ namespace CLanWPFTest
             me = new User("Kevin Corizi");
 
             ActivateAdvertising();
+            ActivateUserCleaner();
+        }
+
+        public static void ActivateUserCleaner()
+        {
+            cleaner = Task.Run(() =>
+            {
+                while (true)
+                {
+                    Console.WriteLine("Cleaning...");
+                    DateTime now = DateTime.Now;
+                    foreach (User u in _onlineUsers)
+                    {
+                        if((now.Subtract(u.lastKeepAlive)).Seconds > KEEP_ALIVE_TIMER_MILLIS / 1000)
+                        {
+                            Console.WriteLine("User is too old, removing");
+                            Current.Dispatcher.BeginInvoke(new Action(() => RemoveUser(u)));
+                        }
+                    }
+                    Thread.Sleep(KEEP_ALIVE_TIMER_MILLIS);
+                }
+            });
         }
 
         public static void ActivateAdvertising()

@@ -19,16 +19,20 @@ namespace CLanWPFTest
         public static async Task StartBroadcastAdvertisement(CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            Message hello = new Message(App.me, MessageType.HELLO, "");
-            byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(hello, CLanJSON.settings()));
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             do {
                 try {
+                    Message hello = new Message(App.me, MessageType.HELLO, "");
+                    byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(hello, CLanJSON.settings()));
                     await outUDP.SendAsync(bytes, bytes.Length, ip);
                 }
                 catch (OperationCanceledException oce) {
                     Console.WriteLine("Terminating advertisement" + oce.Message);
                     return;
+                }
+                catch (SocketException se)
+                {
+                    Console.WriteLine("Connection error: " + se.Message);
                 }
             }
             while (!ct.WaitHandle.WaitOne(ADVERTISEMENT_INTERVAL));     // Sleeps for AD_IN seconds but wakes up if token is canceled
