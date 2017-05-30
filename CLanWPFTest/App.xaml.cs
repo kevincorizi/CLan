@@ -69,6 +69,8 @@ namespace CLanWPFTest
 
             ActivateAdvertising();
             ActivateUserCleaner();
+
+            StartUpManager.AddApplicationToCurrentUserStartup();
         }
 
         public static void ActivateUserCleaner()

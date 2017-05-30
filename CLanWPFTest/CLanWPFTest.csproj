@@ -71,6 +71,7 @@
     <Compile Include="IPAddressConverter.cs" />
     <Compile Include="IPEndPointConverter.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="StartUpManager.cs" />
     <Compile Include="User.cs" />
     <Compile Include="FileTransfer.xaml.cs">
       <DependentUpon>FileTransfer.xaml</DependentUpon>
