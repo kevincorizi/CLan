@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,17 +15,14 @@ namespace CLanWPFTest
     /// 
     public partial class MainWindow : Window
     {
-        
+        public string toSend = null;
 
-        public MainWindow() {
+        public MainWindow(string fileToSend = null) {
             this.Closing += MainWindow_Closing;
             InitializeComponent();
             this.DataContext = this;
-
-            
-           
-        }
-        
+            this.toSend = fileToSend;
+        }    
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
             CLanUDPManager.GoOffline();
@@ -32,12 +31,15 @@ namespace CLanWPFTest
         
         private void PublicMode_Checked(object sender, RoutedEventArgs e)
         {
-
+            CLanUDPManager.GoOnline();
+            Console.WriteLine("public!");
         }
         
         private void continueClick(object sender, RoutedEventArgs e)
         {
-            FileTransfer ft = new FileTransfer();
+            List<User> users = new List<User>();
+            users.Add(UserList.SelectedItem as User);
+            FileTransfer ft = new FileTransfer(toSend, users);
             this.Content = ft.Content;                  // Update the same window with the transaction window 
             ft.Show();
         }      
@@ -46,13 +48,6 @@ namespace CLanWPFTest
         {
            // selectFile sf = new selectFile();
            // this.Content = sf.Content;                  // Update the same window with the transaction window                      
-        }
-
-        private void ListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            System.Windows.Controls.ListView list = e.Source as System.Windows.Controls.ListView;
-            User dest = list.SelectedItem as User;
-            CLanUDPManager.SendFileRequest(dest, "ciao.txt");
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

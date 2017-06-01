@@ -57,9 +57,6 @@ namespace CLanWPFTest
                         case MessageType.BYE:
                             await Application.Current.Dispatcher.BeginInvoke(new Action(() => App.RemoveUser(m.sender)));
                             break;
-                        case MessageType.SEND:
-                            Console.WriteLine("Someone wants to send a file");
-                            break;
                         default:
                             Console.WriteLine("Invalid message");
                             break;
@@ -82,14 +79,6 @@ namespace CLanWPFTest
         {
             Console.WriteLine("Going Online");
             App.ActivateAdvertising();
-        }
-
-        public static void SendFileRequest(User dest, string fileName)
-        {
-            Message req = new Message(dest, MessageType.SEND, fileName);
-            byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(req, CLanJSON.settings()));
-            IPEndPoint ip = new IPEndPoint(dest.ip, udpPort);
-            outUDP.Send(bytes, bytes.Length, ip);
         }
     }
 }

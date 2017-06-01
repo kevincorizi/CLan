@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+namespace CLanWPFTest
+{
+    public static class CLanCommands
+    {
+        public static readonly RoutedUICommand Exit = new RoutedUICommand(
+            "Exit",
+            "Exit",
+            typeof(CLanCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.F4, ModifierKeys.Alt)
+            }
+        );
+
+        public static readonly RoutedUICommand PrivateMode = new RoutedUICommand(
+            "Attiva modalità privata",
+            "PrivateMode",
+            typeof(CLanCommands)
+        );
+
+    }
+}

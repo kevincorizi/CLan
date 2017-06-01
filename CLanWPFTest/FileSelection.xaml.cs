@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Win32;
 using System.Drawing;
+using System;
 
 namespace CLanWPFTest
 {
@@ -10,6 +11,7 @@ namespace CLanWPFTest
 
     public partial class FileSelection : Window
     {
+        public string toSend = null;
         public FileSelection()
         {
             this.Closing += FileSelection_Closing;
@@ -21,7 +23,7 @@ namespace CLanWPFTest
             OpenFileDialog fd = new OpenFileDialog();    // Opens a window to choose the file from the pc
             fd.DefaultExt = "*.*";
             fd.ShowDialog();
-            string fullPath = fd.FileName;               // The file path to be sent to the backend
+            toSend = fd.FileName;               // The file path to be sent to the backend
 
             if (fd.CheckPathExists == true)
             {
@@ -35,8 +37,15 @@ namespace CLanWPFTest
 
         private void continueClick(object sender, RoutedEventArgs e)
         {
-            MainWindow mw = new MainWindow();
-            this.Content = mw.Content;                  // Update the same window with the user selection window     
+            if(toSend != null)
+            {
+                MainWindow mw = new MainWindow(toSend);
+                this.Content = mw.Content;                  // Update the same window with the user selection window  
+            }
+            else
+            {
+                Console.WriteLine("No file selected");
+            }
         }
 
         void FileSelection_Closing(object sender, System.ComponentModel.CancelEventArgs e)

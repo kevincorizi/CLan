@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CLanWPFTest
 {
-    public enum MessageType { HELLO, BYE, SEND };
+    public enum MessageType { HELLO, BYE, SEND, ACK, NACK };
     class Message
     {
         public User sender { get; set; }

@@ -21,5 +21,7 @@ namespace CLanWPFTest
                     key.DeleteValue("CLan", false);
             }
         }
+
+        //TODO registry key for right click context menu
     }
 }

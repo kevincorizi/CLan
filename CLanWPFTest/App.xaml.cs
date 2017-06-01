@@ -24,6 +24,7 @@ namespace CLanWPFTest
 
         public static Task listener;
         public static Task advertiser;
+        public static Task tcpListener;
         public static Task cleaner;
         private static CancellationTokenSource ctsAd;
 
@@ -101,6 +102,7 @@ namespace CLanWPFTest
 
             listener = Task.Run(() => CLanUDPManager.StartAdListening());
             advertiser = Task.Run(() => CLanUDPManager.StartBroadcastAdvertisement(ctAd), ctAd);
+            tcpListener = Task.Run(() => CLanTCPManager.StartRequestListening());
         }
 
         public static void DeactivateAdvertising()
