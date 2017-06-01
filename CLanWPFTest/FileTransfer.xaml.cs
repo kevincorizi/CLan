@@ -34,16 +34,22 @@ namespace CLanWPFTest
             destinations = dest;
 
             // Workers is a list of BackGroundWorkers parallel to destination users
-            workers = new List<BackgroundWorker>(destinations.Count);
+            workers = new List<BackgroundWorker>();
 
+            for (int i = 0; i < destinations.Count; i++)
+            {
+                BackgroundWorker w = new BackgroundWorker();
+                w.WorkerReportsProgress = true;
+                w.WorkerSupportsCancellation = true;
+                w.DoWork += worker_DoWork;
+                w.ProgressChanged += worker_ProgressChanged;
+                w.RunWorkerCompleted += worker_RunWorkerCompleted;
+                workers.Add(w);
+                Console.WriteLine("Added worker " + i);
+            }
             for (int i = 0; i < workers.Count; i++)
             {
-                workers[i] = new BackgroundWorker();
-                workers[i].WorkerReportsProgress = true;
-                workers[i].WorkerSupportsCancellation = true;
-                workers[i].DoWork += worker_DoWork;
-                workers[i].ProgressChanged += worker_ProgressChanged;
-                workers[i].RunWorkerCompleted += worker_RunWorkerCompleted;
+                Console.WriteLine("Starting worker...");
                 workers[i].RunWorkerAsync(i);
             }
         }
@@ -52,6 +58,7 @@ namespace CLanWPFTest
         {
             int index = (int)e.Argument;
             CLanTCPManager.SendFileRequest(fileName, destinations[index]);
+            Console.WriteLine("Worker started: " + fileName + " to " + destinations[index].ip.ToString());
         }
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)

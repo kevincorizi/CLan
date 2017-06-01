@@ -35,20 +35,21 @@ namespace CLanWPFTest
             byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(m, CLanJSON.settings()));
             IPEndPoint ip = new IPEndPoint(dest.ip, tcpPort);
             client.Connect(dest.ip, tcpPort);
+            Console.WriteLine("Connected to " + dest.ip.ToString());
             client.Client.Send(bytes);
             Console.WriteLine("Request sent");
             // Update UI somehow
             byte[] response = new byte[256];
             client.Client.Receive(response);
             Console.Write("Response received: ");
-            Console.WriteLine(response.ToString());
+            Console.WriteLine(Encoding.Default.GetString(response));
         }
 
         public static void ServeFileRequest(Socket s)
         {
             byte[] request = new byte[256];
             s.Receive(request);
-            Console.WriteLine("Request received: " + request.ToString());
+            Console.WriteLine("Request received: \n" + Encoding.Default.GetString(request));
             s.Send(request);
             Console.WriteLine("Response sent (echoed)");
         }
