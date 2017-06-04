@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using NetworkCommsDotNet;
+using NetworkCommsDotNet.DPSBase;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -22,7 +26,6 @@ namespace CLanWPFTest
 
     public partial class FileTransfer : Window
     {
-        bool isCancelled = false;
         public string fileName = null;
         public List<User> destinations = null;
         private List<BackgroundWorker> workers = null;
@@ -57,35 +60,36 @@ namespace CLanWPFTest
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             int index = (int)e.Argument;
-            CLanTCPManager.SendFileRequest(fileName, destinations[index]);
+            CLanTCPManager.SendFile(fileName, destinations[index], workers[index]);
             Console.WriteLine("Worker started: " + fileName + " to " + destinations[index].ip.ToString());
         }
 
         void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            
+            sendProgress.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                sendProgress.Value = (int)e.ProgressPercentage;
+            }));
         }
 
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (e.Cancelled)
-            {
-               
+            if (e.Cancelled) {
+                Console.WriteLine("Operation was cancelled");
             }
-            else
-            {
-               
+            else {
+                Console.WriteLine("Operation completed: " + e.Result);
             }
+            this.Close();
         }
 
-        private void cancel_Click(object sender, RoutedEventArgs e)
+        void cancel_Click(object sender, RoutedEventArgs e)
         {
             // TODO: set a flag to cancel the transfer also if the window is closed with X button.
             foreach (BackgroundWorker w in workers)
             {
                 w.CancelAsync();
             }
-            isCancelled = true;
             this.Close();
         }
     }

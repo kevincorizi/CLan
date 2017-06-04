@@ -1,10 +1,14 @@
-﻿using System;
+﻿using NetworkCommsDotNet;
+using NetworkCommsDotNet.Connections;
+using NetworkCommsDotNet.Tools;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,39 +24,64 @@ namespace CLanWPFTest
     {
         private static int KEEP_ALIVE_TIMER_MILLIS = 10 * 1000;
 
-        private System.Windows.Forms.NotifyIcon _notifyIcon;
+        private NotifyIcon _notifyIcon;
 
-        public static Task listener;
-        public static Task advertiser;
-        public static Task tcpListener;
-        public static Task cleaner;
+        public static Task listener, advertiser, tcpListener, cleaner;
         private static CancellationTokenSource ctsAd;
 
         public static FileSelection fs = null;
         public static FileTransfer ft;
 
+        /// <summary>
+        /// Current user
+        /// </summary>
         public static User me;
     
-        private static ObservableCollection<User> _onlineUsers = new ObservableCollection<User>();
-        public static ObservableCollection<User> OnlineUsers { get { return _onlineUsers; } }
+        /// <summary>
+        /// List containing currently visible users on the network
+        /// </summary>
+        public static ObservableCollection<User> OnlineUsers = new ObservableCollection<User>();
+
+        /// <summary>
+        /// Data context for the GUI list box
+        /// </summary>
+        public static ObservableCollection<CLanReceivedFile> ReceivedFiles = new ObservableCollection<CLanReceivedFile>();
+
+        /// <summary>
+        /// References to received files by remote ConnectionInfo
+        /// </summary>
+        public static Dictionary<ConnectionInfo, Dictionary<string, CLanReceivedFile>> ReceivedFilesDict = new Dictionary<ConnectionInfo, Dictionary<string, CLanReceivedFile>>();
+
+        /// <summary>
+        /// Incoming partial data cache. Keys are ConnectionInfo, PacketSequenceNumber. Value is partial packet data.
+        /// </summary>
+        public static Dictionary<ConnectionInfo, Dictionary<long, byte[]>> IncomingDataCache = new Dictionary<ConnectionInfo, Dictionary<long, byte[]>>();
+
+        /// <summary>
+        /// Incoming sendInfo cache. Keys are ConnectionInfo, PacketSequenceNumber. Value is sendInfo.
+        /// </summary>
+        public static Dictionary<ConnectionInfo, Dictionary<long, CLanFileInfo>> IncomingDataInfoCache = new Dictionary<ConnectionInfo, Dictionary<long, CLanFileInfo>>();
+
+        /// <summary>
+        /// Object used for ensuring thread safety.
+        /// </summary>
+        public static object syncRoot = new object();
 
         public static void AddUser(User u)
         {
-            if (!_onlineUsers.Contains(u))
-            {
+            if (!OnlineUsers.Contains(u)) {
                 u.lastKeepAlive = DateTime.Now;
-                _onlineUsers.Add(u);
+                OnlineUsers.Add(u);
             }
-            else
-            {
-                _onlineUsers.Single(user => user.Equals(u)).lastKeepAlive = DateTime.Now;
+            else {
+                OnlineUsers.Single(user => user.Equals(u)).lastKeepAlive = DateTime.Now;
             }
         }
 
         public static void RemoveUser(User u)
         {
-            if (_onlineUsers.Contains(u))
-                _onlineUsers.Remove(u);
+            if (OnlineUsers.Contains(u))
+                OnlineUsers.Remove(u);
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -70,22 +99,19 @@ namespace CLanWPFTest
 
             ActivateAdvertising();
             ActivateUserCleaner();
+            CLanTCPManager.StartListening();
 
             StartUpManager.AddApplicationToCurrentUserStartup();
         }
 
         public static void ActivateUserCleaner()
         {
-            cleaner = Task.Run(() =>
-            {
-                while (true)
-                {
+            cleaner = Task.Run(() => {
+                while (true) {
                     Console.WriteLine("Cleaning...");
                     DateTime now = DateTime.Now;
-                    foreach (User u in _onlineUsers)
-                    {
-                        if((now.Subtract(u.lastKeepAlive)).Seconds > KEEP_ALIVE_TIMER_MILLIS / 1000)
-                        {
+                    foreach (User u in OnlineUsers) {
+                        if((now.Subtract(u.lastKeepAlive)).Seconds > KEEP_ALIVE_TIMER_MILLIS / 1000) {
                             Console.WriteLine("User is too old, removing");
                             Current.Dispatcher.BeginInvoke(new Action(() => RemoveUser(u)));
                         }
@@ -102,7 +128,6 @@ namespace CLanWPFTest
 
             listener = Task.Run(() => CLanUDPManager.StartAdListening());
             advertiser = Task.Run(() => CLanUDPManager.StartBroadcastAdvertisement(ctAd), ctAd);
-            tcpListener = Task.Run(() => CLanTCPManager.StartRequestListening());
         }
 
         public static void DeactivateAdvertising()
@@ -130,15 +155,11 @@ namespace CLanWPFTest
         {
             if (fs.IsVisible) { 
                 if (fs.WindowState == WindowState.Minimized)
-                {
                     fs.WindowState = WindowState.Normal;
-                }
                 fs.Activate();
             }
             else
-            {
                 fs.Show();
-            }
         }
 
         private void ShowSettings()
@@ -151,8 +172,7 @@ namespace CLanWPFTest
             CLanUDPManager.GoOffline();
             // Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
-            if (menuItem != null)
-            {
+            if (menuItem != null) {
                 menuItem.Text = "Attiva modalità pubblica";
                 menuItem.Click -= (s, e) => TraySwitchToPrivate(s);
                 menuItem.Click += (s, e) => TraySwitchToPublic(s);
@@ -164,8 +184,7 @@ namespace CLanWPFTest
             CLanUDPManager.GoOnline();
             // Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
-            if (menuItem != null)
-            {
+            if (menuItem != null) {
                 menuItem.Text = "Attiva modalità privata";
                 menuItem.Click -= (s, e) => TraySwitchToPublic(s);
                 menuItem.Click += (s, e) => TraySwitchToPrivate(s);
@@ -176,13 +195,23 @@ namespace CLanWPFTest
         {
             Console.WriteLine("OnExit");
             CLanUDPManager.GoOffline();
+            // Close all windows
             foreach (Window window in Current.Windows)
-            {
                 window.Close();
+
+            //Close all files
+            lock (syncRoot)
+            {
+                foreach (CLanReceivedFile file in ReceivedFiles)
+                    file.Close();
             }
+
+            NetworkComms.Shutdown();
             _notifyIcon.Dispose();
             _notifyIcon = null;
             base.OnExit(e);
         }
+
+        
     }
 }

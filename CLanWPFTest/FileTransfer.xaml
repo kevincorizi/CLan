@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLanWPFTest"
         mc:Ignorable="d"
-        Title="CLan - share instantly!" Height="700" Width="900">
+        Title="CLan - Share instantly!" Height="700" Width="900">
     <Window.Background>
         <ImageBrush>
             <ImageBrush.ImageSource>
@@ -16,7 +16,7 @@
 
 
     <Grid x:Name="progressBar" Width="900" Height="650">
-        <ProgressBar HorizontalAlignment="Left" Height="16" Margin="216,326,0,0" VerticalAlignment="Top" Width="468"/>
+        <ProgressBar Name="sendProgress" HorizontalAlignment="Left" Height="16" Margin="216,326,0,0" VerticalAlignment="Top" Width="468"/>
         <Button Content="Cancel" HorizontalAlignment="Left" Margin="411,396,0,0" VerticalAlignment="Top" Width="74" Click="cancel_Click"/>
         <TextBlock HorizontalAlignment="Left" Margin="216,280,0,0" TextWrapping="Wrap" Text="Sending the file..." VerticalAlignment="Top" Width="196" FontSize="18" Foreground="#FF666666"/>
 

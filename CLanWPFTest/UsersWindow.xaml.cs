@@ -13,11 +13,11 @@ namespace CLanWPFTest
     /// Logica di interazione per MainWindow.xaml
     /// </summary>
     /// 
-    public partial class MainWindow : Window
+    public partial class UsersWindow : Window
     {
         public string toSend = null;
 
-        public MainWindow(string fileToSend = null) {
+        public UsersWindow(string fileToSend = null) {
             this.Closing += MainWindow_Closing;
             InitializeComponent();
             this.DataContext = this;
