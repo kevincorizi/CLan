@@ -29,13 +29,20 @@ namespace CLanWPFTest
         public string fileName = null;
         public List<User> destinations = null;
         private List<BackgroundWorker> workers = null;
+        public bool readyToSend = true;    // TODO: update this variable when the connection is established. 
 
         public FileTransfer(string file, List<User> dest)
         {
             InitializeComponent();
             fileName = file;
             destinations = dest;
+            // System.Threading.Thread.Sleep(5000);
 
+
+            if(readyToSend == true)
+                progressBar.Visibility = Visibility.Visible;
+           
+            
             // Workers is a list of BackGroundWorkers parallel to destination users
             workers = new List<BackgroundWorker>();
 
