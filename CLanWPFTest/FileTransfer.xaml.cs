@@ -99,8 +99,12 @@ namespace CLanWPFTest
                 w.CancelAsync();
             }
             this.Close();
-            UsersWindow sf = new UsersWindow();
-            System.Windows.Application.Current.Windows[0].Content = sf.Content;
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure to cancel the file transfer?", " ", System.Windows.MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+            {
+                UsersWindow sf = new UsersWindow();
+                System.Windows.Application.Current.Windows[0].Content = sf.Content;
+            }
 
         }
     }
