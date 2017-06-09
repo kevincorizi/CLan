@@ -6,6 +6,26 @@
         xmlns:local="clr-namespace:CLanWPFTest"
         mc:Ignorable="d"
         Title="CLan - share instantly!" Height="700" Width="900">
+    <Window.Resources>
+        <Style x:Key="MyButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Window.Foreground>
         <ImageBrush>
             <ImageBrush.ImageSource>
@@ -22,7 +42,7 @@
     </Window.Background>
     <Grid Width="900" Height="698.7">
 
-        <Button x:Name="uploadButton" HorizontalAlignment="Left" Margin="344,203,0,0" VerticalAlignment="Top" Width="215" Height="218" BorderThickness="0" Click="selectFile_Click">
+        <Button x:Name="uploadButton" HorizontalAlignment="Left" Margin="344,203,0,0" VerticalAlignment="Top" Width="215" Height="218" BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}">
 
             <Button.Background>
                 <ImageBrush>
@@ -34,7 +54,7 @@
 
         </Button>
         <TextBlock x:Name="selectText" HorizontalAlignment="Left" Margin="402,166,0,0" TextWrapping="Wrap" Text="Select a file" VerticalAlignment="Top" Height="30" Width="100" Foreground="#FFB9B2B2" FontSize="20"/>
-        <Button x:Name="continueButton" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="215" Height="218" Click="continueClick" FontSize="16" BorderThickness="0" Margin="344,203,0,0" IsEnabled="False" RenderTransformOrigin="0.367,1.175" Visibility="Hidden" >
+        <Button x:Name="continueButton" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="215" Height="218" Click="continueClick" FontSize="16" BorderThickness="0" Margin="344,203,0,0" IsEnabled="False" RenderTransformOrigin="0.367,1.175" Visibility="Hidden" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush>
                     <ImageBrush.ImageSource>
@@ -47,5 +67,4 @@
         <TextBlock x:Name="continueText" HorizontalAlignment="Left" Margin="394,166,0,0" TextWrapping="Wrap" Text="  Continue" VerticalAlignment="Top" Height="30" Width="100" Foreground="#FFB9B2B2" FontSize="20" Visibility="Hidden"/>
 
     </Grid>
-
 </Window>
