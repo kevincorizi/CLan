@@ -86,11 +86,15 @@ namespace CLanWPFTest
         void cancel_Click(object sender, RoutedEventArgs e)
         {
             // TODO: set a flag to cancel the transfer also if the window is closed with X button.
+           
             foreach (BackgroundWorker w in workers)
             {
                 w.CancelAsync();
             }
             this.Close();
+            UsersWindow sf = new UsersWindow();
+            System.Windows.Application.Current.Windows[0].Content = sf.Content;
+
         }
     }
 }

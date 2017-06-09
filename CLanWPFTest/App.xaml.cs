@@ -20,7 +20,7 @@ namespace CLanWPFTest
     /// <summary>
     /// Logica di interazione per App.xaml
     /// </summary>
-    public partial class App : System.Windows.Application
+    public partial class Application : System.Windows.Application
     {
         private static int KEEP_ALIVE_TIMER_MILLIS = 10 * 1000;
 

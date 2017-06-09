@@ -38,16 +38,17 @@ namespace CLanWPFTest
         private void continueClick(object sender, RoutedEventArgs e)
         {
             List<User> users = new List<User>();
-            users.Add(UserList.SelectedItem as User);
-            FileTransfer ft = new FileTransfer(toSend, users);
-            this.Content = ft.Content;                  // Update the same window with the transaction window 
-            ft.Show();
-        }      
+            // Following line is commented for the "namespace doesnt include" error. 
+            // users.Add(UserList.SelectedItem as User);
+
+             FileTransfer ft = new FileTransfer(toSend, users);
+            System.Windows.Application.Current.Windows[0].Content = ft.Content;        
+        }
 
         private void backClick(object sender, RoutedEventArgs e)
         {
-           // selectFile sf = new selectFile();
-           // this.Content = sf.Content;                  // Update the same window with the transaction window                      
+            FileSelection sf = new FileSelection();
+            System.Windows.Application.Current.Windows[0].Content = sf.Content;
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

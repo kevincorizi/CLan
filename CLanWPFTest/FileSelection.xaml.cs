@@ -40,7 +40,7 @@ namespace CLanWPFTest
             if(toSend != null)
             {
                 UsersWindow mw = new UsersWindow(toSend);
-                this.Content = mw.Content;                  // Update the same window with the user selection window  
+                System.Windows.Application.Current.Windows[0].Content = mw.Content;       
             }
             else
             {
