@@ -38,7 +38,7 @@ namespace CLanWPFTest
         private void continueClick(object sender, RoutedEventArgs e)
         {
             List<User> users = new List<User>();
-            // Following line is commented for the "namespace doesnt include" error. 
+            // Following line is commented for "no user is selected" error.  
             // users.Add(UserList.SelectedItem as User);
 
              FileTransfer ft = new FileTransfer(toSend, users);
