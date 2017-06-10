@@ -29,7 +29,7 @@ namespace CLanWPFTest
         public static Task listener, advertiser, tcpListener, cleaner;
         private static CancellationTokenSource ctsAd;
 
-        public static FileSelection fs = null;
+        public static MainWindow mw = null;
         public static FileTransfer ft;
 
         /// <summary>
@@ -137,8 +137,8 @@ namespace CLanWPFTest
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (fs == null)
-                fs = new FileSelection();
+            if (mw == null)
+                mw = new MainWindow();
             ShowFileSelection();
         }
 
@@ -153,13 +153,14 @@ namespace CLanWPFTest
 
         private void ShowFileSelection()
         {
-            if (fs.IsVisible) { 
-                if (fs.WindowState == WindowState.Minimized)
-                    fs.WindowState = WindowState.Normal;
-                fs.Activate();
+            if (mw.IsVisible) { 
+                if (mw.WindowState == WindowState.Minimized)
+                    mw.WindowState = WindowState.Normal;
+                mw.Activate();
+                mw._mainFrame.Visibility = Visibility.Visible;
             }
             else
-                fs.Show();
+                mw.Show();  
         }
 
         private void ShowSettings()

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace CLanWPFTest
@@ -13,15 +14,16 @@ namespace CLanWPFTest
     /// Logica di interazione per MainWindow.xaml
     /// </summary>
     /// 
-    public partial class UsersWindow : Window
+    public partial class UsersWindow : Page
     {
         public string toSend = null;
-
+        
         public UsersWindow(string fileToSend = null) {
-            this.Closing += MainWindow_Closing;
+            //this.Closing += MainWindow_Closing; ----> TODO: error due to window->page
             InitializeComponent();
-            this.DataContext = this;
+            //this.DataContext = this; ----> TODO: error due to window->page
             this.toSend = fileToSend;
+            this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
         }    
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
@@ -38,17 +40,11 @@ namespace CLanWPFTest
         private void continueClick(object sender, RoutedEventArgs e)
         {
             List<User> users = new List<User>();
-            // Following line is commented for "no user is selected" error.  
-            // users.Add(UserList.SelectedItem as User);
-
-             FileTransfer ft = new FileTransfer(toSend, users);
-            System.Windows.Application.Current.Windows[0].Content = ft.Content;        
-        }
-
-        private void backClick(object sender, RoutedEventArgs e)
-        {
-            FileSelection sf = new FileSelection();
-            System.Windows.Application.Current.Windows[0].Content = sf.Content;
+            users.Add(UserList.SelectedItem as User);
+            if(users.Count > 0)
+                this._continue.IsEnabled = true;    // Enable the "send" button if at least one user is selected.
+            this.NavigationService.Navigate(new FileTransfer(toSend, users));
+                  
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -56,7 +52,13 @@ namespace CLanWPFTest
             // Prevent window from closing
             e.Cancel = true;
             // Hide window
-            this.Hide();
+            //this.Hide();
+        }
+
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            this.NavigationService.Navigate(new SettingsPage());
         }
     }
 }

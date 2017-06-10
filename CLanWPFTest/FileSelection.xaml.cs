@@ -2,6 +2,8 @@
 using Microsoft.Win32;
 using System.Drawing;
 using System;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace CLanWPFTest
 {
@@ -9,12 +11,12 @@ namespace CLanWPFTest
     /// Interaction logic for selectFile.xaml
     /// </summary>
 
-    public partial class FileSelection : Window
+    public partial class FileSelection : Page
     {
         public string toSend = null;
         public FileSelection()
         {
-            this.Closing += FileSelection_Closing;
+            //this.Closing += FileSelection_Closing; ---> TODO: This part gives me error after window to page change.
             InitializeComponent();
         }
 
@@ -39,8 +41,7 @@ namespace CLanWPFTest
         {
             if(toSend != null)
             {
-                UsersWindow mw = new UsersWindow(toSend);
-                System.Windows.Application.Current.Windows[0].Content = mw.Content;       
+                this.NavigationService.Navigate(new UsersWindow(toSend));      
             }
             else
             {
@@ -54,9 +55,9 @@ namespace CLanWPFTest
             e.Cancel = true;
 
             // Hide window
-            this.Hide();
+            // this.Hide(); ---> TODO: This part gives me error after window to page change.
         }
 
-       
+
     }
 }

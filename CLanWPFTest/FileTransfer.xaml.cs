@@ -24,7 +24,7 @@ namespace CLanWPFTest
     /// </summary>
     /// 
 
-    public partial class FileTransfer : Window
+    public partial class FileTransfer : Page
     {
         public string fileName = null;
         public List<User> destinations = null;
@@ -36,8 +36,6 @@ namespace CLanWPFTest
             InitializeComponent();
             fileName = file;
             destinations = dest;
-            // System.Threading.Thread.Sleep(5000);
-
 
             if(readyToSend == true)
                 progressBar.Visibility = Visibility.Visible;
@@ -87,7 +85,7 @@ namespace CLanWPFTest
             else {
                 Console.WriteLine("Operation completed: " + e.Result);
             }
-            this.Close();
+            // this.Close(); ---> TODO: This part gives me error after window to page change.
         }
 
         void cancel_Click(object sender, RoutedEventArgs e)
@@ -98,12 +96,11 @@ namespace CLanWPFTest
             {
                 w.CancelAsync();
             }
-            this.Close();
+            // this.Close(); ---> TODO: This part gives me error after window to page change.
             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure to cancel the file transfer?", " ", System.Windows.MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
             {
-                UsersWindow sf = new UsersWindow();
-                System.Windows.Application.Current.Windows[0].Content = sf.Content;
+                // Navigate back?
             }
 
         }

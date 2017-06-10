@@ -76,13 +76,27 @@
     </Compile>
     <Compile Include="IPAddressConverter.cs" />
     <Compile Include="IPEndPointConverter.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Message.cs" />
+    <Compile Include="SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StartUpManager.cs" />
     <Compile Include="User.cs" />
     <Compile Include="FileTransfer.xaml.cs">
       <DependentUpon>FileTransfer.xaml</DependentUpon>
     </Compile>
     <Page Include="FileSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

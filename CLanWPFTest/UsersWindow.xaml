@@ -1,27 +1,27 @@
-﻿<Window x:Name="usersListPage" x:Class="CLanWPFTest.UsersWindow"
+﻿<Page x:Name="usersListPage" x:Class="CLanWPFTest.UsersWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLanWPFTest"
         mc:Ignorable="d"
-        Title="CLan - Share instantly!" Width="900" Height="700">
-    <Window.Foreground>
+        Title="CLan - Share instantly!" Width="890" Height="670">
+    <Page.Foreground>
         <ImageBrush>
             <ImageBrush.ImageSource>
                 <BitmapImage UriSource="images/background.jpg"/>
             </ImageBrush.ImageSource>
         </ImageBrush>
-    </Window.Foreground>
-    <Window.Background>
+    </Page.Foreground>
+    <Page.Background>
         <ImageBrush>
             <ImageBrush.ImageSource>
                 <BitmapImage UriSource="images/background.jpg"/>
             </ImageBrush.ImageSource>
         </ImageBrush>
-    </Window.Background>
+    </Page.Background>
     <Grid Width="892">
-        <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent">
+        <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" BorderThickness="0">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -36,8 +36,9 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        
-        <ToggleButton x:Name="PrivateMode" Content="Private" Height="49" Margin="740,0,0,620" RenderTransformOrigin="0.532,5.488" BorderThickness="0" VerticalAlignment="Center" FontSize="18"/>
-        <Button Click="continueClick" Content="Send" Height="48" Margin="376,504,363,117" BorderThickness="0" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
+
+        <ToggleButton x:Name="PrivateMode" Content="Private" Height="51" Margin="740,0,0,619" RenderTransformOrigin="0.532,5.488" BorderThickness="0" VerticalAlignment="Center" FontSize="15" Width="152"/>
+        <Button x:Name="_continue" Click="continueClick" Content="Send" Height="48" Margin="370,504,369,117" BorderThickness="0" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+        <Button Content="Settings" HorizontalAlignment="Left" Width="152" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,0,0,619"/>
     </Grid>
-</Window>
+</Page>
