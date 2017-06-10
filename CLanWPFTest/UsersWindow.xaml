@@ -21,7 +21,7 @@
         </ImageBrush>
     </Window.Background>
     <Grid Width="892">
-        <ListView Name="UserList" ItemsSource="{Binding Source={x:Static local:Application.OnlineUsers}}" Background="Transparent">
+        <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
