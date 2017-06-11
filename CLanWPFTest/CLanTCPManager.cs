@@ -157,37 +157,37 @@ namespace CLanWPFTest
                 CLanReceivedFile file = null;
 
                 //Perform this in a thread safe way
-                lock (Application.syncRoot)
+                lock (App.syncRoot)
                 {
                     //Extract the packet sequence number from the header
                     //The header can also user defined parameters
                     long sequenceNumber = header.GetOption(PacketHeaderLongItems.PacketSequenceNumber);
 
-                    if (Application.IncomingDataInfoCache.ContainsKey(connection.ConnectionInfo) && Application.IncomingDataInfoCache[connection.ConnectionInfo].ContainsKey(sequenceNumber))
+                    if (App.IncomingDataInfoCache.ContainsKey(connection.ConnectionInfo) && App.IncomingDataInfoCache[connection.ConnectionInfo].ContainsKey(sequenceNumber))
                     {
                         //We have the associated SendInfo so we can add this data directly to the file
-                        info = Application.IncomingDataInfoCache[connection.ConnectionInfo][sequenceNumber];
-                        Application.IncomingDataInfoCache[connection.ConnectionInfo].Remove(sequenceNumber);
+                        info = App.IncomingDataInfoCache[connection.ConnectionInfo][sequenceNumber];
+                        App.IncomingDataInfoCache[connection.ConnectionInfo].Remove(sequenceNumber);
 
                         //Check to see if we have already received any files from this location
-                        if (!Application.ReceivedFilesDict.ContainsKey(connection.ConnectionInfo))
-                            Application.ReceivedFilesDict.Add(connection.ConnectionInfo, new Dictionary<string, CLanReceivedFile>());
+                        if (!App.ReceivedFilesDict.ContainsKey(connection.ConnectionInfo))
+                            App.ReceivedFilesDict.Add(connection.ConnectionInfo, new Dictionary<string, CLanReceivedFile>());
 
                         //Check to see if we have already initialised this file
-                        if (!Application.ReceivedFilesDict[connection.ConnectionInfo].ContainsKey(info.Filename))
+                        if (!App.ReceivedFilesDict[connection.ConnectionInfo].ContainsKey(info.Filename))
                         {
-                            Application.ReceivedFilesDict[connection.ConnectionInfo].Add(info.Filename, new CLanReceivedFile(info.Filename, connection.ConnectionInfo, info.TotalBytes));
+                            App.ReceivedFilesDict[connection.ConnectionInfo].Add(info.Filename, new CLanReceivedFile(info.Filename, connection.ConnectionInfo, info.TotalBytes));
                         }
 
-                        file = Application.ReceivedFilesDict[connection.ConnectionInfo][info.Filename];
+                        file = App.ReceivedFilesDict[connection.ConnectionInfo][info.Filename];
                     }
                     else
                     {
                         //We do not yet have the associated CLanFileInfo so we just add the data to the cache
-                        if (!Application.IncomingDataCache.ContainsKey(connection.ConnectionInfo))
-                            Application.IncomingDataCache.Add(connection.ConnectionInfo, new Dictionary<long, byte[]>());
+                        if (!App.IncomingDataCache.ContainsKey(connection.ConnectionInfo))
+                            App.IncomingDataCache.Add(connection.ConnectionInfo, new Dictionary<long, byte[]>());
 
-                        Application.IncomingDataCache[connection.ConnectionInfo].Add(sequenceNumber, data);
+                        App.IncomingDataCache[connection.ConnectionInfo].Add(sequenceNumber, data);
                     }
                 }
 
@@ -227,38 +227,38 @@ namespace CLanWPFTest
                 CLanReceivedFile file = null;
 
                 //Perform this in a thread safe way
-                lock (Application.syncRoot)
+                lock (App.syncRoot)
                 {
                     //Extract the packet sequence number from the header
                     //The header can also user defined parameters
                     long sequenceNumber = info.PacketSequenceNumber;
 
-                    if (Application.IncomingDataCache.ContainsKey(connection.ConnectionInfo) && Application.IncomingDataCache[connection.ConnectionInfo].ContainsKey(sequenceNumber))
+                    if (App.IncomingDataCache.ContainsKey(connection.ConnectionInfo) && App.IncomingDataCache[connection.ConnectionInfo].ContainsKey(sequenceNumber))
                     {
                         //We already have the associated data in the cache
-                        data = Application.IncomingDataCache[connection.ConnectionInfo][sequenceNumber];
-                        Application.IncomingDataCache[connection.ConnectionInfo].Remove(sequenceNumber);
+                        data = App.IncomingDataCache[connection.ConnectionInfo][sequenceNumber];
+                        App.IncomingDataCache[connection.ConnectionInfo].Remove(sequenceNumber);
 
                         //Check to see if we have already received any files from this location
-                        if (!Application.ReceivedFilesDict.ContainsKey(connection.ConnectionInfo))
-                            Application.ReceivedFilesDict.Add(connection.ConnectionInfo, new Dictionary<string, CLanReceivedFile>());
+                        if (!App.ReceivedFilesDict.ContainsKey(connection.ConnectionInfo))
+                            App.ReceivedFilesDict.Add(connection.ConnectionInfo, new Dictionary<string, CLanReceivedFile>());
 
                         //Check to see if we have already initialised this file
-                        if (!Application.ReceivedFilesDict[connection.ConnectionInfo].ContainsKey(info.Filename))
+                        if (!App.ReceivedFilesDict[connection.ConnectionInfo].ContainsKey(info.Filename))
                         {
-                            Application.ReceivedFilesDict[connection.ConnectionInfo].Add(info.Filename, new CLanReceivedFile(info.Filename, connection.ConnectionInfo, info.TotalBytes));
+                            App.ReceivedFilesDict[connection.ConnectionInfo].Add(info.Filename, new CLanReceivedFile(info.Filename, connection.ConnectionInfo, info.TotalBytes));
                         }
 
-                        file = Application.ReceivedFilesDict[connection.ConnectionInfo][info.Filename];
+                        file = App.ReceivedFilesDict[connection.ConnectionInfo][info.Filename];
                     }
                     else
                     {
                         //We do not yet have the necessary data corresponding with this SendInfo so we add the
                         //info to the cache
-                        if (!Application.IncomingDataInfoCache.ContainsKey(connection.ConnectionInfo))
-                            Application.IncomingDataInfoCache.Add(connection.ConnectionInfo, new Dictionary<long, CLanFileInfo>());
+                        if (!App.IncomingDataInfoCache.ContainsKey(connection.ConnectionInfo))
+                            App.IncomingDataInfoCache.Add(connection.ConnectionInfo, new Dictionary<long, CLanFileInfo>());
 
-                        Application.IncomingDataInfoCache[connection.ConnectionInfo].Add(sequenceNumber, info);
+                        App.IncomingDataInfoCache[connection.ConnectionInfo].Add(sequenceNumber, info);
                     }
                 }
 
@@ -291,17 +291,17 @@ namespace CLanWPFTest
         {
             CLanReceivedFile[] filesToRemove = null;
 
-            lock (Application.syncRoot)
+            lock (App.syncRoot)
             {
                 //Remove any associated data from the caches
-                Application.IncomingDataCache.Remove(conn.ConnectionInfo);
-                Application.IncomingDataInfoCache.Remove(conn.ConnectionInfo);
+                App.IncomingDataCache.Remove(conn.ConnectionInfo);
+                App.IncomingDataInfoCache.Remove(conn.ConnectionInfo);
 
                 //Remove any non completed files
-                if (Application.ReceivedFilesDict.ContainsKey(conn.ConnectionInfo))
+                if (App.ReceivedFilesDict.ContainsKey(conn.ConnectionInfo))
                 {
-                    filesToRemove = (from current in Application.ReceivedFilesDict[conn.ConnectionInfo] where !current.Value.IsCompleted select current.Value).ToArray();
-                    Application.ReceivedFilesDict[conn.ConnectionInfo] = (from current in Application.ReceivedFilesDict[conn.ConnectionInfo] where current.Value.IsCompleted select current).ToDictionary(entry => entry.Key, entry => entry.Value);
+                    filesToRemove = (from current in App.ReceivedFilesDict[conn.ConnectionInfo] where !current.Value.IsCompleted select current.Value).ToArray();
+                    App.ReceivedFilesDict[conn.ConnectionInfo] = (from current in App.ReceivedFilesDict[conn.ConnectionInfo] where current.Value.IsCompleted select current).ToDictionary(entry => entry.Key, entry => entry.Value);
                 }
             }
 

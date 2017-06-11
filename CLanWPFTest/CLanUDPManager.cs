@@ -22,7 +22,7 @@ namespace CLanWPFTest
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             do {
                 try {
-                    Message hello = new Message(Application.me, MessageType.HELLO, "");
+                    Message hello = new Message(App.me, MessageType.HELLO, "");
                     byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(hello, CLanJSON.settings()));
                     await outUDP.SendAsync(bytes, bytes.Length, ip);
                 }
@@ -44,7 +44,7 @@ namespace CLanWPFTest
             while (true)
             {
                 UdpReceiveResult res = await inUDP.ReceiveAsync();
-                if (!res.RemoteEndPoint.Address.Equals(Application.me.ip))  // Ignore messages that I sent
+                if (!res.RemoteEndPoint.Address.Equals(App.me.ip))  // Ignore messages that I sent
                 {
                     byte[] bytes = res.Buffer;
                     Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(bytes), CLanJSON.settings());
@@ -52,10 +52,10 @@ namespace CLanWPFTest
                     switch(m.messageType)
                     {
                         case MessageType.HELLO:
-                            await System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => Application.AddUser(m.sender)));
+                            await System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => App.AddUser(m.sender)));
                             break;
                         case MessageType.BYE:
-                            await System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => Application.RemoveUser(m.sender)));
+                            await System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => App.RemoveUser(m.sender)));
                             break;
                         default:
                             Console.WriteLine("Invalid message");
@@ -68,17 +68,17 @@ namespace CLanWPFTest
         public static void GoOffline()
         {
             Console.WriteLine("Going Offline");
-            Message bye = new Message(Application.me, MessageType.BYE, "Farewell, cruel world!");
+            Message bye = new Message(App.me, MessageType.BYE, "Farewell, cruel world!");
             byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(bye, CLanJSON.settings()));
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             outUDP.Send(bytes, bytes.Length, ip);
-            Application.DeactivateAdvertising();
+            App.DeactivateAdvertising();
         }
 
         internal static void GoOnline()
         {
             Console.WriteLine("Going Online");
-            Application.ActivateAdvertising();
+            App.ActivateAdvertising();
         }
     }
 }

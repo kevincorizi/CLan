@@ -19,9 +19,8 @@ namespace CLanWPFTest
         public string toSend = null;
         
         public UsersWindow(string fileToSend = null) {
-            //this.Closing += MainWindow_Closing; ----> TODO: error due to window->page
             InitializeComponent();
-            //this.DataContext = this; ----> TODO: error due to window->page
+            this.DataContext = this;
             this.toSend = fileToSend;
             this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
         }    
@@ -46,15 +45,6 @@ namespace CLanWPFTest
             this.NavigationService.Navigate(new FileTransfer(toSend, users));
                   
         }
-
-        void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // Prevent window from closing
-            e.Cancel = true;
-            // Hide window
-            //this.Hide();
-        }
-
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
