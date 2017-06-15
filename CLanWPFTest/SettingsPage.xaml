@@ -62,20 +62,19 @@
         <TextBox x:Name="PathText" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="205,395,0,0" TextWrapping="Wrap" Text="  \Usr\Kevin\Downloads" VerticalAlignment="Top" Width="275"/>
         <Button x:Name="DownloadPath" Content="Browse" Grid.Column="1" HorizontalAlignment="Left" Margin="487,394,0,0" VerticalAlignment="Top" Width="75" Height="24" BorderThickness="0" Click="DownloadPath_Click"/>
         <TextBlock HorizontalAlignment="Center" Margin="76,239,77,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="14" Foreground="#FF76BFFB"/>
-
-        <Grid x:Name="NameBox" Visibility="Collapsed" Grid.Column="1" HorizontalAlignment="Left" Height="200" Margin="140,191,0,0" VerticalAlignment="Top" Width="350" Background="#FFE5EDFB">
-            <Grid Background="#FFE1F3FF"/>
+        <Grid x:Name="TransparencyLayer" Visibility="Collapsed" Grid.Column="1" Opacity="0.7" Width="890" Height="670" Background="White" />
+        <Grid x:Name="NameBox" Visibility="Collapsed" Grid.Column="1" HorizontalAlignment="Left" Height="200" Margin="140,191,0,0" VerticalAlignment="Top" Width="350" Background="White">
             <Border
-            CornerRadius="5,5,5,5" 
+            BorderBrush="#FFDDDDDD"  
             HorizontalAlignment="Center" 
-            VerticalAlignment="Center" BorderBrush="#FF1A638D">
-                <StackPanel Height="200" Width="350" Opacity="0.5" >
+            VerticalAlignment="Center" BorderThickness="0.3" >
+                <StackPanel Height="200" Width="350" >
                     <TextBlock Margin="15" Text="Edit your name" FontWeight="Bold" FontSize="18" />
                     <TextBlock Margin="15" Text="Name Surname:"  FontSize="15"/>
                     <TextBox  Margin="15,3,15,5"  VerticalAlignment="Center" x:Name="InputTextBox" Width="200" Height="25" SelectionBrush="#FFCFEAFF"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button x:Name="SaveNameButton" Margin="5,7,5,15" Content="Save"  Click="SaveNameButton_Click" FontSize="13" Width="50" Height="25"/>
-                        <Button x:Name="CancelNameButton" Margin="5,7,5,18" Content="Cancel"  Click="CancelNameButton_Click" FontSize="13" Width="50" Height="25"/>
+                        <Button x:Name="CancelNameButton" Margin="5,7,5,15" Content="Cancel"  Click="CancelNameButton_Click" FontSize="13" Width="50" Height="25"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

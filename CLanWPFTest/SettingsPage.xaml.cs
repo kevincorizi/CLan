@@ -53,9 +53,6 @@ namespace CLanWPFTest
 
             // Display OpenFileDialog by calling ShowDialog method 
             result = dlg.ShowDialog();
-                                                                                    // <---
-
-            
 
             // Get the selected file name and display in a TextBox 
             if (result == true)
@@ -75,12 +72,11 @@ namespace CLanWPFTest
                 var brush = new ImageBrush();
                 brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Relative));
                 userImageThumb.Background = brush;
-            }
-            string appPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\images\"; // <---
 
-            string iName = dlg.SafeFileName;   // <---
-            string filepath = dlg.FileName;    // <---
-            File.Copy(filepath, appPath + "user.png", true); // <---          
+                string appPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\images\"; // <---
+                string filepath = dlg.FileName;    // <---
+                File.Copy(filepath, appPath + "user.png", true); // <--- 
+            }
         }
 
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
@@ -88,20 +84,19 @@ namespace CLanWPFTest
             var dialog = new FolderBrowserDialog();
             dialog.ShowDialog();
             PathText.Text = dialog.SelectedPath;
-
         }
 
         private void EditName_Click(object sender, RoutedEventArgs e)
         {
+            TransparencyLayer.Visibility = System.Windows.Visibility.Visible;
             NameBox.Visibility = System.Windows.Visibility.Visible;
             
         }
 
         private void SaveNameButton_Click(object sender, RoutedEventArgs e)
         {
-            // YesButton Clicked! Let's hide our InputBox and handle the input text.
             NameBox.Visibility = System.Windows.Visibility.Collapsed;
-
+            TransparencyLayer.Visibility = System.Windows.Visibility.Collapsed;
             // Do something with the Input
             String input = InputTextBox.Text;
 
@@ -113,8 +108,8 @@ namespace CLanWPFTest
 
         private void CancelNameButton_Click(object sender, RoutedEventArgs e)
         {
-            // NoButton Clicked! Let's hide our InputBox.
             NameBox.Visibility = System.Windows.Visibility.Collapsed;
+            TransparencyLayer.Visibility = System.Windows.Visibility.Collapsed;
 
             // Clear InputBox.
             InputTextBox.Text = String.Empty;
