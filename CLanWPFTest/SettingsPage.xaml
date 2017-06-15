@@ -69,12 +69,12 @@
             HorizontalAlignment="Center" 
             VerticalAlignment="Center" BorderThickness="0.3" >
                 <StackPanel Height="200" Width="350" >
-                    <TextBlock Margin="15" Text="Edit your name" FontWeight="Bold" FontSize="18" />
-                    <TextBlock Margin="15" Text="Name Surname:"  FontSize="15"/>
-                    <TextBox  Margin="15,3,15,5"  VerticalAlignment="Center" x:Name="InputTextBox" Width="200" Height="25" SelectionBrush="#FFCFEAFF"/>
+                    <TextBlock Margin="17" Text="Edit your name" FontWeight="Bold" FontSize="18" />
+                    <TextBlock Margin="15,15,15,5" Text="Name Surname:"  FontSize="15"/>
+                    <TextBox  Margin="15,2,15,0"  VerticalAlignment="Center" x:Name="InputTextBox" Width="200" Height="25" SelectionBrush="#FFCFEAFF" HorizontalAlignment="Left"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button x:Name="SaveNameButton" Margin="5,7,5,15" Content="Save"  Click="SaveNameButton_Click" FontSize="13" Width="50" Height="25"/>
-                        <Button x:Name="CancelNameButton" Margin="5,7,5,15" Content="Cancel"  Click="CancelNameButton_Click" FontSize="13" Width="50" Height="25"/>
+                        <Button x:Name="SaveNameButton" Margin="5,17,5,5" Content="Save"  Click="SaveNameButton_Click" FontSize="14" Width="75" Height="35" BorderThickness="0"/>
+                        <Button x:Name="CancelNameButton" Margin="5,17,5,5" Content="Cancel"  Click="CancelNameButton_Click" FontSize="14" Width="75" Height="35" BorderThickness="0"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
