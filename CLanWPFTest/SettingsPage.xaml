@@ -26,12 +26,13 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Grid Background="White">
+    <Grid x:Name="MainGrid" Background="White" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="55*"/>
             <ColumnDefinition Width="128*"/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
+
         <Rectangle Margin="1,0,0,0" Fill="#FFF6FAFD"/>
         <Button Content="       General" HorizontalAlignment="Left" Margin="-3,310,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15" IsDefault="True"/>
         <Button Content="       Privacy and Security" HorizontalAlignment="Left" Margin="-3,370,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15"/>
@@ -39,27 +40,47 @@
         <Button Content="       Notifications" HorizontalAlignment="Left" Margin="-3,492,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15"/>
         <Button x:Name="SaveButton" Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="422,619,0,0" VerticalAlignment="Top" Width="93" Height="41" BorderThickness="0" FontSize="15" Click="SaveButton_Click"/>
         <Button x:Name="cancel" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="523,619,0,0" VerticalAlignment="Top" Width="93" Height="41" BorderThickness="0" FontSize="15" Click="cancel_Click"/>
-        <Button x:Name="editName" Content="Edit Name" Grid.Column="1" HorizontalAlignment="Left" Margin="145,260,0,0" VerticalAlignment="Top" Width="143" Height="38" FontSize="15" BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White"/>
+        <Button x:Name="EditName" Content="Edit Name" Grid.Column="1" HorizontalAlignment="Left" Margin="145,260,0,0" VerticalAlignment="Top" Width="143" Height="38" FontSize="15" BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="EditName_Click"/>
         <Button x:Name="changePicture" Content="Change Picture" Grid.Column="1" HorizontalAlignment="Left" Margin="337,262,0,0" VerticalAlignment="Top" Width="143" Height="38" FontSize="15" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="changePicture_Click"/>
-        <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="249,39,0,0" VerticalAlignment="Top" Width="150" Height="152" BorderThickness="0" Style="{StaticResource MyButton}" Grid.Column="1">
+        <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="237,39,0,0" VerticalAlignment="Top" Width="150" Height="152" BorderThickness="0" Style="{StaticResource MyButton}" Grid.Column="1">
             <Button.Background>
                 <ImageBrush ImageSource="images/user.png"/>
             </Button.Background>
         </Button>
-        <TextBlock HorizontalAlignment="Center" Margin="265,197,244,0" TextWrapping="Wrap" Text="Kevin Corizi" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="18" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Center" Margin="265,217,244,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="18" Foreground="#FF76BFFB" Grid.Column="1"/>
-        <Button x:Name="userImageThumb" Content="" HorizontalAlignment="Left" Margin="72,107,0,0" VerticalAlignment="Top" Width="100" Height="102" BorderThickness="0" Style="{StaticResource MyButton}">
+        <TextBlock x:Name="UserName" HorizontalAlignment="Center" Margin="145,197,143,0" TextWrapping="Wrap" Text="Kevin Corizi" VerticalAlignment="Top" Height="30" Width="335" TextAlignment="Center" FontSize="18" Grid.Column="1"/>
+        <TextBlock HorizontalAlignment="Center" Margin="255,217,254,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="18" Foreground="#FF76BFFB" Grid.Column="1"/>
+        <Button x:Name="userImageThumb" Content="" HorizontalAlignment="Left" Margin="84,107,0,0" VerticalAlignment="Top" Width="100" Height="102" BorderThickness="0" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="images/user.png"/>
             </Button.Background>
         </Button>
-        <TextBlock HorizontalAlignment="Center" Margin="66,218,87,0" TextWrapping="Wrap" Text="Kevin Corizi" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="18"/>
+        <TextBlock x:Name="UserNameThumb" HorizontalAlignment="Center" Margin="1,218,0,0" TextWrapping="Wrap" Text="Kevin Corizi" VerticalAlignment="Top" Height="30" Width="266" TextAlignment="Center" FontSize="18"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="81,356,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" Foreground="#FFAAACAE"><Run Text="Default mode"/><Run Text=":"/></TextBlock>
         <RadioButton Content="Private" Grid.Column="1" HorizontalAlignment="Left" Margin="205,358,0,0" VerticalAlignment="Top" Height="50" Width="116" IsChecked="True" FontSize="15"/>
         <RadioButton Content="Public" Grid.Column="1" HorizontalAlignment="Left" Margin="285,358,0,0" VerticalAlignment="Top" Height="26" Width="116" FontSize="15"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="81,397,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" Foreground="#FFAAACAE" Text="Download Path: "/>
         <TextBox x:Name="PathText" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="205,395,0,0" TextWrapping="Wrap" Text="  \Usr\Kevin\Downloads" VerticalAlignment="Top" Width="275"/>
         <Button x:Name="DownloadPath" Content="Browse" Grid.Column="1" HorizontalAlignment="Left" Margin="487,394,0,0" VerticalAlignment="Top" Width="75" Height="24" BorderThickness="0" Click="DownloadPath_Click"/>
-        <TextBlock HorizontalAlignment="Center" Margin="64,239,89,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="14" Foreground="#FF76BFFB"/>
+        <TextBlock HorizontalAlignment="Center" Margin="76,239,77,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="14" Foreground="#FF76BFFB"/>
+
+        <Grid x:Name="NameBox" Visibility="Collapsed" Grid.Column="1" HorizontalAlignment="Left" Height="200" Margin="140,191,0,0" VerticalAlignment="Top" Width="350" Background="#FFE5EDFB">
+            <Grid Background="#FFE1F3FF"/>
+            <Border
+            CornerRadius="5,5,5,5" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center" BorderBrush="#FF1A638D">
+                <StackPanel Height="200" Width="350" Opacity="0.5" >
+                    <TextBlock Margin="15" Text="Edit your name" FontWeight="Bold" FontSize="18" />
+                    <TextBlock Margin="15" Text="Name Surname:"  FontSize="15"/>
+                    <TextBox  Margin="15,3,15,5"  VerticalAlignment="Center" x:Name="InputTextBox" Width="200" Height="25" SelectionBrush="#FFCFEAFF"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button x:Name="SaveNameButton" Margin="5,7,5,15" Content="Save"  Click="SaveNameButton_Click" FontSize="13" Width="50" Height="25"/>
+                        <Button x:Name="CancelNameButton" Margin="5,7,5,18" Content="Cancel"  Click="CancelNameButton_Click" FontSize="13" Width="50" Height="25"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
     </Grid>
+
 </Page>

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CLanWPFTest
 {
@@ -24,6 +25,7 @@ namespace CLanWPFTest
     {
         Nullable<bool> result;      // New image selection
         string filename;            // New image path
+        Microsoft.Win32.OpenFileDialog dlg;
         public SettingsPage()
         {
             InitializeComponent();
@@ -42,15 +44,18 @@ namespace CLanWPFTest
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
             // Create OpenFileDialog 
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+           dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
             dlg.DefaultExt = ".png";
-            dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+            dlg.Filter = "PNG Files (*.png)|*.png";
 
 
             // Display OpenFileDialog by calling ShowDialog method 
-            Nullable<bool> result = dlg.ShowDialog();
+            result = dlg.ShowDialog();
+                                                                                    // <---
+
+            
 
             // Get the selected file name and display in a TextBox 
             if (result == true)
@@ -71,6 +76,11 @@ namespace CLanWPFTest
                 brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Relative));
                 userImageThumb.Background = brush;
             }
+            string appPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\images\"; // <---
+
+            string iName = dlg.SafeFileName;   // <---
+            string filepath = dlg.FileName;    // <---
+            File.Copy(filepath, appPath + "user.png", true); // <---          
         }
 
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
@@ -79,6 +89,35 @@ namespace CLanWPFTest
             dialog.ShowDialog();
             PathText.Text = dialog.SelectedPath;
 
+        }
+
+        private void EditName_Click(object sender, RoutedEventArgs e)
+        {
+            NameBox.Visibility = System.Windows.Visibility.Visible;
+            
+        }
+
+        private void SaveNameButton_Click(object sender, RoutedEventArgs e)
+        {
+            // YesButton Clicked! Let's hide our InputBox and handle the input text.
+            NameBox.Visibility = System.Windows.Visibility.Collapsed;
+
+            // Do something with the Input
+            String input = InputTextBox.Text;
+
+            // Clear InputBox.
+            InputTextBox.Text = String.Empty;
+            UserName.Text = input;
+            UserNameThumb.Text = input;
+        }
+
+        private void CancelNameButton_Click(object sender, RoutedEventArgs e)
+        {
+            // NoButton Clicked! Let's hide our InputBox.
+            NameBox.Visibility = System.Windows.Visibility.Collapsed;
+
+            // Clear InputBox.
+            InputTextBox.Text = String.Empty;
         }
     }
 }
