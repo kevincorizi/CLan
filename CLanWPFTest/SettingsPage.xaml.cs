@@ -26,6 +26,7 @@ namespace CLanWPFTest
         Nullable<bool> result;      // New image selection
         string filename;            // New image path
         Microsoft.Win32.OpenFileDialog dlg;
+        String NameInput;
         public SettingsPage()
         {
             InitializeComponent();
@@ -72,7 +73,7 @@ namespace CLanWPFTest
                 var brush = new ImageBrush();
                 brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Relative));
                 userImageThumb.Background = brush;
-
+                UserNameThumb.Text = NameInput;
                 string appPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\images\"; // <---
                 string filepath = dlg.FileName;    // <---
                 File.Copy(filepath, appPath + "user.png", true); // <--- 
@@ -98,12 +99,12 @@ namespace CLanWPFTest
             NameBox.Visibility = System.Windows.Visibility.Collapsed;
             TransparencyLayer.Visibility = System.Windows.Visibility.Collapsed;
             // Do something with the Input
-            String input = InputTextBox.Text;
+            NameInput = InputTextBox.Text;
 
             // Clear InputBox.
             InputTextBox.Text = String.Empty;
-            UserName.Text = input;
-            UserNameThumb.Text = input;
+            UserName.Text = NameInput;
+            
         }
 
         private void CancelNameButton_Click(object sender, RoutedEventArgs e)
