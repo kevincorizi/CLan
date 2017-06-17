@@ -22,12 +22,12 @@
         </ImageBrush>
     </Page.Background>
     <Grid Width="892">
-        <ListView Name="UserList" ItemsSource="{extensions:OnlineUsersBinding}" Background="Transparent">
+        <ListView Name="UserList" ItemsSource="{extensions:OnlineUsersBinding}" Background="Transparent" SelectionMode="Multiple" SelectionChanged="UserList_Selected">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <Image Source="{Binding picture}"/>
-                        <Label Content="{Binding name}"/>
+                        <Image Source="{Binding Picture}"/>
+                        <Label Content="{Binding Name}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -39,7 +39,7 @@
         </ListView>
 
         <ToggleButton x:Name="PrivateMode" Content="Private" Height="51" Margin="740,0,0,619" RenderTransformOrigin="0.532,5.488" BorderThickness="0" VerticalAlignment="Center" FontSize="15" Width="152"/>
-        <Button x:Name="_continue" Click="continueClick" Content="Send" Height="48" Margin="370,504,369,117" BorderThickness="0" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+        <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="48" Margin="370,504,369,117" BorderThickness="0" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
         <Button Content="Settings" HorizontalAlignment="Left" Width="152" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,0,0,619"/>
     </Grid>
 </Page>

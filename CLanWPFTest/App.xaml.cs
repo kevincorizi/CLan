@@ -1,7 +1,7 @@
-﻿using NetworkCommsDotNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,26 +33,6 @@ namespace CLanWPFTest
         /// List containing currently visible users on the network
         /// </summary>
         public static ObservableCollection<User> OnlineUsers = new ObservableCollection<User>();
-
-        /// <summary>
-        /// Data context for the GUI list box
-        /// </summary>
-        public static ObservableCollection<CLanReceivedFile> ReceivedFiles = new ObservableCollection<CLanReceivedFile>();
-
-        /// <summary>
-        /// References to received files by remote ConnectionInfo
-        /// </summary>
-        public static Dictionary<ConnectionInfo, Dictionary<string, CLanReceivedFile>> ReceivedFilesDict = new Dictionary<ConnectionInfo, Dictionary<string, CLanReceivedFile>>();
-
-        /// <summary>
-        /// Incoming partial data cache. Keys are ConnectionInfo, PacketSequenceNumber. Value is partial packet data.
-        /// </summary>
-        public static Dictionary<ConnectionInfo, Dictionary<long, byte[]>> IncomingDataCache = new Dictionary<ConnectionInfo, Dictionary<long, byte[]>>();
-
-        /// <summary>
-        /// Incoming sendInfo cache. Keys are ConnectionInfo, PacketSequenceNumber. Value is sendInfo.
-        /// </summary>
-        public static Dictionary<ConnectionInfo, Dictionary<long, CLanFileInfo>> IncomingDataInfoCache = new Dictionary<ConnectionInfo, Dictionary<long, CLanFileInfo>>();
 
         /// <summary>
         /// Object used for ensuring thread safety.
@@ -101,11 +81,11 @@ namespace CLanWPFTest
         {
             cleaner = Task.Run(() => {
                 while (true) {
-                    Console.WriteLine("Cleaning...");
+                    Trace.WriteLine("Cleaning...");
                     DateTime now = DateTime.Now;
                     foreach (User u in OnlineUsers) {
                         if((now.Subtract(u.lastKeepAlive)).Seconds > KEEP_ALIVE_TIMER_MILLIS / 1000) {
-                            Console.WriteLine("User is too old, removing");
+                            Trace.WriteLine("User is too old, removing");
                             Current.Dispatcher.BeginInvoke(new Action(() => RemoveUser(u)));
                         }
                     }
@@ -195,20 +175,12 @@ namespace CLanWPFTest
 
         protected override void OnExit(ExitEventArgs e)
         {
-            Console.WriteLine("OnExit");
+            Trace.WriteLine("OnExit");
             CLanUDPManager.GoOffline();
             // Close all windows
             foreach (Window window in Current.Windows)
                 window.Close();
 
-            //Close all files
-            lock (syncRoot)
-            {
-                foreach (CLanReceivedFile file in ReceivedFiles)
-                    file.Close();
-            }
-
-            NetworkComms.Shutdown();
             _notifyIcon.Dispose();
             _notifyIcon = null;
             base.OnExit(e);

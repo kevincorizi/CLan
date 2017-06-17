@@ -1,6 +1,7 @@
 ﻿using CLanWPFTest.Extensions;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 
 namespace CLanWPFTest
 {
@@ -20,7 +21,7 @@ namespace CLanWPFTest
         {
             if (_settings == null)
             {
-                Console.WriteLine("Initializing JSON settings");
+                Trace.WriteLine("Initializing JSON settings");
                 initSettings();
             }
             return _settings;

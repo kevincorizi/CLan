@@ -1,0 +1,34 @@
+﻿<Window x:Name="FileTransferList" x:Class="CLanWPFTest.FileTransferWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CLanWPFTest"
+        mc:Ignorable="d"
+        Title="CLan - Share instantly!" Height="300" Width="890">
+    <Window.Background>
+        <ImageBrush>
+            <ImageBrush.ImageSource>
+                <BitmapImage UriSource="/Images/background.jpg"/>
+            </ImageBrush.ImageSource>
+        </ImageBrush>
+    </Window.Background>
+
+    <ListView x:Name="ProgressBars" ItemsSource="{Binding Path=FileTransfers}" Width="800">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Width="600">
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Destination.Name}"/>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
+                    <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}"/>
+                    <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
+                </StackPanel>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="Width" Value="800"/>
+            </Style>
+        </ListView.ItemContainerStyle>
+    </ListView>
+</Window>

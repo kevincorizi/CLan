@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,40 +12,55 @@ namespace CLanWPFTest
     /// 
     public partial class UsersWindow : Page
     {
-        public string toSend = null;
+        public List<string> files;
+        public List<User> destinations;
 
-        public UsersWindow(string fileToSend = null)
+        public UsersWindow(List<string> lf)
         {
             InitializeComponent();
+
+            destinations = new List<User>();
+            files = new List<string>();
+
             this.DataContext = this;
-            this.toSend = fileToSend;
+            this.files = lf;
             this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
         }
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
             CLanUDPManager.GoOffline();
-            Console.WriteLine("private!");
+            Trace.WriteLine("private!");
         }
 
         private void PublicMode_Checked(object sender, RoutedEventArgs e)
         {
             CLanUDPManager.GoOnline();
-            Console.WriteLine("public!");
+            Trace.WriteLine("public!");
         }
 
-        private void continueClick(object sender, RoutedEventArgs e)
+        private void ContinueClick(object sender, RoutedEventArgs e)
         {
+            Trace.WriteLine("Clicked");
             List<User> users = new List<User>();
             users.Add(UserList.SelectedItem as User);
-            if (users.Count > 0)
-                this._continue.IsEnabled = true;    // Enable the "send" button if at least one user is selected.
-            this.NavigationService.Navigate(new FileTransfer(toSend, users));
 
+            Trace.WriteLine(users.Count.ToString() + " users selected");
+            // Open the actual file transfer window, with progress and all
+            FileTransferWindow ft = new FileTransferWindow(files, users);
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Navigate(new SettingsPage());
+        }
+
+        private void UserList_Selected(object sender, RoutedEventArgs e)
+        {
+            _continue.IsEnabled = true;
+            foreach(User item in ((ListView)sender).SelectedItems)
+            {
+                destinations.Add(item);
+            }
         }
     }
 }

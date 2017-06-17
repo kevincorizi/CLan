@@ -4,6 +4,8 @@ using System.Drawing;
 using System;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace CLanWPFTest
 {
@@ -13,7 +15,7 @@ namespace CLanWPFTest
 
     public partial class FileSelection : Page
     {
-        public string toSend = null;
+        public List<string> files;
         public FileSelection()
         {
             //this.Closing += FileSelection_Closing; ---> TODO: This part gives me error after window to page change.
@@ -24,8 +26,9 @@ namespace CLanWPFTest
         {
             OpenFileDialog fd = new OpenFileDialog();    // Opens a window to choose the file from the pc
             fd.DefaultExt = "*.*";
+            fd.Multiselect = true;
             fd.ShowDialog();
-            toSend = fd.FileName;               // The file path to be sent to the backend
+            files = new List<string>(fd.FileNames);               // The file path to be sent to the backend
 
             if (fd.CheckPathExists == true)
             {
@@ -39,13 +42,13 @@ namespace CLanWPFTest
 
         private void continueClick(object sender, RoutedEventArgs e)
         {
-            if(toSend != null)
+            if(files != null)
             {
-                this.NavigationService.Navigate(new UsersWindow(toSend));      
+                this.NavigationService.Navigate(new UsersWindow(files));      
             }
             else
             {
-                Console.WriteLine("No file selected");
+                Trace.WriteLine("No file selected");
             }
         }
     }

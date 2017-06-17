@@ -35,14 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>CLanWPFTest.App</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NetworkCommsDotNetComplete">
-      <HintPath>Libraries\NetworkCommsDotNetComplete.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,11 +69,10 @@
     </ApplicationDefinition>
     <Compile Include="Extensions\BaseBindingConverter.cs" />
     <Compile Include="Extensions\CLanCommands.cs" />
-    <Compile Include="CLanFileInfo.cs" />
     <Compile Include="CLanJSON.cs" />
-    <Compile Include="CLanReceivedFile.cs" />
-    <Compile Include="CLanTCPManager.cs" />
-    <Compile Include="CLanUDPManager.cs" />
+    <Compile Include="Networking\CLanFileTransfer.cs" />
+    <Compile Include="Networking\CLanTCPManager.cs" />
+    <Compile Include="Networking\CLanUDPManager.cs" />
     <Compile Include="Extensions\DefaultSavePathConverter.cs" />
     <Compile Include="Extensions\InvertBoolConverter.cs" />
     <Compile Include="Extensions\OnlineUsersBindingExtension.cs" />
@@ -84,15 +84,16 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Message.cs" />
+    <Compile Include="Objects\CLanFile.cs" />
+    <Compile Include="Objects\Message.cs" />
     <Compile Include="Extensions\SettingBindingExtension.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="StartUpManager.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="FileTransfer.xaml.cs">
-      <DependentUpon>FileTransfer.xaml</DependentUpon>
+    <Compile Include="Objects\User.cs" />
+    <Compile Include="FileTransferWindow.xaml.cs">
+      <DependentUpon>FileTransferWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="FileSelection.xaml">
       <SubType>Designer</SubType>
@@ -118,7 +119,7 @@
       <DependentUpon>UsersWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="FileTransfer.xaml">
+    <Page Include="FileTransferWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -144,6 +145,7 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace CLanWPFTest
 {
@@ -98,9 +99,9 @@ namespace CLanWPFTest
             DisplaySettings("Settings saved");
 
             // Update data for current session
-            App.me.name = Properties.Settings.Default.Name;
-            App.me.picture = Properties.Settings.Default.PicturePath;
-            Console.WriteLine("Current session updated");
+            App.me.Name = Properties.Settings.Default.Name;
+            App.me.Picture = Properties.Settings.Default.PicturePath;
+            Trace.WriteLine("Current session updated");
 
             if(NavigationService.CanGoBack)
             {
@@ -124,10 +125,10 @@ namespace CLanWPFTest
         // DEBUG
         private void DisplaySettings(string pre)
         {
-            Console.WriteLine(pre);
+            Trace.WriteLine(pre);
             foreach (System.Configuration.SettingsProperty currentProperty in Properties.Settings.Default.Properties)
             {
-                Console.WriteLine(currentProperty.Name + ": " + currentProperty.DefaultValue);
+                Trace.WriteLine(currentProperty.Name + ": " + currentProperty.DefaultValue);
             }
         }
     }

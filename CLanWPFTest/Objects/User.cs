@@ -7,24 +7,24 @@ namespace CLanWPFTest
 {
     public class User : IEquatable<User>
     {
-        public string name { get; set; }
-        public string picture { get; set; }
-        public IPAddress ip { get; set; }
+        public string Name { get; set; }
+        public string Picture { get; set; }
+        public IPAddress Ip { get; set; }
 
         [JsonIgnore]
         public DateTime lastKeepAlive { get; set; }
 
         public User(string name, string picture = "", IPAddress ip = null)
         {
-            this.name = name;
+            this.Name = name;
             if (picture == "")
-                this.picture = "/images/user.png";
+                this.Picture = "/images/user.png";
             else
-                this.picture = picture;
+                this.Picture = picture;
             if(ip == null)
-                this.ip = GetMyIPAddress();
+                this.Ip = GetMyIPAddress();
             else
-                this.ip = ip;
+                this.Ip = ip;
         }
 
         private static IPAddress GetMyIPAddress()
@@ -43,12 +43,12 @@ namespace CLanWPFTest
 
         public bool Equals(User other)
         {
-            return this.ip.Equals(other.ip);
+            return this.Ip.Equals(other.Ip);
         }
 
         public override int GetHashCode()
         {
-            return this.ip.GetHashCode();
+            return this.Ip.GetHashCode();
         }
     }
 }

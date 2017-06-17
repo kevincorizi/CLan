@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Newtonsoft.Json;
 using System.Windows;
+using System.Diagnostics;
 
 namespace CLanWPFTest
 {
@@ -27,16 +28,16 @@ namespace CLanWPFTest
                     await outUDP.SendAsync(bytes, bytes.Length, ip);
                 }
                 catch (OperationCanceledException oce) {
-                    Console.WriteLine("Terminating advertisement" + oce.Message);
+                    Trace.WriteLine("Terminating advertisement" + oce.Message);
                     return;
                 }
                 catch (SocketException se)
                 {
-                    Console.WriteLine("Connection error: " + se.Message);
+                    Trace.WriteLine("Connection error: " + se.Message);
                 }
             }
             while (!ct.WaitHandle.WaitOne(ADVERTISEMENT_INTERVAL));     // Sleeps for AD_IN seconds but wakes up if token is canceled
-            Console.WriteLine("Exiting advertisement");
+            Trace.WriteLine("Exiting advertisement");
         }
 
         public static async Task StartAdListening()
@@ -44,11 +45,11 @@ namespace CLanWPFTest
             while (true)
             {
                 UdpReceiveResult res = await inUDP.ReceiveAsync();
-                if (!res.RemoteEndPoint.Address.Equals(App.me.ip))  // Ignore messages that I sent
+                if (!res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
                 {
                     byte[] bytes = res.Buffer;
                     Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(bytes), CLanJSON.settings());
-                    m.sender.ip = res.RemoteEndPoint.Address;
+                    m.sender.Ip = res.RemoteEndPoint.Address;
                     switch(m.messageType)
                     {
                         case MessageType.HELLO:
@@ -58,16 +59,16 @@ namespace CLanWPFTest
                             await System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => App.RemoveUser(m.sender)));
                             break;
                         default:
-                            Console.WriteLine("Invalid message");
+                            Trace.WriteLine("Invalid message");
                             break;
                     }
-                    Console.WriteLine(JsonConvert.SerializeObject(m, CLanJSON.settings()));
+                    Trace.WriteLine(JsonConvert.SerializeObject(m, CLanJSON.settings()));
                 }
             }
         }
         public static void GoOffline()
         {
-            Console.WriteLine("Going Offline");
+            Trace.WriteLine("Going Offline");
             Message bye = new Message(App.me, MessageType.BYE, "Farewell, cruel world!");
             byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(bye, CLanJSON.settings()));
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
@@ -77,7 +78,7 @@ namespace CLanWPFTest
 
         internal static void GoOnline()
         {
-            Console.WriteLine("Going Online");
+            Trace.WriteLine("Going Online");
             App.ActivateAdvertising();
         }
     }
