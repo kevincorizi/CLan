@@ -75,6 +75,7 @@
     <Compile Include="CLanUDPManager.cs" />
     <Compile Include="Extensions\DefaultSavePathConverter.cs" />
     <Compile Include="Extensions\InvertBoolConverter.cs" />
+    <Compile Include="Extensions\OnlineUsersBindingExtension.cs" />
     <Compile Include="FileSelection.xaml.cs">
       <DependentUpon>FileSelection.xaml</DependentUpon>
     </Compile>

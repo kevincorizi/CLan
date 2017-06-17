@@ -96,6 +96,12 @@ namespace CLanWPFTest
             // Now the modifications to settings become permanent
             Properties.Settings.Default.Save();
             DisplaySettings("Settings saved");
+
+            // Update data for current session
+            App.me.name = Properties.Settings.Default.Name;
+            App.me.picture = Properties.Settings.Default.PicturePath;
+            Console.WriteLine("Current session updated");
+
             if(NavigationService.CanGoBack)
             {
                 NavigationService.GoBack();

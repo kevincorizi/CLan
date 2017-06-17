@@ -4,24 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLanWPFTest"
+        xmlns:extensions="clr-namespace:CLanWPFTest.Extensions"
         mc:Ignorable="d"
         Title="CLan - Share instantly!" Width="890" Height="670">
     <Page.Foreground>
         <ImageBrush>
             <ImageBrush.ImageSource>
-                <BitmapImage UriSource="images/background.jpg"/>
+                <BitmapImage UriSource="/Images/background.jpg"/>
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Page.Foreground>
     <Page.Background>
         <ImageBrush>
             <ImageBrush.ImageSource>
-                <BitmapImage UriSource="images/background.jpg"/>
+                <BitmapImage UriSource="/Images/background.jpg"/>
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Page.Background>
     <Grid Width="892">
-        <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent">
+        <ListView Name="UserList" ItemsSource="{extensions:OnlineUsersBinding}" Background="Transparent">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>

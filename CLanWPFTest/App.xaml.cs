@@ -1,19 +1,12 @@
 ﻿using NetworkCommsDotNet;
-using NetworkCommsDotNet.Connections;
-using NetworkCommsDotNet.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Threading;
 
 namespace CLanWPFTest
 {
@@ -94,7 +87,8 @@ namespace CLanWPFTest
 
             CreateContextMenu();
 
-            me = new User("Kevin Corizi");
+            // Initialize current user with name from last saved settings
+            me = new User(CLanWPFTest.Properties.Settings.Default.Name);
 
             ActivateAdvertising();
             ActivateUserCleaner();
