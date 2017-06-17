@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CLanWPFTest.Extensions;
+using Newtonsoft.Json;
 using System;
 
 namespace CLanWPFTest

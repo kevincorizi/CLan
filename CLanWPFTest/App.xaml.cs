@@ -30,7 +30,6 @@ namespace CLanWPFTest
         private static CancellationTokenSource ctsAd;
 
         public static MainWindow mw = null;
-        public static FileTransfer ft;
 
         /// <summary>
         /// Current user
@@ -165,7 +164,15 @@ namespace CLanWPFTest
 
         private void ShowSettings()
         {
-            // SHOW SETTINGS PAGE
+            if (mw.IsVisible)
+            {
+                if (mw.WindowState == WindowState.Minimized)
+                    mw.WindowState = WindowState.Normal;
+                mw.Activate();
+                mw._mainFrame.Visibility = Visibility.Visible;
+            }
+            else
+                mw.Show();
         }
 
         private void TraySwitchToPrivate(object sender)
@@ -211,8 +218,6 @@ namespace CLanWPFTest
             _notifyIcon.Dispose();
             _notifyIcon = null;
             base.OnExit(e);
-        }
-
-        
+        }        
     }
 }

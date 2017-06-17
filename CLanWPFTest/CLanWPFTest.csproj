@@ -65,21 +65,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CLanCommands.cs" />
+    <Compile Include="Extensions\BaseBindingConverter.cs" />
+    <Compile Include="Extensions\CLanCommands.cs" />
     <Compile Include="CLanFileInfo.cs" />
     <Compile Include="CLanJSON.cs" />
     <Compile Include="CLanReceivedFile.cs" />
     <Compile Include="CLanTCPManager.cs" />
     <Compile Include="CLanUDPManager.cs" />
+    <Compile Include="Extensions\DefaultSavePathConverter.cs" />
+    <Compile Include="Extensions\InvertBoolConverter.cs" />
     <Compile Include="FileSelection.xaml.cs">
       <DependentUpon>FileSelection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IPAddressConverter.cs" />
-    <Compile Include="IPEndPointConverter.cs" />
+    <Compile Include="Extensions\IPAddressConverter.cs" />
+    <Compile Include="Extensions\IPEndPointConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Message.cs" />
+    <Compile Include="Extensions\SettingBindingExtension.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
@@ -150,12 +154,12 @@
     <None Include="Resources\TrayIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\background.jpg" />
-    <Resource Include="images\backwardButton.png" />
-    <Resource Include="images\forwardButton.png" />
-    <Resource Include="images\logo.png" />
-    <Resource Include="images\upload.png" />
-    <Resource Include="images\user.png" />
+    <Resource Include="Images\background.jpg" />
+    <Resource Include="Images\backwardButton.png" />
+    <Resource Include="Images\forwardButton.png" />
+    <Resource Include="Images\logo.png" />
+    <Resource Include="Images\upload.png" />
+    <Resource Include="Images\user.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

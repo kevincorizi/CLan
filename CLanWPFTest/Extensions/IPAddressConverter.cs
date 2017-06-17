@@ -8,7 +8,7 @@ using NetworkCommsDotNet.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace CLanWPFTest
+namespace CLanWPFTest.Extensions
 {
     class IPAddressConverter : JsonConverter
     {

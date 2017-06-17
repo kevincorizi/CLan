@@ -48,16 +48,5 @@ namespace CLanWPFTest
                 Console.WriteLine("No file selected");
             }
         }
-
-        void FileSelection_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            // Prevent window from closing
-            e.Cancel = true;
-
-            // Hide window
-            // this.Hide(); ---> TODO: This part gives me error after window to page change.
-        }
-
-
     }
 }
