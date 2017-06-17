@@ -156,10 +156,10 @@ namespace CLanWPFTest
                 if (mw.WindowState == WindowState.Minimized)
                     mw.WindowState = WindowState.Normal;
                 mw.Activate();
-                mw._mainFrame.Visibility = Visibility.Visible;
             }
             else
-                mw.Show();  
+                mw.Show();
+            mw._mainFrame.Navigate(new FileSelection());
         }
 
         private void ShowSettings()
@@ -169,10 +169,10 @@ namespace CLanWPFTest
                 if (mw.WindowState == WindowState.Minimized)
                     mw.WindowState = WindowState.Normal;
                 mw.Activate();
-                mw._mainFrame.Visibility = Visibility.Visible;
             }
             else
                 mw.Show();
+            mw._mainFrame.Navigate(new SettingsPage());
         }
 
         private void TraySwitchToPrivate(object sender)

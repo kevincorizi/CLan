@@ -6,7 +6,5 @@
         xmlns:local="clr-namespace:CLanWPFTest"
         mc:Ignorable="d"
         Title="CLan - Share instantly!" Height="700" Width="900">
-    <Frame x:Name="_mainFrame" Source="FileSelection.xaml" Height="670" Width="890" NavigationUIVisibility="Hidden"/>
-        
-    
+    <Frame x:Name="_mainFrame" Height="670" Width="890" NavigationUIVisibility="Hidden"/>
 </Window>

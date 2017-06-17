@@ -13,10 +13,6 @@ namespace CLanWPFTest
     /// </summary>
     public partial class SettingsPage : Page
     {
-        Nullable<bool> result;      // New image selection
-        string filename;            // New image path
-        Microsoft.Win32.OpenFileDialog dlg;
-        String NameInput;
         public SettingsPage()
         {
             InitializeComponent();
@@ -27,15 +23,10 @@ namespace CLanWPFTest
 
         }
 
-        private void cancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.NavigationService.Navigate(new UsersWindow(null));
-        }
-
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
             // Create OpenFileDialog 
-           dlg = new Microsoft.Win32.OpenFileDialog();
+            var dlg = new Microsoft.Win32.OpenFileDialog();
 
             // Set filter for file extension and default file extension 
             dlg.DefaultExt = ".png";
@@ -43,67 +34,95 @@ namespace CLanWPFTest
 
 
             // Display OpenFileDialog by calling ShowDialog method 
-            result = dlg.ShowDialog();
+            Nullable<bool> result = dlg.ShowDialog();
 
             // Get the selected file name and display in a TextBox 
             if (result == true)
             {
                 // Open document 
-                filename = dlg.FileName;
+                string filename = dlg.FileName;
                 var brush = new ImageBrush();
                 brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Relative));
                 userImage.Background = brush;
-            }
-        }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (filename != null)   // If the image is changed
-            {
-                var brush = new ImageBrush();
-                brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Relative));
-                userImageThumb.Background = brush;
-                UserNameThumb.Text = NameInput;
-                string appPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\images\"; // <---
-                string filepath = dlg.FileName;    // <---
-                File.Copy(filepath, appPath + "user.png", true); // <--- 
+                // Update value in settings (this is not yet saved, it will be when the user presses the Save button)
+                Properties.Settings.Default.PicturePath = filename;
             }
-        }
+        } 
 
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();
             dialog.ShowDialog();
-            PathText.Text = dialog.SelectedPath;
+            string filePath = dialog.SelectedPath;
+            PathText.Text = filePath;
+
+            // Update value in settings (this is not yet saved, it will be when the user presses the Save button)
+            Properties.Settings.Default.DefaultSavePath = filePath;
         }
 
         private void EditName_Click(object sender, RoutedEventArgs e)
         {
-            TransparencyLayer.Visibility = System.Windows.Visibility.Visible;
-            NameBox.Visibility = System.Windows.Visibility.Visible;
-            
+            TransparencyLayer.Visibility = Visibility.Visible;
+            NameBox.Visibility = Visibility.Visible;           
         }
 
         private void SaveNameButton_Click(object sender, RoutedEventArgs e)
         {
-            NameBox.Visibility = System.Windows.Visibility.Collapsed;
-            TransparencyLayer.Visibility = System.Windows.Visibility.Collapsed;
+            NameBox.Visibility = Visibility.Collapsed;
+            TransparencyLayer.Visibility = Visibility.Collapsed;
             // Do something with the Input
-            NameInput = InputTextBox.Text;
+            string newName = InputTextBox.Text;
 
             // Clear InputBox.
             InputTextBox.Text = String.Empty;
-            UserName.Text = NameInput;
-            
+            UserName.Text = newName;
+
+            // Update value in settings (this is not yet saved, it will be when the user presses the Save button)
+            Properties.Settings.Default.Name = newName;
         }
 
         private void CancelNameButton_Click(object sender, RoutedEventArgs e)
         {
-            NameBox.Visibility = System.Windows.Visibility.Collapsed;
-            TransparencyLayer.Visibility = System.Windows.Visibility.Collapsed;
+            NameBox.Visibility = Visibility.Collapsed;
+            TransparencyLayer.Visibility = Visibility.Collapsed;
 
             // Clear InputBox.
             InputTextBox.Text = String.Empty;
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Now the modifications to settings become permanent
+            Properties.Settings.Default.Save();
+            DisplaySettings("Settings saved");
+            if(NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+        }
+
+        private void cancel_Click(object sender, RoutedEventArgs e)
+        {
+            // Discard pending changes to settings
+            Properties.Settings.Default.Reload();
+            DisplaySettings("Settings discarded");
+
+            // Go back to previous window
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+        }
+
+        // DEBUG
+        private void DisplaySettings(string pre)
+        {
+            Console.WriteLine(pre);
+            foreach (System.Configuration.SettingsProperty currentProperty in Properties.Settings.Default.Properties)
+            {
+                Console.WriteLine(currentProperty.Name + ": " + currentProperty.DefaultValue);
+            }
         }
     }
 }
