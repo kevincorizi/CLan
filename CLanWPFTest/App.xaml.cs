@@ -15,6 +15,16 @@ namespace CLanWPFTest
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        /// <summary>
+        /// List containing currently visible users on the network
+        /// </summary>
+        public static ObservableCollection<User> OnlineUsers { get; set; }
+
+        /// <summary>
+        /// Current user
+        /// </summary>
+        public static User me { get; set; }
+
         private static int KEEP_ALIVE_TIMER_MILLIS = 10 * 1000;
 
         private NotifyIcon _notifyIcon;
@@ -24,20 +34,28 @@ namespace CLanWPFTest
 
         public static MainWindow mw = null;
 
-        /// <summary>
-        /// Current user
-        /// </summary>
-        public static User me;
-    
-        /// <summary>
-        /// List containing currently visible users on the network
-        /// </summary>
-        public static ObservableCollection<User> OnlineUsers = new ObservableCollection<User>();
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
-        /// <summary>
-        /// Object used for ensuring thread safety.
-        /// </summary>
-        public static object syncRoot = new object();
+            _notifyIcon = new System.Windows.Forms.NotifyIcon();
+            _notifyIcon.DoubleClick += (s, args) => ShowFileSelection();
+            _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
+            _notifyIcon.Visible = true;
+
+            CreateContextMenu();
+
+            // Initialize the list of users 
+            OnlineUsers = new ObservableCollection<User>();
+            // Initialize current user with name from last saved settings
+            me = new User(CLanWPFTest.Properties.Settings.Default.Name);
+
+            ActivateAdvertising();
+            ActivateUserCleaner();
+            CLanTCPManager.StartListening();
+
+            StartUpManager.AddApplicationToCurrentUserStartup();
+        }
 
         public static void AddUser(User u)
         {
@@ -54,27 +72,6 @@ namespace CLanWPFTest
         {
             if (OnlineUsers.Contains(u))
                 OnlineUsers.Remove(u);
-        }
-
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
-
-            _notifyIcon = new System.Windows.Forms.NotifyIcon();
-            _notifyIcon.DoubleClick += (s, args) => ShowFileSelection();
-            _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
-            _notifyIcon.Visible = true;
-
-            CreateContextMenu();
-
-            // Initialize current user with name from last saved settings
-            me = new User(CLanWPFTest.Properties.Settings.Default.Name);
-
-            ActivateAdvertising();
-            ActivateUserCleaner();
-            CLanTCPManager.StartListening();
-
-            StartUpManager.AddApplicationToCurrentUserStartup();
         }
 
         public static void ActivateUserCleaner()
