@@ -64,7 +64,15 @@ namespace CLanWPFTest
                 OnlineUsers.Add(u);
             }
             else {
-                OnlineUsers.Single(user => user.Equals(u)).lastKeepAlive = DateTime.Now;
+                User target = OnlineUsers.Single(user => user.Equals(u));
+
+                // Refresh the timer for the user
+                target.lastKeepAlive = DateTime.Now;
+
+                // Update fields (in case the user updated name or picture)
+                // These modifications will be visible because User implements INotifyPropertyChanged
+                target.Name = u.Name;
+                target.Picture = u.Picture;
             }
         }
 

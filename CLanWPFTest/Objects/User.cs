@@ -2,30 +2,63 @@
 using System.Net;
 using System.Net.Sockets;
 using Newtonsoft.Json;
+using System.ComponentModel;
 //
 namespace CLanWPFTest
 {
-    public class User : IEquatable<User>
+    public class User : IEquatable<User>, INotifyPropertyChanged
     {
-        public string Name { get; set; }
-        public string Picture { get; set; }
+        private string name;
+        public string Name {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if(value != name)
+                {
+                    name = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string picture;
+        public string Picture
+        {
+            get
+            {
+                return picture;
+            }
+            set
+            {
+                if(value != picture)
+                {
+                    picture = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
         public IPAddress Ip { get; set; }
 
         [JsonIgnore]
         public DateTime lastKeepAlive { get; set; }
 
-        public User(string name, string picture = "", IPAddress ip = null)
+        public User(string n, string p = "", IPAddress i = null)
         {
-            this.Name = name;
+            this.Name = n;
             if (picture == "")
-                this.Picture = "/images/user.png";
+                this.Picture = Properties.Settings.Default.PicturePath;
             else
-                this.Picture = picture;
-            if(ip == null)
+                this.Picture = p;
+            if(i == null)
                 this.Ip = GetMyIPAddress();
             else
-                this.Ip = ip;
+                this.Ip = i;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private static IPAddress GetMyIPAddress()
         {
@@ -49,6 +82,17 @@ namespace CLanWPFTest
         public override int GetHashCode()
         {
             return this.Ip.GetHashCode();
+        }
+
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        private void NotifyPropertyChanged(String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }
