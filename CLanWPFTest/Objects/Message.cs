@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace CLanWPFTest
 {
     public enum MessageType { HELLO, BYE, SEND, ACK, NACK };
-    class Message
+    public class Message
     {
         public User sender { get; set; }
         public MessageType messageType { get; set; }
-        public string message { get; set; }
+        public object message { get; set; }
         public DateTime timestamp { get; set; }
 
-        public Message(User s, MessageType mt, string m)
+        public Message(User s, MessageType mt, object m)
         {
             sender = s;
             messageType = mt;

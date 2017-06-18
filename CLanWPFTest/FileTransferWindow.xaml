@@ -14,11 +14,11 @@
         </ImageBrush>
     </Window.Background>
 
-    <ListView x:Name="ProgressBars" ItemsSource="{Binding Path=FileTransfers}" Width="800">
+    <ListView x:Name="ProgressBars" ItemsSource="{Binding Source={x:Static local:App.FileTransfers}}" Width="800">
         <ListView.ItemTemplate>
             <DataTemplate>
                 <StackPanel Width="600">
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Destination.Name}"/>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
                     <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
                     <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}"/>
                     <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>

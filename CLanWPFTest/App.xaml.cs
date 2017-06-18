@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CLanWPFTest.Networking;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -19,6 +20,10 @@ namespace CLanWPFTest
         /// List containing currently visible users on the network
         /// </summary>
         public static ObservableCollection<User> OnlineUsers { get; set; }
+
+        // User will see one progress bar for each batch of files to the same destinations.
+        // In this way we do not clutter the interface too much and we are still able to stay responsive and clear
+        public static ObservableCollection<CLanFileTransfer> FileTransfers { get; set; }
 
         /// <summary>
         /// Current user
@@ -47,12 +52,15 @@ namespace CLanWPFTest
 
             // Initialize the list of users 
             OnlineUsers = new ObservableCollection<User>();
+
+            FileTransfers = new ObservableCollection<CLanFileTransfer>();
+
             // Initialize current user with name from last saved settings
             me = new User(CLanWPFTest.Properties.Settings.Default.Name);
 
             ActivateAdvertising();
             ActivateUserCleaner();
-            CLanTCPManager.StartListening();
+            ActivateTCPListener();
 
             StartUpManager.AddApplicationToCurrentUserStartup();
         }
@@ -82,6 +90,31 @@ namespace CLanWPFTest
                 OnlineUsers.Remove(u);
         }
 
+        public static void AddTransfer(CLanFileTransfer cft)
+        {
+            if(!FileTransfers.Contains(cft))
+            {
+                FileTransfers.Add(cft);
+                Trace.WriteLine("APP.XAML.CS - TRANSFER ADDED");
+            }
+            else
+            {
+                Trace.WriteLine("Trying to insert a duplicate file transfer");
+            }
+        }
+
+        public static void RemoveTransfer(CLanFileTransfer cft)
+        {
+            if(FileTransfers.Contains(cft))
+            {
+                cft.Stop();
+                FileTransfers.Remove(cft);
+            }
+            else
+            {
+                Trace.WriteLine("Trying to remove a non-existent file transfer");
+            }
+        }
         public static void ActivateUserCleaner()
         {
             cleaner = Task.Run(() => {
@@ -106,6 +139,11 @@ namespace CLanWPFTest
 
             listener = Task.Run(() => CLanUDPManager.StartAdListening());
             advertiser = Task.Run(() => CLanUDPManager.StartBroadcastAdvertisement(ctAd), ctAd);
+        }
+
+        public static void ActivateTCPListener()
+        {
+            tcpListener = Task.Run(() => CLanTCPManager.StartListening());
         }
 
         public static void DeactivateAdvertising()

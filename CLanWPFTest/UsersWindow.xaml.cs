@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CLanWPFTest.Networking;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -40,11 +41,10 @@ namespace CLanWPFTest
 
         private void ContinueClick(object sender, RoutedEventArgs e)
         {
-            Trace.WriteLine("Clicked");
             List<User> users = new List<User>();
             users.Add(UserList.SelectedItem as User);
 
-            Trace.WriteLine(users.Count.ToString() + " users selected");
+            Trace.WriteLine("UW.XAML.CS" + users.Count.ToString() + " USERS SELECTED");
             // Open the actual file transfer window, with progress and all
             FileTransferWindow ft = new FileTransferWindow(files, users);
         }

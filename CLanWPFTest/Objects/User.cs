@@ -48,7 +48,7 @@ namespace CLanWPFTest
         public User(string n, string p = "", IPAddress i = null)
         {
             this.Name = n;
-            if (picture == "")
+            if (p == "")
                 this.Picture = Properties.Settings.Default.PicturePath;
             else
                 this.Picture = p;

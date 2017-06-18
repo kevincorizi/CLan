@@ -71,6 +71,7 @@
     <Compile Include="Extensions\CLanCommands.cs" />
     <Compile Include="CLanJSON.cs" />
     <Compile Include="Networking\CLanFileTransfer.cs" />
+    <Compile Include="Networking\CLanFileTransferRequest.cs" />
     <Compile Include="Networking\CLanTCPManager.cs" />
     <Compile Include="Networking\CLanUDPManager.cs" />
     <Compile Include="Extensions\DefaultSavePathConverter.cs" />
