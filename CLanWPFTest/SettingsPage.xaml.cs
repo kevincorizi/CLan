@@ -26,29 +26,8 @@ namespace CLanWPFTest
 
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
-            // Create OpenFileDialog 
-            var dlg = new Microsoft.Win32.OpenFileDialog();
-
-            // Set filter for file extension and default file extension 
-            dlg.DefaultExt = ".png";
-            dlg.Filter = "PNG Files (*.png)|*.png";
-
-
-            // Display OpenFileDialog by calling ShowDialog method 
-            Nullable<bool> result = dlg.ShowDialog();
-
-            // Get the selected file name and display in a TextBox 
-            if (result == true)
-            {
-                // Open document 
-                string filename = dlg.FileName;
-                var brush = new ImageBrush();
-                brush.ImageSource = new BitmapImage(new Uri(filename, UriKind.Relative));
-                userImage.Background = brush;
-
-                // Update value in settings (this is not yet saved, it will be when the user presses the Save button)
-                Properties.Settings.Default.PicturePath = filename;
-            }
+            SelectPicture sp = new SelectPicture();
+            sp.Show();
         } 
 
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
