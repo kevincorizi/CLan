@@ -3,6 +3,8 @@ using System.Net;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.ComponentModel;
+using System.Diagnostics;
+
 //
 namespace CLanWPFTest
 {
@@ -33,7 +35,7 @@ namespace CLanWPFTest
             }
             set
             {
-                if(value != picture)
+                if(value.CompareTo(picture) != 0)
                 {
                     picture = value;
                     NotifyPropertyChanged();
@@ -48,7 +50,8 @@ namespace CLanWPFTest
         public User(string n, string p = "", IPAddress i = null)
         {
             this.Name = n;
-            if (p == "")
+            Trace.WriteLine(Properties.Settings.Default.PicturePath);
+            if (p == null || p.CompareTo("") == 0)
                 this.Picture = Properties.Settings.Default.PicturePath;
             else
                 this.Picture = p;

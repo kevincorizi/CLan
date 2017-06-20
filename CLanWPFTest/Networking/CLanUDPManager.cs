@@ -47,14 +47,15 @@ namespace CLanWPFTest.Networking
             while (true)
             {
                 UdpReceiveResult res = await inUDP.ReceiveAsync();
+                /* DONT FORGET TO DELETE THIS LATER!
                 if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
                 {
                     continue;
                 }
-
+                */
                 byte[] bytes = res.Buffer;
                 Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(bytes), CLanJSON.settings());
-
+                Trace.WriteLine(Encoding.ASCII.GetString(bytes));
                 m.sender.Ip = res.RemoteEndPoint.Address;
                 switch(m.messageType)
                 {
