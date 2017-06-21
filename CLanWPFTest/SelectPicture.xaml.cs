@@ -20,7 +20,7 @@ namespace CLanWPFTest
         public SelectPicture()
         {
             InitializeComponent();
-            // Probably this is not the way you wanted to do :/
+            // Probably this is not the way you wanted to do 
             DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory() + @"../../Resources");
             FileInfo[] images = folder.GetFiles("*.png");
             foreach (FileInfo img in images)
@@ -44,7 +44,7 @@ namespace CLanWPFTest
            Console.WriteLine("Double click!");
             if (Thumbnails.SelectedItems.Count > 0)
             {
-                string imgpath = (Thumbnails.SelectedItem as ListViewItem).;
+                //string imgpath = (Thumbnails.SelectedItem as ListViewItem);
                 //Properties.Settings.Default.PicturePath = imgpath;
                 Trace.WriteLine(imgpath);
             }
