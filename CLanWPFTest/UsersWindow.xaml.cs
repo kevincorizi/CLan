@@ -57,10 +57,12 @@ namespace CLanWPFTest
         private void UserList_Selected(object sender, RoutedEventArgs e)
         {
             _continue.IsEnabled = true;
-            foreach(User item in ((ListView)sender).SelectedItems)
+            
+            foreach(User item in ((ListView)UserList).SelectedItems)
             {
                 destinations.Add(item);
             }
+            
         }
     }
 }
