@@ -45,7 +45,7 @@ namespace CLanWPFTest
 
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
             _notifyIcon.DoubleClick += (s, args) => ShowFileSelection();
-            _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
+           // _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
             _notifyIcon.Visible = true;
 
             CreateContextMenu();

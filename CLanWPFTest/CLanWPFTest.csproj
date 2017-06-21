@@ -135,20 +135,11 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -160,9 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\TrayIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\background.jpg" />
@@ -185,6 +173,21 @@
     <Resource Include="UserAvatars\user07.png" />
     <Resource Include="UserAvatars\user08.png" />
     <Resource Include="UserAvatars\user09.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\user01.png" />
+    <Resource Include="Resources\user02.png" />
+    <Resource Include="Resources\user03.png" />
+    <Resource Include="Resources\user04.png" />
+    <Resource Include="Resources\user05.png" />
+    <Resource Include="Resources\user06.png" />
+    <Resource Include="Resources\user07.png" />
+    <Resource Include="Resources\user08.png" />
+    <Resource Include="Resources\user09.png" />
+    <Resource Include="Resources\user10.png" />
+    <Resource Include="Resources\user11.png" />
+    <Resource Include="Resources\user12.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
