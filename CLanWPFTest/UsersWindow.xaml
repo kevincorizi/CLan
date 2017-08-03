@@ -21,7 +21,7 @@
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Page.Background>
-    <Grid Width="892"  ShowGridLines="False">
+    <Grid  ShowGridLines="False">
         <Grid Height="520" Width="780" ShowGridLines="False" >
             <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="0,0,0,112" BorderThickness="0">
                 <ListView.ItemsPanel>
@@ -42,12 +42,13 @@
                         <Setter Property="Width" Value="120"/>
                         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="UserList_Selected" />
                     </Style>
-                    
+
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <ToggleButton x:Name="PrivateMode" Content="Private" Height="51" Margin="740,0,0,619" RenderTransformOrigin="0.532,5.488" BorderThickness="0" VerticalAlignment="Center" FontSize="15" Width="152"/>
-        <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="48" Margin="370,504,369,117" BorderThickness="0" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-        <Button Content="Settings" HorizontalAlignment="Left" Width="152" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,0,0,619"/>
+        <ToggleButton x:Name="PrivateMode" Height="51" Margin="748,14,-8,605" RenderTransformOrigin="0.532,5.488" BorderThickness="0" VerticalAlignment="Center" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF"/>
+        <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="48" Margin="370,504,369,117" BorderThickness="0" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8"/>
+        <Button Content="Settings" HorizontalAlignment="Left" Width="152" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,10,0,619" Height="Auto" Background="#FF66B5F8" BorderBrush="#FF3A84B7"/>
+        <TextBlock TextWrapping="Wrap" Text="Private" Margin="806,50,42,600" Foreground="#FFA0A0A0"/>
     </Grid>
 </Page>
