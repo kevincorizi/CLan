@@ -37,7 +37,7 @@
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
 
-        <Rectangle Margin="1,0,0,0" Fill="#FFF6FAFD"/>
+        <Rectangle Fill="#FFF6FAFD" Grid.Column="0" />
         <Button Content="       General" HorizontalAlignment="Left" Margin="-3,310,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15" IsDefault="True"/>
         <Button Content="       Privacy and Security" HorizontalAlignment="Left" Margin="-3,370,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15"/>
         <Button Content="       Network" HorizontalAlignment="Left" Margin="-3,430,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15"/>

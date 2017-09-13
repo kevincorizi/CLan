@@ -6,23 +6,12 @@
         xmlns:local="clr-namespace:CLanWPFTest"
         xmlns:extensions="clr-namespace:CLanWPFTest.Extensions"
         mc:Ignorable="d"
-        Title="CLan - Share instantly!" Width="890" Height="670">
-    <Page.Foreground>
-        <ImageBrush>
-            <ImageBrush.ImageSource>
-                <BitmapImage UriSource="/Images/background.jpg"/>
-            </ImageBrush.ImageSource>
-        </ImageBrush>
-    </Page.Foreground>
-    <Page.Background>
-        <ImageBrush>
-            <ImageBrush.ImageSource>
-                <BitmapImage UriSource="/Images/background.jpg"/>
-            </ImageBrush.ImageSource>
-        </ImageBrush>
-    </Page.Background>
-    <Grid  ShowGridLines="False">
-        <Grid Height="520" Width="780" ShowGridLines="False" >
+        Title="CLan - Share instantly!" 
+        d:DesignWidth="600" d:DesignHeight="400">
+
+
+    <Grid  ShowGridLines="False" VerticalAlignment="Stretch">
+        <Grid ShowGridLines="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="0,0,0,112" BorderThickness="0">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -46,9 +35,10 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <ToggleButton x:Name="PrivateMode" Height="51" Margin="748,14,-8,605" RenderTransformOrigin="0.532,5.488" BorderThickness="0" VerticalAlignment="Center" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF"/>
-        <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="48" Margin="370,504,369,117" BorderThickness="0" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8"/>
-        <Button Content="Settings" HorizontalAlignment="Left" Width="152" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,10,0,619" Height="Auto" Background="#FF66B5F8" BorderBrush="#FF3A84B7"/>
-        <TextBlock TextWrapping="Wrap" Text="Private" Margin="806,50,42,600" Foreground="#FFA0A0A0"/>
+        <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0"/>
+        <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="36"  BorderThickness="0"   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8" Width="120" BorderBrush="#FF33A0EC" Margin="232,338,248,26"/>
+        <Button Content="Settings" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="45" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,0,0,360" Background="#FF66B5F8" BorderBrush="#FF3A84B7" Width="120" />
+        <TextBlock TextWrapping="Wrap" Text="Private" Margin="0,33,31,0" Foreground="#FFA0A0A0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+
     </Grid>
 </Page>

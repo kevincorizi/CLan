@@ -30,7 +30,7 @@ namespace CLanWPFTest
             fd.ShowDialog();
             files = new List<string>(fd.FileNames);               // The file path to be sent to the backend
 
-            if (fd.CheckPathExists == true)
+            if (fd.CheckFileExists == true)
             {
                 uploadButton.Visibility = Visibility.Hidden;
                 continueButton.Visibility = Visibility.Visible;

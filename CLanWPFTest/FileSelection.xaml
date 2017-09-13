@@ -10,6 +10,7 @@
         <Style x:Key="MyButton" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Cursor" Value="Hand" />
+            
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -21,40 +22,33 @@
                                 <Setter Property="Opacity" Value="0.7" />
                             </Trigger>
                         </ControlTemplate.Triggers>
+                        
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
     </Page.Resources>
-    <Page.Foreground>
-        <ImageBrush>
-            <ImageBrush.ImageSource>
-                <BitmapImage UriSource="images/background.jpg"/>
-            </ImageBrush.ImageSource>
-        </ImageBrush>
-    </Page.Foreground>
-    <Page.Background>
-        <ImageBrush>
-            <ImageBrush.ImageSource>
-                <BitmapImage UriSource="images/background.jpg"/>
-            </ImageBrush.ImageSource>
-        </ImageBrush>
-    </Page.Background>
-    <Grid Width="900" Height="698.7">
 
-        <Button x:Name="uploadButton" HorizontalAlignment="Left" Margin="344,203,0,0" VerticalAlignment="Top" Width="215" Height="218" BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}">
-
-            <Button.Background>
-                <ImageBrush>
-                    <ImageBrush.ImageSource>
-                        <BitmapImage UriSource="images/upload.png"/>
-                    </ImageBrush.ImageSource>
-                </ImageBrush>
-            </Button.Background>
-
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="187*" />
+            <RowDefinition Height="271*" />
+            <RowDefinition Height="212*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="113*" />
+            <ColumnDefinition Width="168*" />
+            <ColumnDefinition Width="119*" />
+        </Grid.ColumnDefinitions>
+        
+        <Button x:Name="uploadButton"  Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="81,53,78,0">
+            <Image Source="images/upload.png"/>
+           
         </Button>
-        <TextBlock x:Name="selectText" HorizontalAlignment="Left" Margin="402,166,0,0" TextWrapping="Wrap" Text="Select a file" VerticalAlignment="Top" Height="30" Width="100" Foreground="#FFB9B2B2" FontSize="20"/>
-        <Button x:Name="continueButton" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="215" Height="218" Click="continueClick" FontSize="16" BorderThickness="0" Margin="344,203,0,0" IsEnabled="False" RenderTransformOrigin="0.367,1.175" Visibility="Hidden" Style="{StaticResource MyButton}">
+        
+        <TextBlock x:Name="selectText" HorizontalAlignment="Center" Margin="10,0,0,0" TextWrapping="Wrap" Text="Select a file" Foreground="#FFB9B2B2" FontSize="20" Grid.Column="1" Grid.Row="1"/>
+        <Button x:Name="continueButton" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="0" Click="continueClick" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="81,53,78,0" Visibility="Hidden">
             <Button.Background>
                 <ImageBrush>
                     <ImageBrush.ImageSource>
@@ -64,7 +58,8 @@
             </Button.Background>
         </Button>
 
-        <TextBlock x:Name="continueText" HorizontalAlignment="Left" Margin="394,166,0,0" TextWrapping="Wrap" Text="  Continue" VerticalAlignment="Top" Height="30" Width="100" Foreground="#FFB9B2B2" FontSize="20" Visibility="Hidden"/>
+        <TextBlock x:Name="continueText" HorizontalAlignment="Center" Margin="5,0,0,0" TextWrapping="Wrap" Text="Continue" Foreground="#FFB9B2B2" FontSize="20" Grid.Column="1" Grid.Row="1" Visibility="Hidden"></TextBlock>
 
     </Grid>
+
 </Page>

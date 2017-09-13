@@ -5,6 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLanWPFTest"
         mc:Ignorable="d"
-        Title="CLan - Share instantly!" Height="700" Width="900">
-    <Frame x:Name="_mainFrame" Height="670" Width="890" NavigationUIVisibility="Hidden"/>
+        Title="CLan - Share instantly!"    
+        DataContext="{Binding}"
+        >
+    <Window.Resources>
+        <BitmapImage x:Key="backgroundBrush"
+                     UriSource="images/background.jpg"/>
+    </Window.Resources>
+    <Window.Width>
+        <Binding Source="{StaticResource backgroundBrush}" Path="PixelWidth"/>
+    </Window.Width>
+    <Window.Height>
+        <Binding Source="{StaticResource backgroundBrush}" Path="PixelHeight"/>
+    </Window.Height>
+    <Window.Background>
+        <ImageBrush x:Name="imageBrush"
+                    ImageSource="{StaticResource backgroundBrush}"></ImageBrush>
+    </Window.Background>
+    
+    <Frame x:Name="_mainFrame" NavigationUIVisibility="Hidden"/>
 </Window>
