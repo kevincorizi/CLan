@@ -13,22 +13,43 @@
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Window.Background>
-
-    <ListView x:Name="ProgressBars" ItemsSource="{Binding Source={x:Static local:App.FileTransfers}}" Width="800">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Width="600">
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
-                    <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}"/>
-                    <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
-                </StackPanel>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="Width" Value="800"/>
-            </Style>
-        </ListView.ItemContainerStyle>
-    </ListView>
+    <StackPanel>
+        <TextBlock>Trasferimenti in entrata</TextBlock>
+        <ListView x:Name="IncomingProgressBar" ItemsSource="{Binding Source={x:Static local:App.IncomingTransfers}}" Width="800">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Width="600">
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
+                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}"/>
+                        <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Width" Value="800"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <TextBlock>Trasferimenti in uscita</TextBlock>
+        <ListView x:Name="OutgoingProgressBar" ItemsSource="{Binding Source={x:Static local:App.OutgoingTransfers}}" Width="800">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Width="600">
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
+                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}"/>
+                        <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Width" Value="800"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </StackPanel>
+    
 </Window>

@@ -118,12 +118,10 @@ namespace CLanWPFTest
             switch (cft.Type)
             {
                 case CLanTransferType.RECEIVE:
-                    cft.Stop();
                     IncomingTransfers.Remove(cft);
                     Trace.WriteLine("APP.XAML.CS - INCOMING TRANSFER ADDED");
                     break;
                 case CLanTransferType.SEND:
-                    cft.Stop();
                     OutgoingTransfers.Remove(cft);
                     Trace.WriteLine("APP.XAML.CS - OUTGOING TRANSFER ADDED");
                     break;

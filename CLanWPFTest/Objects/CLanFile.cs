@@ -8,11 +8,11 @@ namespace CLanWPFTest.Objects
         public long Size { get; set; }
         public string RelativePath { get; set; }
 
-        public CLanFile(string name, long size = -1, string relpath = "")
+        public CLanFile(string path, long size = -1, string name = "")
         {
-            this.Name = name;
-            this.Size = size == -1 ? (new FileInfo(this.Name)).Length : size;
-            this.RelativePath = relpath == "" ? Name : relpath;
+            this.RelativePath = path;
+            this.Name = name == "" ? Path.GetRandomFileName() : name;
+            this.Size = size == -1 ? (new FileInfo(this.RelativePath)).Length : size;
         }
     }
 }

@@ -34,11 +34,7 @@ namespace CLanWPFTest
                 Trace.WriteLine("FTW.XAML.CS - ADDING FILE TRANSFER");
                 CLanFileTransfer cft = new CLanFileTransfer(u, cfiles, CLanTransferType.SEND);
                 cft.Store();
-            }
-
-            foreach (CLanFileTransfer cft in App.FileTransfers)
-            {
-                cft.Ask();
+                cft.Start();
             }
 
             this.Show();

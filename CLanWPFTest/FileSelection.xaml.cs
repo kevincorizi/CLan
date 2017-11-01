@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CLanWPFTest
 {
@@ -28,6 +29,7 @@ namespace CLanWPFTest
             fd.DefaultExt = "*.*";
             fd.Multiselect = true;
             fd.ShowDialog();
+
             files = new List<string>(fd.FileNames);               // The file path to be sent to the backend
 
             if (fd.CheckFileExists == true)
