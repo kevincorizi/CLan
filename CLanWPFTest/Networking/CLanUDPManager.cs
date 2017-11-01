@@ -19,6 +19,11 @@ namespace CLanWPFTest.Networking
         private static UdpClient inUDP = new UdpClient(udpPort);
         private static UdpClient outUDP = new UdpClient();
 
+        public static int GetAdvertisementInterval()
+        {
+            return ADVERTISEMENT_INTERVAL;
+        }
+
         public static async Task StartBroadcastAdvertisement(CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
@@ -47,21 +52,20 @@ namespace CLanWPFTest.Networking
             while (true)
             {
                 UdpReceiveResult res = await inUDP.ReceiveAsync();
-                /* DONT FORGET TO DELETE THIS LATER!
                 if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
-                {
                     continue;
-                }
-                */
+            
                 byte[] bytes = res.Buffer;
                 Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(bytes), CLanJSON.settings());
+
                 Trace.WriteLine(Encoding.ASCII.GetString(bytes));
+
                 m.sender.Ip = res.RemoteEndPoint.Address;
                 switch(m.messageType)
                 {
                     case MessageType.HELLO:
                         Application.Current.Dispatcher.Invoke(new Action(() => App.AddUser(m.sender)));
-                        Trace.WriteLine("RECEIVED HELLO UDP");
+                        Trace.WriteLine("RECEIVED HELLO UDP FROM " + m.sender.Ip.ToString());
                         break;
                     case MessageType.BYE:
                         Application.Current.Dispatcher.Invoke(new Action(() => App.RemoveUser(m.sender)));

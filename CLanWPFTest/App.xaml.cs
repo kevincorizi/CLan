@@ -17,20 +17,24 @@ namespace CLanWPFTest
     public partial class App : System.Windows.Application
     {
         /// <summary>
-        /// List containing currently visible users on the network
+        /// List containing currently visible users on the network.
+        /// It is only updated by the UDPManager, so no need for it to be thread-safe
         /// </summary>
         public static ObservableCollection<User> OnlineUsers { get; set; }
 
         // User will see one progress bar for each batch of files to the same destinations.
         // In this way we do not clutter the interface too much and we are still able to stay responsive and clear
-        public static ObservableCollection<CLanFileTransfer> FileTransfers { get; set; }
+        // This list will be modified by multiple threads (one per file transfer). We have to make sure that each thread
+        // only accesses one element of the list, so it has to be thread-safe
+        public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
+        public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
 
         /// <summary>
         /// Current user
         /// </summary>
         public static User me { get; set; }
 
-        private static int KEEP_ALIVE_TIMER_MILLIS = 10 * 1000;
+        private static int KEEP_ALIVE_TIMER_MILLIS = 2 * CLanUDPManager.GetAdvertisementInterval();
 
         private NotifyIcon _notifyIcon;
 
@@ -45,7 +49,7 @@ namespace CLanWPFTest
 
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
             _notifyIcon.DoubleClick += (s, args) => ShowFileSelection();
-           // _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
+            //_notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
             _notifyIcon.Visible = true;
 
             CreateContextMenu();
@@ -53,7 +57,8 @@ namespace CLanWPFTest
             // Initialize the list of users 
             OnlineUsers = new ObservableCollection<User>();
 
-            FileTransfers = new ObservableCollection<CLanFileTransfer>();
+            IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
+            OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
 
             // Initialize current user with name from last saved settings
             me = new User(CLanWPFTest.Properties.Settings.Default.Name);
@@ -92,27 +97,39 @@ namespace CLanWPFTest
 
         public static void AddTransfer(CLanFileTransfer cft)
         {
-            if(!FileTransfers.Contains(cft))
+            switch(cft.Type)
             {
-                FileTransfers.Add(cft);
-                Trace.WriteLine("APP.XAML.CS - TRANSFER ADDED");
-            }
-            else
-            {
-                Trace.WriteLine("Trying to insert a duplicate file transfer");
+                case CLanTransferType.RECEIVE:
+                    IncomingTransfers.Add(cft);
+                    Trace.WriteLine("APP.XAML.CS - INCOMING TRANSFER ADDED");
+                    break;
+                case CLanTransferType.SEND:
+                    OutgoingTransfers.Add(cft);
+                    Trace.WriteLine("APP.XAML.CS - OUTGOING TRANSFER ADDED");
+                    break;
+                default:
+                    Trace.WriteLine("Invalid transfer-added type, please check your code");
+                    break;
             }
         }
 
         public static void RemoveTransfer(CLanFileTransfer cft)
         {
-            if(FileTransfers.Contains(cft))
+            switch (cft.Type)
             {
-                cft.Stop();
-                FileTransfers.Remove(cft);
-            }
-            else
-            {
-                Trace.WriteLine("Trying to remove a non-existent file transfer");
+                case CLanTransferType.RECEIVE:
+                    cft.Stop();
+                    IncomingTransfers.Remove(cft);
+                    Trace.WriteLine("APP.XAML.CS - INCOMING TRANSFER ADDED");
+                    break;
+                case CLanTransferType.SEND:
+                    cft.Stop();
+                    OutgoingTransfers.Remove(cft);
+                    Trace.WriteLine("APP.XAML.CS - OUTGOING TRANSFER ADDED");
+                    break;
+                default:
+                    Trace.WriteLine("Invalid transfer-removed type, please check your code");
+                    break;
             }
         }
         public static void ActivateUserCleaner()
