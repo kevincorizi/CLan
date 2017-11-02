@@ -11,7 +11,7 @@ namespace CLanWPFTest.Objects
         public CLanFile(string path, long size = -1, string name = "")
         {
             this.RelativePath = path;
-            this.Name = name == "" ? Path.GetRandomFileName() : name;
+            this.Name = name == "" ? Path.GetFileName(RelativePath) : name;
             this.Size = size == -1 ? (new FileInfo(this.RelativePath)).Length : size;
         }
     }

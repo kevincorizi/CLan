@@ -1,4 +1,5 @@
 ﻿using CLanWPFTest.Networking;
+using CLanWPFTest.Objects;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,15 +14,15 @@ namespace CLanWPFTest
     /// 
     public partial class UsersWindow : Page
     {
-        public List<string> files;
+        public List<CLanFile> files;
         public List<User> destinations;
 
-        public UsersWindow(List<string> lf)
+        public UsersWindow(List<CLanFile> lf)
         {
             InitializeComponent();
 
             destinations = new List<User>();
-            files = new List<string>();
+            files = new List<CLanFile>();
 
             this.DataContext = this;
             this.files = lf;

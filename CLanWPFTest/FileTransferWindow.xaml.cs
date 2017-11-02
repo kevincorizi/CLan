@@ -17,22 +17,15 @@ namespace CLanWPFTest
     /// 
     public partial class FileTransferWindow : Window
     {
-        public FileTransferWindow(List<string> files, List<User> dest)
+        public FileTransferWindow(List<CLanFile> files, List<User> dest)
         {
             InitializeComponent();
 
             this.DataContext = this;
-
-            List<CLanFile> cfiles = new List<CLanFile>();
-            foreach (string s in files)
-            {
-                cfiles.Add(new CLanFile(s));
-            }
-
             foreach (User u in dest)
             {
                 Trace.WriteLine("FTW.XAML.CS - ADDING FILE TRANSFER");
-                CLanFileTransfer cft = new CLanFileTransfer(u, cfiles, CLanTransferType.SEND);
+                CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
                 cft.Store();
                 cft.Start();
             }
