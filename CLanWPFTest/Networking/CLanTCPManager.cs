@@ -145,19 +145,7 @@ namespace CLanWPFTest.Networking
             Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(data), CLanJSON.settings());
             CLanFileTransferRequest req = JsonConvert.DeserializeObject<CLanFileTransferRequest>(m.message.ToString(), CLanJSON.settings());
 
-            Message response;
-            if(req.Prompt())
-            {
-                // Accept the file request and initialize all the data structures
-                response = new Message(App.me, MessageType.ACK, "My body is ready!");
-                // Meanwhile the receiving file transfer has been started by the request
-            } else
-            {
-                // Decline the file request and close connection
-                response = new Message(App.me, MessageType.NACK, "Maybe next time :/");
-            }
-            byte[] toSend = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response, CLanJSON.settings()));
-            Send(toSend, source);
+            req.Prompt();
         }
 
         public static void SendFiles(CLanFileTransfer cft)

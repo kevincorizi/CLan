@@ -1,6 +1,8 @@
 ﻿using CLanWPFTest.Objects;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Windows;
 
 namespace CLanWPFTest.Networking
@@ -25,10 +27,14 @@ namespace CLanWPFTest.Networking
             if (result == MessageBoxResult.Yes)
             {
                 CLanFileTransfer cft = new CLanFileTransfer(From, Files, CLanTransferType.RECEIVE);
-                cft.Store();
-                cft.Start();
+                cft.Store();    // Store the transfer in the global list
+                cft.Start();    // Start the working thread, that will also ask for the save directory
                 return true;
             }
+            // Decline the request
+            Message response = new Message(App.me, MessageType.NACK, "Maybe next time :/");
+            byte[] toSend = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response, CLanJSON.settings()));
+            CLanTCPManager.Send(toSend, From);
             return false;
         }
 

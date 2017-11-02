@@ -150,6 +150,11 @@ namespace CLanWPFTest.Networking
             // the size, name and path of each of them
             Trace.WriteLine("CTF.CS - WORKERSTARTRECEIVE");
 
+            // Since we accepted the request, we may have to specify a save path, according to our settings
+            // The client confirms the transfer only after the path has been specified
+            // Please note that it is not possible to cancel the transfer during this phase: it will be again possible
+            // during the transfer itself
+
             // TODO: Check if the user has default-receive to true
 
             // TODO: Check if the user wants to use the default download folder or if it wants to change it
@@ -174,6 +179,12 @@ namespace CLanWPFTest.Networking
                 t.Join();
             }
 
+            // Confirm the transfer
+            Message response = new Message(App.me, MessageType.ACK, "My body is ready!");
+            byte[] toSend = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response, CLanJSON.settings()));
+            CLanTCPManager.Send(toSend, Other);
+
+            // Receive files
             CLanTCPManager.ReceiveFiles(this, root);
             Stop();
         }
