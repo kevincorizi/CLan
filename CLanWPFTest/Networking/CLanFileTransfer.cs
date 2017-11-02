@@ -9,6 +9,7 @@ using System.Threading;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Windows;
+using System.IO;
 
 namespace CLanWPFTest.Networking
 {
@@ -149,7 +150,31 @@ namespace CLanWPFTest.Networking
             // the size, name and path of each of them
             Trace.WriteLine("CTF.CS - WORKERSTARTRECEIVE");
 
-            CLanTCPManager.ReceiveFiles(this);
+            // TODO: Check if the user has default-receive to true
+
+            // TODO: Check if the user wants to use the default download folder or if it wants to change it
+            string root = "";
+            if(!Properties.Settings.Default.DefaultAskSavePath && Properties.Settings.Default.DefaultSavePath != "") // If ASK is not default behaviour
+            {
+                root = Properties.Settings.Default.DefaultSavePath; // Then start saving there
+            }   
+            else
+            {
+                var t = new Thread(() => {
+                    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                    fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
+                    fbd.ShowNewFolderButton = true;
+                    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                        return;
+
+                    root = fbd.SelectedPath + Path.DirectorySeparatorChar;
+                });
+                t.SetApartmentState(ApartmentState.STA);
+                t.Start();
+                t.Join();
+            }
+
+            CLanTCPManager.ReceiveFiles(this, root);
             Stop();
         }
 

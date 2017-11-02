@@ -205,7 +205,7 @@ namespace CLanWPFTest.Networking
             sockets.Remove(other);
         }
 
-        public static void ReceiveFiles(CLanFileTransfer cft)
+        public static void ReceiveFiles(CLanFileTransfer cft, string rootFolder = "")
         {
             User other = cft.Other;
             List<CLanFile> files = cft.Files;
@@ -229,7 +229,7 @@ namespace CLanWPFTest.Networking
                 byte[] buffer = null;
                 
                 NetworkStream stream = new NetworkStream(sockets[other]);
-                FileStream fstream = new FileStream(f.Name, FileMode.OpenOrCreate, FileAccess.Write);
+                FileStream fstream = new FileStream(rootFolder + f.Name, FileMode.OpenOrCreate, FileAccess.Write);
                 int packets = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(f.Size) / Convert.ToDouble(BUFFER_SIZE)));
 
                 if (stream.CanRead)
