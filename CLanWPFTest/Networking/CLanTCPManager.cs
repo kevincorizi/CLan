@@ -182,7 +182,8 @@ namespace CLanWPFTest.Networking
                         int size = fstream.Read(buffer, 0, BUFFER_SIZE);
                         stream.Write(buffer, 0, size);
                         sentSize += size;
-                        bw.ReportProgress(Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) / Convert.ToDouble(totalSize))));
+                        int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
+                        bw.ReportProgress(progress);
                     }
                 }
 
@@ -228,7 +229,8 @@ namespace CLanWPFTest.Networking
                         int size = stream.Read(buffer, 0, BUFFER_SIZE);
                         fstream.Write(buffer, 0, size);
                         receivedSize += size;
-                        bw.ReportProgress(Convert.ToInt32(Math.Ceiling(Convert.ToDouble(receivedSize) / Convert.ToDouble(totalSize))));
+                        int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(receivedSize) * 100 / Convert.ToDouble(totalSize)));
+                        bw.ReportProgress(progress);
                     }
                 }
 
