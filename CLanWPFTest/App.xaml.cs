@@ -49,7 +49,7 @@ namespace CLanWPFTest
             base.OnStartup(e);
 
             _notifyIcon = new NotifyIcon();
-            _notifyIcon.DoubleClick += (s, args) => ShowFileSelection();
+            _notifyIcon.DoubleClick += (s, args) => ShowUsersWindow();
             _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
             _notifyIcon.Visible = true;
 
@@ -171,19 +171,19 @@ namespace CLanWPFTest
         {
             if (mw == null)
                 mw = new MainWindow();
-            ShowFileSelection();
+            ShowUsersWindow();
         }
 
         private void CreateContextMenu()
         {
             _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
-            _notifyIcon.ContextMenuStrip.Items.Add("Apri CLan").Click += (s, e) => ShowFileSelection();
+            _notifyIcon.ContextMenuStrip.Items.Add("Apri CLan").Click += (s, e) => ShowUsersWindow();
             _notifyIcon.ContextMenuStrip.Items.Add("Impostazioni").Click += (s, e) => ShowSettings();
             _notifyIcon.ContextMenuStrip.Items.Add("Attiva modalità privata").Click += (s, e) => TraySwitchToPrivate(s);
             _notifyIcon.ContextMenuStrip.Items.Add("Esci").Click += (s, e) => Current.Shutdown();
         }
 
-        private void ShowFileSelection()
+        private void ShowUsersWindow()
         {
             if (mw.IsVisible) { 
                 if (mw.WindowState == WindowState.Minimized)
@@ -192,7 +192,7 @@ namespace CLanWPFTest
             }
             else
                 mw.Show();
-            mw._mainFrame.Navigate(new FileSelection());
+            mw._mainFrame.Navigate(new UsersWindow());
         }
 
         private void ShowSettings()

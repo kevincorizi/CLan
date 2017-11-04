@@ -192,23 +192,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\user01.png" />
-    <Resource Include="Resources\user02.png" />
-    <Resource Include="Resources\user03.png" />
-    <Resource Include="Resources\user04.png" />
-    <Resource Include="Resources\user05.png" />
-    <Resource Include="Resources\user06.png" />
-    <Resource Include="Resources\user07.png" />
-    <Resource Include="Resources\user08.png" />
-    <Resource Include="Resources\user09.png" />
-    <Resource Include="Resources\user10.png" />
-    <Resource Include="Resources\user11.png" />
-    <Resource Include="Resources\user12.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\TrayIcon.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\TrayIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

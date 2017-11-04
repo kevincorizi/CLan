@@ -16,9 +16,12 @@ namespace CLanWPFTest
     public partial class FileSelection : Page
     {
         public List<CLanFile> files;
-        public FileSelection()
+        public List<User> destinations;
+        public FileSelection(List<User> users)
         {
             //this.Closing += FileSelection_Closing; ---> TODO: This part gives me error after window to page change.
+            files = new List<CLanFile>();
+            this.destinations = users;
             InitializeComponent();
         }
 
@@ -38,7 +41,6 @@ namespace CLanWPFTest
             // or if they are folders, and in case i have to enumerate all possible
             // subfolders and files
 
-            files = new List<CLanFile>();
             // Convert filenames to CLanFiles here
             foreach (string p in sFiles)
             {
@@ -73,7 +75,7 @@ namespace CLanWPFTest
         {
             if (files != null)
             {
-                this.NavigationService.Navigate(new UsersWindow(files));
+                this.NavigationService.Navigate(new FileTransferWindow(files, destinations));
             }
             else
             {

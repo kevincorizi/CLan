@@ -14,18 +14,15 @@ namespace CLanWPFTest
     /// 
     public partial class UsersWindow : Page
     {
-        public List<CLanFile> files;
         public List<User> destinations;
 
-        public UsersWindow(List<CLanFile> lf)
+        public UsersWindow()
         {
             InitializeComponent();
 
             destinations = new List<User>();
-            files = new List<CLanFile>();
 
             this.DataContext = this;
-            this.files = lf;
             this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
         }
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
@@ -47,7 +44,7 @@ namespace CLanWPFTest
 
             Trace.WriteLine("UW.XAML.CS" + users.Count.ToString() + " USERS SELECTED");
             // Open the actual file transfer window, with progress and all
-            FileTransferWindow ft = new FileTransferWindow(files, users);
+            FileSelection ft = new FileSelection(users);
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)

@@ -75,7 +75,7 @@ namespace CLanWPFTest
         {
             // Now the modifications to settings become permanent
             Properties.Settings.Default.Save();
-            DisplaySettings("Settings saved");
+            // DisplaySettings("Settings saved");
 
             // Update data for current session
             App.me.Name = Properties.Settings.Default.Name;
@@ -92,7 +92,7 @@ namespace CLanWPFTest
         {
             // Discard pending changes to settings
             Properties.Settings.Default.Reload();
-            DisplaySettings("Settings discarded");
+            // DisplaySettings("Settings discarded");
 
             // Go back to previous window
             if (NavigationService.CanGoBack)
