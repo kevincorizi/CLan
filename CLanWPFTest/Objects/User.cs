@@ -50,7 +50,6 @@ namespace CLanWPFTest
         public User(string n, string p = "", IPAddress i = null)
         {
             this.Name = n;
-            Trace.WriteLine(Properties.Settings.Default.PicturePath);
             if (p == null || p.CompareTo("") == 0)
                 this.Picture = Properties.Settings.Default.PicturePath;
             else

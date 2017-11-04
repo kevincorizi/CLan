@@ -83,5 +83,7 @@
                 </StackPanel>
             </Border>
         </Grid>
+        <CheckBox Name="AcceptAllTransfers" Content="Accetta tutti i trasferimenti&#xD;&#xA;" Grid.Column="1" HorizontalAlignment="Left" Margin="81,451,0,0" VerticalAlignment="Top"/>
+        <CheckBox Name="UseDefaultPath" Content="Usa percorso di default&#xD;&#xA;" Grid.Column="1" HorizontalAlignment="Left" Margin="81,492,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Page>

@@ -22,13 +22,18 @@ namespace CLanWPFTest.Networking
 
         public bool Prompt()
         {
+            // Check if the user wants to accept all file transfers
+            if (Properties.Settings.Default.DefaultAcceptTransfer == true)
+            {
+                AcceptTransfer();
+                return true;
+            }
+
             // Ask the user to accept or decline the file transfer
             MessageBoxResult result = MessageBox.Show(this.ToString(), "CLan Incoming Files", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                CLanFileTransfer cft = new CLanFileTransfer(From, Files, CLanTransferType.RECEIVE);
-                cft.Store();    // Store the transfer in the global list
-                cft.Start();    // Start the working thread, that will also ask for the save directory
+                AcceptTransfer();
                 return true;
             }
             // Decline the request
@@ -36,6 +41,13 @@ namespace CLanWPFTest.Networking
             byte[] toSend = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response, CLanJSON.settings()));
             CLanTCPManager.Send(toSend, From);
             return false;
+        }
+
+        private void AcceptTransfer()
+        {
+            CLanFileTransfer cft = new CLanFileTransfer(From, Files, CLanTransferType.RECEIVE);
+            cft.Store();    // Store the transfer in the global list
+            cft.Start();    // Start the working thread, that will also ask for the save directory
         }
 
         public override string ToString()

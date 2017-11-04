@@ -76,6 +76,9 @@
     <Compile Include="Extensions\BaseBindingConverter.cs" />
     <Compile Include="Extensions\CLanCommands.cs" />
     <Compile Include="CLanJSON.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Networking\CLanFileTransfer.cs" />
     <Compile Include="Networking\CLanFileTransferRequest.cs" />
     <Compile Include="Networking\CLanTCPManager.cs" />
@@ -87,9 +90,6 @@
     </Compile>
     <Compile Include="Extensions\IPAddressConverter.cs" />
     <Compile Include="Extensions\IPEndPointConverter.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Objects\CLanFile.cs" />
     <Compile Include="Objects\Message.cs" />
     <Compile Include="Extensions\SettingBindingExtension.cs" />
@@ -115,7 +115,7 @@
     </Page>
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="SelectPicture.xaml">
       <SubType>Designer</SubType>

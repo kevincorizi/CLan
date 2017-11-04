@@ -91,12 +91,5 @@ namespace CLanWPFTest.Networking
             Trace.WriteLine("Going Online");
             App.ActivateAdvertising();
         }
-
-        public static void Send(User dest, object message)
-        {
-            byte[] data = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(message, CLanJSON.settings()));
-            Trace.WriteLine("CUDPM.CS - SENDING\n" + JsonConvert.SerializeObject(message, CLanJSON.settings()));
-            outUDP.Send(data, data.Length, new IPEndPoint(dest.Ip, udpPort));
-        }
     }
 }

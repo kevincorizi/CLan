@@ -156,9 +156,7 @@ namespace CLanWPFTest.Networking
             // Please note that it is not possible to cancel the transfer during this phase: it will be again possible
             // during the transfer itself
 
-            // TODO: Check if the user has default-receive to true
-
-            // TODO: Check if the user wants to use the default download folder or if it wants to change it
+            // Check if the user wants to use the default download folder or if it wants to change it
             string root = "";
             if(!Properties.Settings.Default.DefaultAskSavePath && Properties.Settings.Default.DefaultSavePath != "") // If ASK is not default behaviour
             {

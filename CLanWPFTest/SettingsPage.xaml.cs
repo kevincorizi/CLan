@@ -74,6 +74,11 @@ namespace CLanWPFTest
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             // Now the modifications to settings become permanent
+
+            // Check checkbox status
+            Properties.Settings.Default.DefaultAcceptTransfer = (AcceptAllTransfers.IsChecked == true);
+            Properties.Settings.Default.DefaultAskSavePath = (UseDefaultPath.IsChecked != true);
+
             Properties.Settings.Default.Save();
             // DisplaySettings("Settings saved");
 
