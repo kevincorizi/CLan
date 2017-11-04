@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Windows;
 using System.IO;
+using System.Net.Sockets;
 
 namespace CLanWPFTest.Networking
 {
@@ -108,10 +109,10 @@ namespace CLanWPFTest.Networking
             Message requestMessage = new Message(App.me, MessageType.SEND, req);
             byte[] requestData = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(requestMessage, CLanJSON.settings()));
 
-            CLanTCPManager.GetConnection(Other);
+            Socket otherSocket = CLanTCPManager.GetConnection(Other);
             CLanTCPManager.Send(requestData, Other);
 
-            byte[] responseData = CLanTCPManager.Receive(Other);
+            byte[] responseData = CLanTCPManager.Receive(otherSocket);
             if (responseData != null)
             {
                 Message responseMessage = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(responseData), CLanJSON.settings());

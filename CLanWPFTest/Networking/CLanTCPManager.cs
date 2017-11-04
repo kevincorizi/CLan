@@ -41,7 +41,7 @@ namespace CLanWPFTest.Networking
         }
 
 
-        public static void GetConnection(User dest)
+        public static Socket GetConnection(User dest)
         {
             IPEndPoint i = new IPEndPoint(dest.Ip, tcpListeningPort);
             if (!sockets.ContainsKey(dest))
@@ -49,6 +49,7 @@ namespace CLanWPFTest.Networking
                 sockets.Add(dest, new Socket(SocketType.Stream, ProtocolType.IP));
             }
             sockets[dest].Connect(i);
+            return sockets[dest];
         }
 
         public static void Send(byte[] message, User dest)
@@ -58,10 +59,6 @@ namespace CLanWPFTest.Networking
                 Trace.WriteLine("Cannot send TCP message to non-existing or disconnected client");
                 return;
             }
-
-            // If it is a valid source, we add it to the destinations to send him messages
-
-            //destinations.Add(dest, sources[dest]);
 
             // Uses the GetStream public method to return the NetworkStream.
             NetworkStream netStream = new NetworkStream(sockets[dest]);
@@ -81,24 +78,18 @@ namespace CLanWPFTest.Networking
             }
         }
 
-        public static byte[] Receive(User source)
+        public static byte[] Receive(Socket source)
         {
-            if (!sockets.ContainsKey(source) || !sockets[source].Connected)
-            {
-                Trace.WriteLine("Cannot receive TCP message from non-existing or disconnected client");
-                return null;
-            }
-
             // Uses the GetStream public method to return the NetworkStream.
-            NetworkStream netStream = new NetworkStream(sockets[source]);
+            NetworkStream netStream = new NetworkStream(source);
             if (netStream.CanRead)
             {
                 // Reads NetworkStream into a byte buffer.
-                byte[] bytes = new byte[sockets[source].ReceiveBufferSize];
+                byte[] bytes = new byte[source.ReceiveBufferSize];
 
                 // Read can return anything from 0 to numBytesToRead. 
                 // This method blocks until at least one byte is read.
-                netStream.Read(bytes, 0, sockets[source].ReceiveBufferSize);
+                netStream.Read(bytes, 0, source.ReceiveBufferSize);
                 netStream.Close();
 
                 // Returns the data received from the host to the console.
@@ -107,7 +98,7 @@ namespace CLanWPFTest.Networking
             else
             {
                 Console.WriteLine("You cannot read data from this stream.");
-                sockets[source].Close();
+                source.Close();
 
                 // Closing the tcpClient instance does not close the network stream.
                 netStream.Close();
@@ -125,25 +116,30 @@ namespace CLanWPFTest.Networking
             User source = App.OnlineUsers.SingleOrDefault(u => u.Ip.Equals((client.RemoteEndPoint as IPEndPoint).Address));
             if (source == null)
             {
-                Trace.WriteLine("Cannot accept connection from non-listed user");
-                client.Close();
-                return;
+                Trace.WriteLine("Incoming connection from non-listed user, probably in private mode");
+                // There is going to be a socket not listed in the sockets list, for now
             }
-            if (!sockets.ContainsKey(source))
+            else if (!sockets.ContainsKey(source))
             {
                 sockets.Add(source, client);
             }
 
-            HandleIncomingRequest(source);
+            HandleIncomingRequest(client);
         }
 
-        public static void HandleIncomingRequest(User source)
+        public static void HandleIncomingRequest(Socket source)
         {
             // This method is executed in the same thread as HandleAccept, which is a separate thread
             byte[] data = Receive(source);
-            Trace.WriteLine(Encoding.ASCII.GetString(data));
+            // Trace.WriteLine(Encoding.ASCII.GetString(data));
             Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(data), CLanJSON.settings());
             CLanFileTransferRequest req = JsonConvert.DeserializeObject<CLanFileTransferRequest>(m.message.ToString(), CLanJSON.settings());
+
+            if(!sockets.ContainsValue(source))
+            {
+                // This means that the sender was probably in private mode and therefore not inserted yet
+                sockets.Add(m.sender, source);
+            }
 
             req.Prompt();
         }

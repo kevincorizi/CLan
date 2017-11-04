@@ -35,7 +35,7 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0"/>
+        <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0" Checked="PrivateMode_Checked" Unchecked="PublicMode_Checked"/>
         <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="36"  BorderThickness="0"   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8" Width="120" BorderBrush="#FF33A0EC" Margin="232,338,248,26"/>
         <Button Content="Settings" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="45" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,0,0,360" Background="#FF66B5F8" BorderBrush="#FF3A84B7" Width="120" />
         <TextBlock TextWrapping="Wrap" Text="Private" Margin="0,33,31,0" Foreground="#FFA0A0A0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
