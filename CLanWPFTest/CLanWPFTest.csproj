@@ -93,6 +93,11 @@
     <Compile Include="Objects\CLanFile.cs" />
     <Compile Include="Objects\Message.cs" />
     <Compile Include="Extensions\SettingBindingExtension.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SelectPicture.xaml.cs">
       <DependentUpon>SelectPicture.xaml</DependentUpon>
     </Compile>
@@ -180,7 +185,12 @@
     <Resource Include="UserAvatars\user08.png" />
     <Resource Include="UserAvatars\user09.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\user01.png" />
     <Resource Include="Resources\user02.png" />
@@ -194,6 +204,12 @@
     <Resource Include="Resources\user10.png" />
     <Resource Include="Resources\user11.png" />
     <Resource Include="Resources\user12.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TrayIcon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TrayIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

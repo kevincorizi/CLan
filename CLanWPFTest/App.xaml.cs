@@ -1,4 +1,5 @@
-﻿using CLanWPFTest.Networking;
+﻿using CLanWPFTest;
+using CLanWPFTest.Networking;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -47,9 +48,9 @@ namespace CLanWPFTest
         {
             base.OnStartup(e);
 
-            _notifyIcon = new System.Windows.Forms.NotifyIcon();
+            _notifyIcon = new NotifyIcon();
             _notifyIcon.DoubleClick += (s, args) => ShowFileSelection();
-            //_notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
+            _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
             _notifyIcon.Visible = true;
 
             CreateContextMenu();
