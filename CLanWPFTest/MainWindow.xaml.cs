@@ -11,6 +11,7 @@ namespace CLanWPFTest
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         protected override void OnClosing(CancelEventArgs e)

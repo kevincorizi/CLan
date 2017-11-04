@@ -115,7 +115,7 @@
     </Page>
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectPicture.xaml">
       <SubType>Designer</SubType>
@@ -172,18 +172,42 @@
     <Resource Include="Images\user.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="UserAvatars\user01.png" />
-    <Resource Include="UserAvatars\user10.png" />
-    <Resource Include="UserAvatars\user11.png" />
-    <Resource Include="UserAvatars\user12.png" />
-    <Resource Include="UserAvatars\user02.png" />
-    <Resource Include="UserAvatars\user03.png" />
-    <Resource Include="UserAvatars\user04.png" />
-    <Resource Include="UserAvatars\user05.png" />
-    <Resource Include="UserAvatars\user06.png" />
-    <Resource Include="UserAvatars\user07.png" />
-    <Resource Include="UserAvatars\user08.png" />
-    <Resource Include="UserAvatars\user09.png" />
+    <Resource Include="UserAvatars\user01.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user10.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user11.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user12.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user02.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user03.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user04.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user05.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user06.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user07.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user08.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="UserAvatars\user09.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

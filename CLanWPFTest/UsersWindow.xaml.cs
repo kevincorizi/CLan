@@ -14,13 +14,9 @@ namespace CLanWPFTest
     /// 
     public partial class UsersWindow : Page
     {
-        public List<User> destinations;
-
         public UsersWindow()
         {
             InitializeComponent();
-
-            destinations = new List<User>();
 
             this.DataContext = this;
             this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
@@ -55,12 +51,6 @@ namespace CLanWPFTest
         private void UserList_Selected(object sender, RoutedEventArgs e)
         {
             _continue.IsEnabled = true;
-            
-            foreach(User item in ((ListView)UserList).SelectedItems)
-            {
-                destinations.Add(item);
-            }
-            
         }
     }
 }
