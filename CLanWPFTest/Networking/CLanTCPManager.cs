@@ -218,6 +218,13 @@ namespace CLanWPFTest.Networking
                 byte[] buffer = null;
                 
                 NetworkStream stream = new NetworkStream(sockets[other]);
+
+                string directoryName = Path.GetDirectoryName(f.Name);
+                if ((directoryName.Length > 0) && (!Directory.Exists(rootFolder + directoryName)))
+                {
+                    Directory.CreateDirectory(rootFolder + directoryName);
+                }
+
                 FileStream fstream = new FileStream(rootFolder + f.Name, FileMode.OpenOrCreate, FileAccess.Write);
                 int packets = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(f.Size) / Convert.ToDouble(BUFFER_SIZE)));
 
