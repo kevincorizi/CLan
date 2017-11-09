@@ -55,8 +55,7 @@ namespace CLanWPFTest
 
             CreateContextMenu();
 
-            // Initialize the list of users 
-            OnlineUsers = new ObservableCollection<User>();
+            
 
             IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
             OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
@@ -69,6 +68,13 @@ namespace CLanWPFTest
             ActivateTCPListener();
 
             StartUpManager.AddApplicationToCurrentUserStartup();
+
+            // Initialize the list of users 
+            OnlineUsers = new ObservableCollection<User>();
+
+            if (mw == null)
+                mw = new MainWindow();
+            ShowUsersWindow();
         }
 
         public static void AddUser(User u)
@@ -165,13 +171,6 @@ namespace CLanWPFTest
         public static void DeactivateAdvertising()
         {
             ctsAd.Cancel();
-        }
-
-        private void Application_Startup(object sender, StartupEventArgs e)
-        {
-            if (mw == null)
-                mw = new MainWindow();
-            ShowUsersWindow();
         }
 
         private void CreateContextMenu()
