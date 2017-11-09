@@ -73,14 +73,7 @@ namespace CLanWPFTest
 
         private void continueClick(object sender, RoutedEventArgs e)
         {
-            if (files != null)
-            {
-                this.NavigationService.Navigate(new FileTransferWindow(files, destinations));
-            }
-            else
-            {
-                Trace.WriteLine("No file selected");
-            }
+            new FileTransferWindow(files, destinations);
         }
     }
 }

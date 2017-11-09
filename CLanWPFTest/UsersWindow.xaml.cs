@@ -40,7 +40,14 @@ namespace CLanWPFTest
 
             Trace.WriteLine("UW.XAML.CS" + users.Count.ToString() + " USERS SELECTED");
             // Open the actual file transfer window, with progress and all
-            FileSelection ft = new FileSelection(users);
+            if (users != null)
+            {
+                this.NavigationService.Navigate(new FileSelection(users));
+            }
+            else
+            {
+                Trace.WriteLine("No users selected");
+            }
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)
