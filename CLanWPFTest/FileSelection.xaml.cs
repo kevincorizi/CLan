@@ -1,11 +1,12 @@
-﻿using System.Windows;
+﻿using CLanWPFTest.Networking;
+using CLanWPFTest.Objects;
 using Microsoft.Win32;
 using System;
-using System.Windows.Controls;
-using System.Diagnostics;
 using System.Collections.Generic;
-using CLanWPFTest.Objects;
+using System.Diagnostics;
 using System.IO;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CLanWPFTest
 {
@@ -19,7 +20,6 @@ namespace CLanWPFTest
         public List<User> destinations;
         public FileSelection(List<User> users)
         {
-            //this.Closing += FileSelection_Closing; ---> TODO: This part gives me error after window to page change.
             files = new List<CLanFile>();
             this.destinations = users;
             InitializeComponent();
@@ -73,7 +73,12 @@ namespace CLanWPFTest
 
         private void continueClick(object sender, RoutedEventArgs e)
         {
-            new FileTransferWindow(files, destinations);
+            foreach (User u in destinations)
+            {
+                Trace.WriteLine("FTW.XAML.CS - ADDING FILE TRANSFER");
+                CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
+                cft.Start();
+            }
         }
     }
 }

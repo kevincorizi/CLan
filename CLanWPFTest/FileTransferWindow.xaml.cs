@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using CLanWPFTest.Networking;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows;
-using CLanWPFTest.Networking;
-using System.Diagnostics;
 using System.Windows.Controls;
-using CLanWPFTest.Objects;
 
 namespace CLanWPFTest
-
 {
     /// <summary>
     /// Interaction logic for fileTransfer.xaml
@@ -17,21 +12,42 @@ namespace CLanWPFTest
     /// 
     public partial class FileTransferWindow : Window
     {
-        public FileTransferWindow(List<CLanFile> files, List<User> dest)
+        private static FileTransferWindow ftw = null;
+
+        private FileTransferWindow()
         {
-            InitializeComponent();
-
+            this.InitializeComponent();
             this.DataContext = this;
-            foreach (User u in dest)
-            {
-                Trace.WriteLine("FTW.XAML.CS - ADDING FILE TRANSFER");
-                CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
-                cft.Store();
-                cft.Start();
-            }
-
-            this.Show();
         }
+
+        public static void Open()
+        {
+            if (ftw == null)
+            {
+                var t = new Thread(() => {
+                    ftw = new FileTransferWindow();
+                    ftw.Show();
+                    System.Windows.Threading.Dispatcher.Run();
+                });
+                t.SetApartmentState(ApartmentState.STA);
+                t.Start();
+            }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            // Do not close the window if there are ongoing file transfers,
+            // Otherwise you lose the chance to check them and stop them
+            if(App.IncomingTransfers.Count != 0 || App.OutgoingTransfers.Count != 0)
+            {
+                e.Cancel = true;
+                this.WindowState = WindowState.Minimized;
+            } else
+            {
+                ftw = null;
+            }
+        }
+
         void cancel_Click(object sender, RoutedEventArgs e)
         {
             Button b = sender as Button;

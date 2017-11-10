@@ -1,14 +1,12 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Threading;
 
 namespace CLanWPFTest.Networking
 {

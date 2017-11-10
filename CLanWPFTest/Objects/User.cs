@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
-using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Diagnostics;
 
-//
 namespace CLanWPFTest
 {
     public class User : IEquatable<User>, INotifyPropertyChanged

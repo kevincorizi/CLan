@@ -1,6 +1,5 @@
 ﻿using CLanWPFTest.Extensions;
 using Newtonsoft.Json;
-using System;
 using System.Diagnostics;
 
 namespace CLanWPFTest

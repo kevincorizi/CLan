@@ -1,6 +1,4 @@
 ﻿using CLanWPFTest.Networking;
-using CLanWPFTest.Objects;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -24,13 +22,11 @@ namespace CLanWPFTest
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
             CLanUDPManager.GoOffline();
-            Trace.WriteLine("private!");
         }
 
         private void PublicMode_Checked(object sender, RoutedEventArgs e)
         {
             CLanUDPManager.GoOnline();
-            Trace.WriteLine("public!");
         }
 
         private void ContinueClick(object sender, RoutedEventArgs e)

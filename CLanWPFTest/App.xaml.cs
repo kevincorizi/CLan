@@ -1,13 +1,12 @@
-﻿using CLanWPFTest;
-using CLanWPFTest.Networking;
+﻿using CLanWPFTest.Networking;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Forms;
 
 namespace CLanWPFTest
@@ -29,6 +28,7 @@ namespace CLanWPFTest
         // only accesses one element of the list, so it has to be thread-safe
         public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
         public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
+        private static object _transferLock = new object();
 
         /// <summary>
         /// Current user
@@ -39,7 +39,7 @@ namespace CLanWPFTest
 
         private NotifyIcon _notifyIcon;
 
-        public static Task listener, advertiser, tcpListener, cleaner;
+        private static Task listener, advertiser, tcpListener, cleaner;
         private static CancellationTokenSource ctsAd;
 
         public static MainWindow mw = null;
@@ -53,12 +53,12 @@ namespace CLanWPFTest
             _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
             _notifyIcon.Visible = true;
 
-            CreateContextMenu();
-
-            
+            CreateContextMenu();            
 
             IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
             OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
+            BindingOperations.EnableCollectionSynchronization(IncomingTransfers, _transferLock);
+            BindingOperations.EnableCollectionSynchronization(OutgoingTransfers, _transferLock);
 
             // Initialize current user with name from last saved settings
             me = new User(CLanWPFTest.Properties.Settings.Default.Name);

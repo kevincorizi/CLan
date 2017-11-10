@@ -1,16 +1,13 @@
-﻿using System;
+﻿using CLanWPFTest.Objects;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CLanWPFTest.Objects;
-using System.Threading;
 using System.Diagnostics;
-using Newtonsoft.Json;
-using System.Windows;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
+using System.Windows;
 
 namespace CLanWPFTest.Networking
 {
@@ -91,8 +88,27 @@ namespace CLanWPFTest.Networking
         public void Start()
         {
             Trace.WriteLine("CFT.CS - STARTING BW");
-
             bw.RunWorkerAsync();    // WorkerStartSend ot WorkerStartReceive, depending on the type of file transfer
+        }
+        public void Stop()
+        {
+            // This will have to notify the necessary network structures to terminate the communication gracefully
+            bw.CancelAsync();
+        }
+        // Store the current file transfer in global transfer list
+        private void Store()
+        {
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                App.AddTransfer(this);
+            });
+        }
+        private void Unstore()
+        {
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                App.RemoveTransfer(this);
+            });
         }
 
         private void WorkerStartSend(object sender, DoWorkEventArgs e)
@@ -106,8 +122,7 @@ namespace CLanWPFTest.Networking
             Trace.WriteLine("CTF.CS - WORKERSTARTSEND");
 
             CLanFileTransferRequest req = new CLanFileTransferRequest(App.me, Other, Files);
-            Message requestMessage = new Message(App.me, MessageType.SEND, req);
-            byte[] requestData = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(requestMessage, CLanJSON.settings()));
+            byte[] requestData = new Message(App.me, MessageType.SEND, req).ToByteArray();
 
             Socket otherSocket = CLanTCPManager.GetConnection(Other);
             CLanTCPManager.Send(requestData, Other);
@@ -115,13 +130,16 @@ namespace CLanWPFTest.Networking
             byte[] responseData = CLanTCPManager.Receive(otherSocket);
             if (responseData != null)
             {
-                Message responseMessage = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(responseData), CLanJSON.settings());
+                Message responseMessage = Message.GetMessage(responseData);
                 switch (responseMessage.messageType)
                 {
                     case MessageType.ACK:
                         // Destination accepted the transfer
+                        // Show the window with all file transfers
+                        Store();
+                        FileTransferWindow.Open();
                         CLanTCPManager.SendFiles(this);
-                        Stop();
+                        Unstore();
                         break;
                     case MessageType.NACK:
                         // Destination refused the transfer
@@ -146,7 +164,7 @@ namespace CLanWPFTest.Networking
 
         private void WorkerStartReceive(object sender, DoWorkEventArgs e)
         {
-            // This method starts when we accept the file request, so we already have
+            // This method starts when we accept the file request (but before we inform the other), so we already have
             // all the information about it. We know the sender, how many files and
             // the size, name and path of each of them
             Trace.WriteLine("CTF.CS - WORKERSTARTRECEIVE");
@@ -179,21 +197,16 @@ namespace CLanWPFTest.Networking
             }
 
             // Confirm the transfer
-            Message response = new Message(App.me, MessageType.ACK, "My body is ready!");
-            byte[] toSend = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response, CLanJSON.settings()));
+            byte[] toSend = new Message(App.me, MessageType.ACK, "My body is ready!").ToByteArray();
             CLanTCPManager.Send(toSend, Other);
 
             // Receive files
+            Store();
+            FileTransferWindow.Open();
             CLanTCPManager.ReceiveFiles(this, root);
-            Stop();
+            Unstore();
         }
-
-        public void Stop()
-        {
-            // This will have to notify the necessary network structures to terminate the communication gracefully
-            bw.CancelAsync();
-            Application.Current.Dispatcher.Invoke(new Action(() => App.RemoveTransfer(this)));
-        }
+        
 
         private void WorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -218,12 +231,6 @@ namespace CLanWPFTest.Networking
         private void NotifyPropertyChanged(String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        // Store the current file transfer in global transfer list
-        public void Store()
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() => App.AddTransfer(this)));
         }
     }
 }

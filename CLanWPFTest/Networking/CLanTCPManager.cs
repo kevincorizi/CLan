@@ -1,15 +1,13 @@
-﻿using System;
+﻿using CLanWPFTest.Objects;
+using System;
 using System.Collections.Generic;
-using System.Net;
-using System.IO;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Net.Sockets;
-using Newtonsoft.Json;
-using System.Text;
-using System.Threading;
+using System.IO;
 using System.Linq;
-using CLanWPFTest.Objects;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace CLanWPFTest.Networking
 {
@@ -132,8 +130,8 @@ namespace CLanWPFTest.Networking
             // This method is executed in the same thread as HandleAccept, which is a separate thread
             byte[] data = Receive(source);
             // Trace.WriteLine(Encoding.ASCII.GetString(data));
-            Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(data), CLanJSON.settings());
-            CLanFileTransferRequest req = JsonConvert.DeserializeObject<CLanFileTransferRequest>(m.message.ToString(), CLanJSON.settings());
+            Message m = Message.GetMessage(data);
+            CLanFileTransferRequest req = CLanFileTransferRequest.GetRequest(m.message.ToString());
 
             if(!sockets.ContainsValue(source))
             {

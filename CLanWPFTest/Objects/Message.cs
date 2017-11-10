@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
+using System;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CLanWPFTest
 {
@@ -20,6 +18,16 @@ namespace CLanWPFTest
             messageType = mt;
             timestamp = DateTime.Now;
             message = m;
+        }
+
+        public byte[] ToByteArray()
+        {
+            return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(this, CLanJSON.settings()));
+        }
+
+        public static Message GetMessage(byte[] data)
+        {
+            return JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(data), CLanJSON.settings());
         }
     }
 }
