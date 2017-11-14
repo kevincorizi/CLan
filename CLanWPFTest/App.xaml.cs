@@ -28,7 +28,7 @@ namespace CLanWPFTest
         // only accesses one element of the list, so it has to be thread-safe
         public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
         public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
-        private static object _transferLock = new object();
+        private static object _transferLock;
 
         /// <summary>
         /// Current user
@@ -53,12 +53,13 @@ namespace CLanWPFTest
             _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
             _notifyIcon.Visible = true;
 
-            CreateContextMenu();            
+            CreateContextMenu();
 
+            _transferLock = new object();
+
+            OnlineUsers = new ObservableCollection<User>();
             IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
             OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
-            BindingOperations.EnableCollectionSynchronization(IncomingTransfers, _transferLock);
-            BindingOperations.EnableCollectionSynchronization(OutgoingTransfers, _transferLock);
 
             // Initialize current user with name from last saved settings
             me = new User(CLanWPFTest.Properties.Settings.Default.Name);
@@ -68,9 +69,6 @@ namespace CLanWPFTest
             ActivateTCPListener();
 
             StartUpManager.AddApplicationToCurrentUserStartup();
-
-            // Initialize the list of users 
-            OnlineUsers = new ObservableCollection<User>();
 
             if (mw == null)
                 mw = new MainWindow();
