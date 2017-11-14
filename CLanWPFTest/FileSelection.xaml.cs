@@ -1,6 +1,6 @@
 ﻿using CLanWPFTest.Networking;
 using CLanWPFTest.Objects;
-using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,11 +27,14 @@ namespace CLanWPFTest
 
         private void selectFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fd = new OpenFileDialog();    // Opens a window to choose the file from the pc
-            fd.DefaultExt = "*.*";
+            CommonOpenFileDialog fd = new CommonOpenFileDialog();    // Opens a window to choose the file from the pc
+            //fd.DefaultExt = "*.*";
             fd.Multiselect = true;
-            bool? result = fd.ShowDialog();
-            if (result != true || fd.CheckFileExists != true)
+            fd.EnsureValidNames = true;
+            fd.EnsureFileExists = true;
+            fd.EnsurePathExists = true;
+            CommonFileDialogResult result = fd.ShowDialog();
+            if (result != CommonFileDialogResult.Ok)
             {
                 return;
             }
@@ -64,6 +67,11 @@ namespace CLanWPFTest
                 }
             }
 
+            foreach (CLanFile cf in files)
+            {
+                Trace.WriteLine(cf.Name);
+            }
+
             uploadButton.Visibility = Visibility.Hidden;
             continueButton.Visibility = Visibility.Visible;
             selectText.Visibility = Visibility.Hidden;
@@ -76,8 +84,11 @@ namespace CLanWPFTest
             foreach (User u in destinations)
             {
                 Trace.WriteLine("FTW.XAML.CS - ADDING FILE TRANSFER");
-                CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
-                cft.Start();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
+                    cft.Start();
+                });
             }
         }
     }

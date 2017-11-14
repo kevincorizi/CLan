@@ -214,12 +214,50 @@ namespace CLanWPFTest.Networking
                 NetworkStream stream = new NetworkStream(sockets[other]);
 
                 string directoryName = Path.GetDirectoryName(f.Name);
-                if ((directoryName.Length > 0) && (!Directory.Exists(rootFolder + directoryName)))
-                {
+
+                // If incoming file is in folder
+                if (directoryName.Length > 0) {
+                    // If there is no current folder with the same name, create it
+                    // Note that this will be always valid for subfolders
+                    // If there is a folder with that name, apply the policy selected by the user
+                   
+                    if(Directory.Exists(rootFolder + directoryName))
+                    {
+                        // A folder with that name already exists
+                        if (Properties.Settings.Default.DefaultRenameFile)
+                        {
+                            // Apply renaming policy
+                            // Need to change directoryName to something that does not exist
+                            string newDirectoryName = directoryName;
+                            for(int i = 1; ; i++)
+                            {
+                                newDirectoryName = newDirectoryName + " (" + i + ")";
+                                if (!Directory.Exists(rootFolder + newDirectoryName))
+                                    break;
+                            }
+                            directoryName = newDirectoryName;
+                        }
+                    }
                     Directory.CreateDirectory(rootFolder + directoryName);
                 }
 
+                // Check if the file already exists and apply duplicate policy
+                if (File.Exists(rootFolder + f.Name))
+                {
+                    if (Properties.Settings.Default.DefaultRenameFile)
+                    {
+                        string newFileName = f.Name;
+                        for (int i = 1; ; i++)
+                        {
+                            newFileName = Path.GetFileNameWithoutExtension(f.Name) + " (" + i + ")" + Path.GetExtension(f.Name);
+                            if (!File.Exists(rootFolder + newFileName))
+                                break;
+                        }
+                        f.Name = newFileName;
+                    }
+                }
                 FileStream fstream = new FileStream(rootFolder + f.Name, FileMode.OpenOrCreate, FileAccess.Write);
+
                 int packets = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(f.Size) / Convert.ToDouble(BUFFER_SIZE)));
 
                 if (stream.CanRead)

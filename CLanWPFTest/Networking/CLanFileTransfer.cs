@@ -1,4 +1,5 @@
 ﻿using CLanWPFTest.Objects;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -176,24 +177,23 @@ namespace CLanWPFTest.Networking
 
             // Check if the user wants to use the default download folder or if it wants to change it
             string root = "";
-            if(!Properties.Settings.Default.DefaultAskSavePath && Properties.Settings.Default.DefaultSavePath != "") // If ASK is not default behaviour
+            if (!Properties.Settings.Default.DefaultAskSavePath && Properties.Settings.Default.DefaultSavePath != "") // If ASK is not default behaviour
             {
                 root = Properties.Settings.Default.DefaultSavePath; // Then start saving there
-            }   
+            }
             else
             {
-                var t = new Thread(() => {
-                    System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-                    fbd.RootFolder = System.Environment.SpecialFolder.MyComputer;
-                    fbd.ShowNewFolderButton = true;
-                    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    CommonOpenFileDialog fbd = new CommonOpenFileDialog();
+                    fbd.DefaultDirectory = System.Environment.SpecialFolder.MyComputer.ToString();
+                    fbd.IsFolderPicker = true;
+                    fbd.Multiselect = false;
+                    if (fbd.ShowDialog() != CommonFileDialogResult.Ok)
                         return;
 
-                    root = fbd.SelectedPath + Path.DirectorySeparatorChar;
+                    root = fbd.FileName + Path.DirectorySeparatorChar;
                 });
-                t.SetApartmentState(ApartmentState.STA);
-                t.Start();
-                t.Join();
             }
 
             // Confirm the transfer
