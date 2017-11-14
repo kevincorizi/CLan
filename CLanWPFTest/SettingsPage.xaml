@@ -7,7 +7,7 @@
         mc:Ignorable="d"
       
         xmlns:local="clr-namespace:CLanWPFTest"
-        xmlns:extensions="clr-namespace:CLanWPFTest.Extensions"
+        xmlns:extensions="clr-namespace:CLanWPFTest.Extensions;assembly=CLan"
       
         Title="Settings" Height="670" Width="890">
     <Page.Resources>
@@ -30,43 +30,9 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Grid x:Name="MainGrid" Background="White" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="55*"/>
-            <ColumnDefinition Width="128*"/>
-            <ColumnDefinition Width="0*"/>
-        </Grid.ColumnDefinitions>
+    <Grid x:Name="MainGrid" Background="White" Margin="170,0" >
 
-        <Rectangle Fill="#FFF6FAFD" Grid.Column="0" />
-        <Button Content="       General" HorizontalAlignment="Left" Margin="-3,310,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15" IsDefault="True"/>
-        <Button Content="       Privacy and Security" HorizontalAlignment="Left" Margin="-3,370,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15"/>
-        <Button Content="       Network" HorizontalAlignment="Left" Margin="-3,430,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15"/>
-        <Button Content="       Notifications" HorizontalAlignment="Left" Margin="-3,492,0,0" VerticalAlignment="Top" Width="270" Height="55" Click="General_Click" BorderThickness="0" HorizontalContentAlignment="Left" FontSize="15"/>
-        <Button x:Name="SaveButton" Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="422,619,0,0" VerticalAlignment="Top" Width="93" Height="41" BorderThickness="0" FontSize="15" Click="SaveButton_Click"/>
-        <Button x:Name="cancel" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="523,619,0,0" VerticalAlignment="Top" Width="93" Height="41" BorderThickness="0" FontSize="15" Click="cancel_Click"/>
-        <Button x:Name="EditName" Content="Edit Name" Grid.Column="1" HorizontalAlignment="Left" Margin="145,260,0,0" VerticalAlignment="Top" Width="143" Height="38" FontSize="15" BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="EditName_Click"/>
-        <Button x:Name="changePicture" Content="Change Picture" Grid.Column="1" HorizontalAlignment="Left" Margin="337,262,0,0" VerticalAlignment="Top" Width="143" Height="38" FontSize="15" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="changePicture_Click"/>
-        <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="237,39,0,0" VerticalAlignment="Top" Width="150" Height="152" BorderThickness="0" Style="{StaticResource MyButton}" Grid.Column="1">
-            <Button.Background>
-                <ImageBrush ImageSource="{extensions:SettingBinding PicturePath}"/>
-            </Button.Background>
-        </Button>
-        <TextBlock x:Name="UserName" HorizontalAlignment="Center" Margin="145,197,143,0" TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" VerticalAlignment="Top" Height="30" Width="335" TextAlignment="Center" FontSize="18" Grid.Column="1"/>
-        <TextBlock HorizontalAlignment="Center" Margin="255,217,254,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="18" Foreground="#FF76BFFB" Grid.Column="1"/>
-        <Button x:Name="userImageThumb" Content="" HorizontalAlignment="Left" Margin="84,107,0,0" VerticalAlignment="Top" Width="100" Height="102" BorderThickness="0" Style="{StaticResource MyButton}">
-            <Button.Background>
-                <ImageBrush ImageSource="{extensions:SettingBinding PicturePath}"/>
-            </Button.Background>
-        </Button>
-        <TextBlock x:Name="UserNameThumb" HorizontalAlignment="Center" Margin="1,218,0,0" TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" VerticalAlignment="Top" Height="30" Width="266" TextAlignment="Center" FontSize="18"/>
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="81,356,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" Foreground="#FFAAACAE"><Run Text="Default mode"/><Run Text=":"/></TextBlock>
-        <RadioButton Content="Private" Grid.Column="1" HorizontalAlignment="Left" Margin="205,358,0,0" VerticalAlignment="Top" Height="50" Width="116" IsChecked="{extensions:SettingBinding DefaultPrivate}" FontSize="15"/>
-        <RadioButton Content="Public" Grid.Column="1" HorizontalAlignment="Left" Margin="285,358,0,0" VerticalAlignment="Top" Height="26" Width="116" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}" FontSize="15"/>
-        <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="81,397,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" Foreground="#FFAAACAE" Text="Download Path: "/>
-        <TextBox x:Name="PathText" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="205,395,0,0" TextWrapping="Wrap" Text="{extensions:SettingBinding DefaultSavePath, Converter={extensions:DefaultSavePathConverter}}" VerticalAlignment="Top" Width="275"/>
-        <Button x:Name="DownloadPath" Content="Browse" Grid.Column="1" HorizontalAlignment="Left" Margin="487,394,0,0" VerticalAlignment="Top" Width="75" Height="24" BorderThickness="0" Click="DownloadPath_Click"/>
-        <TextBlock HorizontalAlignment="Center" Margin="76,239,77,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="114" TextAlignment="Center" FontSize="14" Foreground="#FF76BFFB"/>
-        <Grid x:Name="TransparencyLayer" Visibility="Collapsed" Grid.Column="1" Opacity="0.7" Width="890" Height="670" Background="White" />
+        <Grid x:Name="TransparencyLayer" Visibility="Collapsed" Opacity="0.01" Width="890" Height="670" Background="Black" Margin="-170,0" />
         <Grid x:Name="NameBox" Visibility="Collapsed" Grid.Column="1" HorizontalAlignment="Left" Height="200" Margin="140,191,0,0" VerticalAlignment="Top" Width="350" Background="White">
             <Border
             BorderBrush="#FFDDDDDD"  
@@ -83,7 +49,54 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <CheckBox Name="AcceptAllTransfers" Content="Accetta tutti i trasferimenti&#xD;&#xA;" Grid.Column="1" HorizontalAlignment="Left" Margin="81,451,0,0" VerticalAlignment="Top"/>
-        <CheckBox Name="UseDefaultPath" Content="Usa percorso di default&#xD;&#xA;" Grid.Column="1" HorizontalAlignment="Left" Margin="81,492,0,0" VerticalAlignment="Top"/>
+
+        <Rectangle Fill="White" HorizontalAlignment="Left" Height="62" Stroke="LightGray" StrokeThickness='0.5'  VerticalAlignment="Top" Width="551"/>
+        <Label x:Name="label4"  Content="Settings" HorizontalAlignment="Left" Margin="20,12,0,0" FontSize="20" Foreground="Black" VerticalAlignment="Top" />
+
+        <ScrollViewer HorizontalAlignment="Left" Height="556" Margin="0,62,-1,0" VerticalAlignment="Top" Width="551">
+            <StackPanel x:Name="sp">
+                <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="46,40,0,20" VerticalAlignment="Top" Width="150" Height="152" BorderThickness="0" Style="{StaticResource MyButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="{extensions:SettingBinding PicturePath}"/>
+                    </Button.Background>
+                </Button>
+                <TextBlock  Margin="226,-130,231,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" Height="30" Width="93" FontSize="18" Foreground="#FF76BFFB"/>
+                <TextBlock x:Name="UserName" Margin="226,-150,131,0" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" VerticalAlignment="Top" Height="30" Width="124" TextAlignment="Left" FontSize="18"/>
+                <Button x:Name="EditName" Content="Edit Name" HorizontalAlignment="Left" Margin="222,-80,0,0" VerticalAlignment="Top" Width="143" Height="38" FontSize="15" BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="EditName_Click"/>
+                <Button x:Name="changePicture" Content="Change Picture" HorizontalAlignment="Left" Margin="374,-80,0,0" VerticalAlignment="Top" Width="144" Height="38" FontSize="15" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="changePicture_Click"/>
+
+                <Label x:Name="label" Content="Notifications" HorizontalAlignment="Left" Margin="40,0,0,0" Height="30" Width="143" FontSize="15" FontWeight="Bold" VerticalAlignment="Top" />
+
+                <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" Margin="45,0,0,0"  Checked="AcceptAllTransfers_Checked" />
+                <CheckBox x:Name="checkBox1" Content="Hide all notifications" Margin="45,0,0,0"/>
+
+                <Label x:Name="label2" Content="Storage" HorizontalAlignment="Left" Margin="40,10,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
+                <CheckBox x:Name="UseDefaultPath" Content="Use default path" Margin="45,0,0,0" />
+                <Button x:Name="DownloadPath" Content="Browse" HorizontalAlignment="Left" Margin="370,0,0,0" VerticalAlignment="Top" Width="92" Height="32" BorderThickness="0" Click="DownloadPath_Click"/>
+                <TextBlock HorizontalAlignment="Left" Margin="45,-25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30"><Run Text="Default path"/><Run Text=":"/></TextBlock>
+                <TextBox x:Name="PathText" HorizontalAlignment="Left" Height="26" Margin="130,-35,0,0" TextWrapping="Wrap" Text="{extensions:SettingBinding DefaultSavePath, Converter={extensions:DefaultSavePathConverter}}" VerticalAlignment="Top" Width="230"/>
+
+                <Label x:Name="label3" Content="Privacy" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
+                <TextBlock HorizontalAlignment="Left" Margin="45,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30"><Run Text="Default mode"/><Run Text=":"/></TextBlock>
+
+                <RadioButton Content="Private" HorizontalAlignment="Left" Margin="159,-30,0,0" VerticalAlignment="Top"  IsChecked="{extensions:SettingBinding DefaultPrivate}"/>
+                <RadioButton Content="Public" HorizontalAlignment="Left" Margin="243,-30,0,0" VerticalAlignment="Top" Height="26" Width="116" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}"/>
+
+                <Label x:Name="label1" Content="Customization" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
+                <Button x:Name="background" Content="" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top" Width="100" Height="100" BorderThickness="0" Style="{StaticResource MyButton}" >
+                    <Button.Background>
+                        <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" Stretch="UniformToFill" />
+                    </Button.Background>
+
+                </Button>
+                <Button x:Name="ChangeBG" Content="Change Background" HorizontalAlignment="Left" Margin="170,-70,0,0" VerticalAlignment="Top" Width="171" Height="32" BorderThickness="0" />
+                <CheckBox  Content="Night mode" Margin="45,0,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="354,0,0,12" VerticalAlignment="Bottom" Width="92" Height="33" BorderThickness="0" FontSize="15" Click="cancel_Click" RenderTransformOrigin="1.158,0.512"/>
+        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" Margin="0,0,8,12" VerticalAlignment="Bottom" Width="92" Height="34" BorderThickness="0" FontSize="15" Click="SaveButton_Click"/>
+
+
     </Grid>
 </Page>

@@ -112,5 +112,10 @@ namespace CLanWPFTest
                 Trace.WriteLine(currentProperty.Name + ": " + currentProperty.DefaultValue);
             }
         }
+
+        private void AcceptAllTransfers_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

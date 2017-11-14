@@ -20,5 +20,8 @@
     <Setting Name="Name" Type="System.String" Scope="User">
       <Value Profile="(Default)">CLan User</Value>
     </Setting>
+    <Setting Name="BackgroundPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/Images/background.png</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
