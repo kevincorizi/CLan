@@ -166,12 +166,11 @@ namespace CLanWPFTest.Networking
 
                 NetworkStream stream = new NetworkStream(sockets[other]);
                 FileStream fstream = new FileStream(f.RelativePath, FileMode.Open, FileAccess.Read);
-                int packets = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(f.Size) / Convert.ToDouble(BUFFER_SIZE)));
 
                 if(stream.CanWrite)
                 {
                     int oldProgress = 0;
-                    for (int i = 0; i < packets; i++)
+                    while(sentSize < totalSize)
                     {
                         buffer = new byte[BUFFER_SIZE];
                         int size = fstream.Read(buffer, 0, BUFFER_SIZE);
@@ -263,12 +262,10 @@ namespace CLanWPFTest.Networking
                 }
                 FileStream fstream = new FileStream(rootFolder + f.Name, FileMode.OpenOrCreate, FileAccess.Write);
 
-                int packets = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(f.Size) / Convert.ToDouble(BUFFER_SIZE)));
-
                 if (stream.CanRead)
                 {
                     int oldProgress = 0;
-                    for (int i = 0; i < packets; i++)
+                    while (receivedSize < totalSize)
                     {
                         buffer = new byte[BUFFER_SIZE];
                         int size = stream.Read(buffer, 0, BUFFER_SIZE);
