@@ -21,7 +21,7 @@ namespace CLanWPFTest
         /// It is only updated by the UDPManager, so no need for it to be thread-safe
         /// </summary>
         public static ObservableCollection<User> OnlineUsers { get; set; }
-
+       
         // User will see one progress bar for each batch of files to the same destinations.
         // In this way we do not clutter the interface too much and we are still able to stay responsive and clear
         // This list will be modified by multiple threads (one per file transfer). We have to make sure that each thread
@@ -43,6 +43,7 @@ namespace CLanWPFTest
         private static CancellationTokenSource ctsAd;
 
         public static MainWindow mw = null;
+        public static FileTransferWindow TransferWindow = null;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -72,6 +73,8 @@ namespace CLanWPFTest
 
             if (mw == null)
                 mw = new MainWindow();
+            if (TransferWindow == null)
+                TransferWindow = new FileTransferWindow();
             ShowUsersWindow();
         }
 
@@ -105,11 +108,11 @@ namespace CLanWPFTest
             switch(cft.Type)
             {
                 case CLanTransferType.RECEIVE:
-                    IncomingTransfers.Add(cft);
+                    TransferWindow.Dispatcher.Invoke(()=> IncomingTransfers.Add(cft));
                     Trace.WriteLine("APP.XAML.CS - INCOMING TRANSFER ADDED");
                     break;
                 case CLanTransferType.SEND:
-                    OutgoingTransfers.Add(cft);
+                    TransferWindow.Dispatcher.Invoke(() => OutgoingTransfers.Add(cft));
                     Trace.WriteLine("APP.XAML.CS - OUTGOING TRANSFER ADDED");
                     break;
                 default:
@@ -123,11 +126,11 @@ namespace CLanWPFTest
             switch (cft.Type)
             {
                 case CLanTransferType.RECEIVE:
-                    IncomingTransfers.Remove(cft);
+                    TransferWindow.Dispatcher.Invoke(() => IncomingTransfers.Remove(cft));
                     Trace.WriteLine("APP.XAML.CS - INCOMING TRANSFER ADDED");
                     break;
                 case CLanTransferType.SEND:
-                    OutgoingTransfers.Remove(cft);
+                    TransferWindow.Dispatcher.Invoke(() => OutgoingTransfers.Remove(cft));
                     Trace.WriteLine("APP.XAML.CS - OUTGOING TRANSFER ADDED");
                     break;
                 default:

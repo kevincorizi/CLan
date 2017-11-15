@@ -12,9 +12,7 @@ namespace CLanWPFTest
     /// 
     public partial class FileTransferWindow : Window
     {
-        private static FileTransferWindow ftw = null;
-
-        private FileTransferWindow()
+        public FileTransferWindow()
         {
             this.InitializeComponent();
             this.DataContext = this;
@@ -22,16 +20,7 @@ namespace CLanWPFTest
 
         public static void Open()
         {
-            if (ftw == null)
-            {
-                var t = new Thread(() => {
-                    ftw = new FileTransferWindow();
-                    ftw.Show();
-                    System.Windows.Threading.Dispatcher.Run();
-                });
-                t.SetApartmentState(ApartmentState.STA);
-                t.Start();
-            }
+            App.Current.Dispatcher.Invoke(() => App.TransferWindow.Show());
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -42,9 +31,6 @@ namespace CLanWPFTest
             {
                 e.Cancel = true;
                 this.WindowState = WindowState.Minimized;
-            } else
-            {
-                ftw = null;
             }
         }
 

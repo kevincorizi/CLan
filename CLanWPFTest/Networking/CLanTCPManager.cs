@@ -170,6 +170,7 @@ namespace CLanWPFTest.Networking
 
                 if(stream.CanWrite)
                 {
+                    int oldProgress = 0;
                     for (int i = 0; i < packets; i++)
                     {
                         buffer = new byte[BUFFER_SIZE];
@@ -177,7 +178,11 @@ namespace CLanWPFTest.Networking
                         stream.Write(buffer, 0, size);
                         sentSize += size;
                         int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
-                        bw.ReportProgress(progress);
+                        if(oldProgress != progress)
+                        {
+                            oldProgress = progress;
+                            bw.ReportProgress(progress);
+                        }                      
                     }
                 }
 
@@ -262,14 +267,19 @@ namespace CLanWPFTest.Networking
 
                 if (stream.CanRead)
                 {
+                    int oldProgress = 0;
                     for (int i = 0; i < packets; i++)
                     {
                         buffer = new byte[BUFFER_SIZE];
                         int size = stream.Read(buffer, 0, BUFFER_SIZE);
                         fstream.Write(buffer, 0, size);
-                        receivedSize += size;
+                        receivedSize += size; 
                         int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(receivedSize) * 100 / Convert.ToDouble(totalSize)));
-                        bw.ReportProgress(progress);
+                        if (oldProgress != progress)
+                        {
+                            oldProgress = progress;
+                            bw.ReportProgress(progress);
+                        }
                     }
                 }
 

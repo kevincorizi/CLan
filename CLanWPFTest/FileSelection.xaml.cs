@@ -84,11 +84,8 @@ namespace CLanWPFTest
             foreach (User u in destinations)
             {
                 Trace.WriteLine("FTW.XAML.CS - ADDING FILE TRANSFER");
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
-                    cft.Start();
-                });
+                CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
+                cft.Start();
             }
         }
     }

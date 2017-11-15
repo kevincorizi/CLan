@@ -9,6 +9,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace CLanWPFTest.Networking
 {
@@ -69,6 +70,7 @@ namespace CLanWPFTest.Networking
             Files = f;
             Type = t;
 
+            //SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(App.Current.Dispatcher));
             bw = new BackgroundWorker();
             bw.WorkerSupportsCancellation = true;
             bw.WorkerReportsProgress = true;
@@ -99,17 +101,11 @@ namespace CLanWPFTest.Networking
         // Store the current file transfer in global transfer list
         private void Store()
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate
-            {
-                App.AddTransfer(this);
-            });
+            App.AddTransfer(this);
         }
         private void Unstore()
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate
-            {
-                App.RemoveTransfer(this);
-            });
+            App.RemoveTransfer(this);
         }
 
         private void WorkerStartSend(object sender, DoWorkEventArgs e)
