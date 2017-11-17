@@ -21,12 +21,12 @@ namespace CLanWPFTest
         }
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
-            CLanUDPManager.GoOffline();
+            CLanUDPManager.Instance.GoOffline();
         }
 
-        private void PublicMode_Checked(object sender, RoutedEventArgs e)
+        private void PrivateMode_Unchecked(object sender, RoutedEventArgs e)
         {
-            CLanUDPManager.GoOnline();
+            CLanUDPManager.Instance.GoOnline();
         }
 
         private void ContinueClick(object sender, RoutedEventArgs e)

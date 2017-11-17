@@ -56,12 +56,13 @@ namespace CLanWPFTest.Networking
         }
         [JsonIgnore]
         private BackgroundWorker bw;
+        [JsonIgnore]
         public BackgroundWorker BW
         {
             get { return bw; }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        [JsonIgnore]
+        CLanTCPManager TCPManager;
 
         public CLanFileTransfer(User u, List<CLanFile> f, CLanTransferType t)
         {
@@ -70,22 +71,19 @@ namespace CLanWPFTest.Networking
             Files = f;
             Type = t;
 
-            //SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(App.Current.Dispatcher));
             bw = new BackgroundWorker();
             bw.WorkerSupportsCancellation = true;
             bw.WorkerReportsProgress = true;
 
             if (t == CLanTransferType.SEND)
-            {
                 bw.DoWork += WorkerStartSend;
-            }
             else
-            {
                 bw.DoWork += WorkerStartReceive;
-            }
 
             bw.ProgressChanged += WorkerReportProgress;
             bw.RunWorkerCompleted += WorkerCompleted;
+
+            TCPManager = CLanTCPManager.Instance;
         }
 
         public void Start()
@@ -101,11 +99,11 @@ namespace CLanWPFTest.Networking
         // Store the current file transfer in global transfer list
         private void Store()
         {
-            App.AddTransfer(this);
+            OnTransferAdded(this);
         }
         private void Unstore()
         {
-            App.RemoveTransfer(this);
+            OnTransferRemoved(this);
         }
 
         private void WorkerStartSend(object sender, DoWorkEventArgs e)
@@ -121,10 +119,10 @@ namespace CLanWPFTest.Networking
             CLanFileTransferRequest req = new CLanFileTransferRequest(App.me, Other, Files);
             byte[] requestData = new Message(App.me, MessageType.SEND, req).ToByteArray();
 
-            Socket otherSocket = CLanTCPManager.GetConnection(Other);
-            CLanTCPManager.Send(requestData, Other);
+            Socket otherSocket = TCPManager.GetConnection(Other);
+            TCPManager.Send(requestData, Other);
 
-            byte[] responseData = CLanTCPManager.Receive(otherSocket);
+            byte[] responseData = TCPManager.Receive(otherSocket);
             if (responseData != null)
             {
                 Message responseMessage = Message.GetMessage(responseData);
@@ -134,8 +132,7 @@ namespace CLanWPFTest.Networking
                         // Destination accepted the transfer
                         // Show the window with all file transfers
                         Store();
-                        FileTransferWindow.Open();
-                        CLanTCPManager.SendFiles(this);
+                        TCPManager.SendFiles(this);
                         Unstore();
                         break;
                     case MessageType.NACK:
@@ -194,12 +191,11 @@ namespace CLanWPFTest.Networking
 
             // Confirm the transfer
             byte[] toSend = new Message(App.me, MessageType.ACK, "My body is ready!").ToByteArray();
-            CLanTCPManager.Send(toSend, Other);
+            TCPManager.Send(toSend, Other);
 
             // Receive files
             Store();
-            FileTransferWindow.Open();
-            CLanTCPManager.ReceiveFiles(this, root);
+            TCPManager.ReceiveFiles(this, root);
             Unstore();
         }
         
@@ -221,12 +217,26 @@ namespace CLanWPFTest.Networking
             Progress = e.ProgressPercentage;
         }
 
-        // This method is called by the Set accessor of each property.
-        // The CallerMemberName attribute that is applied to the optional propertyName
-        // parameter causes the property name of the caller to be substituted as an argument.
+        #region Events
+        public event PropertyChangedEventHandler PropertyChanged;
+        public static event EventHandler<CLanFileTransfer> TransferAdded;
+        public static event EventHandler<CLanFileTransfer> TransferRemoved;
+        
         private void NotifyPropertyChanged(String propertyName = "")
         {
+            // This method is called by the Set accessor of each property.
+            // The CallerMemberName attribute that is applied to the optional propertyName
+            // parameter causes the property name of the caller to be substituted as an argument.
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        public void OnTransferAdded(CLanFileTransfer ctf)
+        {
+            TransferAdded?.Invoke(this, ctf);
+        }
+        public void OnTransferRemoved(CLanFileTransfer ctf)
+        {
+            TransferRemoved?.Invoke(this, ctf);
+        }
+        #endregion
     }
 }

@@ -1,36 +1,52 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace CLanWPFTest.Networking
 {
     public class CLanUDPManager
     {
-        private static short udpPort = 20002;
+        private readonly short udpPort = 20002;
+        public readonly int ADVERTISEMENT_INTERVAL;
+        public readonly int KEEP_ALIVE_TIMER_MILLIS;
 
-        private static int ADVERTISEMENT_INTERVAL = 5000;
-        private static UdpClient inUDP = new UdpClient(udpPort);
-        private static UdpClient outUDP = new UdpClient();
+        private UdpClient inUDP;
+        private UdpClient outUDP;
 
-        public static int GetAdvertisementInterval()
+        private static CLanUDPManager instance = null;
+        private static readonly object _lock = new object();
+
+        private CLanUDPManager()
         {
-            return ADVERTISEMENT_INTERVAL;
+            ADVERTISEMENT_INTERVAL = 5000;
+            KEEP_ALIVE_TIMER_MILLIS = 2 * ADVERTISEMENT_INTERVAL;
+            inUDP = new UdpClient(udpPort);
+            outUDP = new UdpClient();
         }
 
-        public static async Task StartBroadcastAdvertisement(CancellationToken ct)
+        public static CLanUDPManager Instance
+        {
+            get
+            {
+                lock(_lock)
+                {
+                    if (instance == null)
+                        instance = new CLanUDPManager();
+                }
+                return instance;
+            }
+        }
+
+        public async Task StartAdvertisement(CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             do {
                 try {
-                    Message hello = new Message(App.me, MessageType.HELLO, "");
-                    byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(hello, CLanJSON.settings()));
+                    byte[] bytes = (new Message(App.me, MessageType.HELLO, "")).ToByteArray();
                     await outUDP.SendAsync(bytes, bytes.Length, ip);
                 }
                 catch (OperationCanceledException oce) {
@@ -46,48 +62,79 @@ namespace CLanWPFTest.Networking
             Trace.WriteLine("Exiting advertisement");
         }
 
-        public static async Task StartAdListening()
+        public async Task StartListening(CancellationToken ct)
         {
-            while (true)
-            {
-                UdpReceiveResult res = await inUDP.ReceiveAsync();
-                if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
-                    continue;
-            
-                byte[] bytes = res.Buffer;
-                Message m = JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(bytes), CLanJSON.settings());
-
-                //Trace.WriteLine(Encoding.ASCII.GetString(bytes));
-
-                m.sender.Ip = res.RemoteEndPoint.Address;
-                switch(m.messageType)
+            ct.ThrowIfCancellationRequested();
+            while(true) {
+                try
                 {
-                    case MessageType.HELLO:
-                        Application.Current.Dispatcher.Invoke(new Action(() => App.AddUser(m.sender)));
-                        Trace.WriteLine("RECEIVED HELLO UDP FROM " + m.sender.Ip.ToString());
-                        break;
-                    case MessageType.BYE:
-                        Application.Current.Dispatcher.Invoke(new Action(() => App.RemoveUser(m.sender)));
-                        break;
-                    default:
-                        Trace.WriteLine("Invalid message");
-                        break;
+                    UdpReceiveResult res = await inUDP.ReceiveAsync();
+                    if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
+                        continue;
+
+                    Message m = Message.GetMessage(res.Buffer);
+                    m.sender.Ip = res.RemoteEndPoint.Address;
+                    switch (m.messageType)
+                    {
+                        case MessageType.HELLO:
+                            OnUserJoin(m.sender);
+                            Trace.WriteLine("RECEIVED HELLO UDP FROM " + m.sender.Ip.ToString());
+                            break;
+                        case MessageType.BYE:
+                            OnUserLeave(m.sender);
+                            break;
+                        default:
+                            Trace.WriteLine("Invalid message");
+                            break;
+                    }
+                }
+                catch (OperationCanceledException oce)
+                {
+                    Trace.WriteLine("Terminating listening" + oce.Message);
+                    return;
+                }
+                catch (SocketException se)
+                {
+                    Trace.WriteLine("Connection error in UDP listener" + se.Message);
+                    return;
                 }
             }
         }
-        public static void GoOffline()
+
+        public void GoOffline()
         {
-            Trace.WriteLine("Going Offline");
-            Message bye = new Message(App.me, MessageType.BYE, "Farewell, cruel world!");
-            byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(bye, CLanJSON.settings()));
+            byte[] bytes = (new Message(App.me, MessageType.BYE, "Farewell, cruel world!")).ToByteArray();
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             outUDP.Send(bytes, bytes.Length, ip);
-            App.DeactivateAdvertising();
+            OnToggleOffline();
         }
-        public static void GoOnline()
+        public void GoOnline()
         {
-            Trace.WriteLine("Going Online");
-            App.ActivateAdvertising();
+            OnToggleOnline();
         }
+
+        #region Events
+        public event EventHandler<User> UserJoin;
+        public event EventHandler<User> UserLeave;
+        public event EventHandler ToggleOnline;
+        public event EventHandler ToggleOffline;
+
+        public void OnUserJoin(User u)
+        {
+            UserJoin?.Invoke(this, u);
+        }
+        public void OnUserLeave(User u)
+        {
+            UserLeave?.Invoke(this, u);
+        }
+        public void OnToggleOnline()
+        {
+            ToggleOnline?.Invoke(this, EventArgs.Empty);
+        }
+        public void OnToggleOffline()
+        {
+            ToggleOffline?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
     }
 }

@@ -1,6 +1,6 @@
 ﻿using CLanWPFTest.Networking;
+using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,20 +18,9 @@ namespace CLanWPFTest
             this.DataContext = this;
         }
 
-        public static void Open()
+        public void Open()
         {
-            App.Current.Dispatcher.Invoke(() => App.TransferWindow.Show());
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            // Do not close the window if there are ongoing file transfers,
-            // Otherwise you lose the chance to check them and stop them
-            if(App.IncomingTransfers.Count != 0 || App.OutgoingTransfers.Count != 0)
-            {
-                e.Cancel = true;
-                this.WindowState = WindowState.Minimized;
-            }
+            OnDisplay();
         }
 
         void cancel_Click(object sender, RoutedEventArgs e)
@@ -41,6 +30,12 @@ namespace CLanWPFTest
             // Find the specific file transfer we want to stop
             CLanFileTransfer cft = b.DataContext as CLanFileTransfer;
             cft.Stop();
+        }
+
+        public event EventHandler Display;
+        public void OnDisplay()
+        {
+            Display?.Invoke(this, EventArgs.Empty);
         }
     }
 }

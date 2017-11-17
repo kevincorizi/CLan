@@ -13,33 +13,63 @@ namespace CLanWPFTest.Networking
 {
     class CLanTCPManager
     {
-        private static int tcpListeningPort = 20001;
-        private static int BUFFER_SIZE = 1024;
+        private int tcpListeningPort = 20001;
+        private int secondInstancePort = 20003;
+        private int BUFFER_SIZE = 1024;
+        private Dictionary<User, Socket> sockets;
 
-        private static Dictionary<User, Socket> sockets = new Dictionary<User, Socket>();
+        private static CLanTCPManager instance = null;
+        private static readonly object _lock = new object();
+       
+        private CLanTCPManager()
+        {
+            sockets = new Dictionary<User, Socket>();
+        }
+
+        public static CLanTCPManager Instance {
+            get
+            {
+                lock (_lock)
+                {
+                    if (instance == null)
+                        instance = new CLanTCPManager();
+                }
+                return instance;
+            }
+        }
 
         /// <summary>
         /// Start listening for new TCP connections
         /// </summary>
-        public static void StartListening()
-        {
-            
-            Trace.WriteLine("Starting TCP listener...");
-            TcpListener listener = new TcpListener(App.me.Ip, tcpListeningPort);
-            listener.Start();
-            while(true)
+        public void StartListening(CancellationToken ct)
+        {            
+            try
             {
-                Trace.WriteLine("Waiting for connections...");
-                Socket client = listener.AcceptSocket();
+                ct.ThrowIfCancellationRequested();
+                TcpListener listener = new TcpListener(App.me.Ip, tcpListeningPort);
+                listener.Start();
+                while (true)
+                {
+                    Socket client = listener.AcceptSocket();
 
-                // Someone contacted me, i need to answer, but in a separate thread
-                Thread t = new Thread(new ParameterizedThreadStart(HandleAccept));
-                t.Start(client);
+                    // Someone contacted me, i need to answer, but in a separate thread
+                    Thread t = new Thread(() => HandleAccept(client));
+                    t.Start();
+                }
+            }
+            catch (OperationCanceledException oce)
+            {
+                Trace.WriteLine("Terminating TCP listening" + oce.Message);
+                return;
+            }
+            catch (SocketException se)
+            {
+                Trace.WriteLine("Connection error in TCP listener" + se.Message);
+                return;
             }
         }
 
-
-        public static Socket GetConnection(User dest)
+        public Socket GetConnection(User dest)
         {
             IPEndPoint i = new IPEndPoint(dest.Ip, tcpListeningPort);
             if (!sockets.ContainsKey(dest))
@@ -50,7 +80,7 @@ namespace CLanWPFTest.Networking
             return sockets[dest];
         }
 
-        public static void Send(byte[] message, User dest)
+        public void Send(byte[] message, User dest)
         {
             if (!sockets.ContainsKey(dest) || !sockets[dest].Connected)
             {
@@ -76,7 +106,7 @@ namespace CLanWPFTest.Networking
             }
         }
 
-        public static byte[] Receive(Socket source)
+        public byte[] Receive(Socket source)
         {
             // Uses the GetStream public method to return the NetworkStream.
             NetworkStream netStream = new NetworkStream(source);
@@ -104,13 +134,10 @@ namespace CLanWPFTest.Networking
             }
         }
 
-        public static void HandleAccept(object obj)
+        public void HandleAccept(Socket client)
         {
             // This method is already being executed in a separate thread
             Trace.WriteLine("New connection!");
-
-            // retrieve client from parameter passed to thread
-            Socket client = (Socket)obj;
             User source = App.OnlineUsers.SingleOrDefault(u => u.Ip.Equals((client.RemoteEndPoint as IPEndPoint).Address));
             if (source == null)
             {
@@ -122,27 +149,20 @@ namespace CLanWPFTest.Networking
                 sockets.Add(source, client);
             }
 
-            HandleIncomingRequest(client);
-        }
-
-        public static void HandleIncomingRequest(Socket source)
-        {
-            // This method is executed in the same thread as HandleAccept, which is a separate thread
-            byte[] data = Receive(source);
+            byte[] data = Receive(client);
             // Trace.WriteLine(Encoding.ASCII.GetString(data));
             Message m = Message.GetMessage(data);
             CLanFileTransferRequest req = CLanFileTransferRequest.GetRequest(m.message.ToString());
 
-            if(!sockets.ContainsValue(source))
+            if (!sockets.ContainsValue(client))
             {
                 // This means that the sender was probably in private mode and therefore not inserted yet
-                sockets.Add(m.sender, source);
+                sockets.Add(m.sender, client);
             }
 
             req.Prompt();
         }
-
-        public static void SendFiles(CLanFileTransfer cft)
+        public void SendFiles(CLanFileTransfer cft)
         {
             User other = cft.Other;
             List<CLanFile> files = cft.Files;
@@ -192,7 +212,7 @@ namespace CLanWPFTest.Networking
             sockets.Remove(other);
         }
 
-        public static void ReceiveFiles(CLanFileTransfer cft, string rootFolder = "")
+        public void ReceiveFiles(CLanFileTransfer cft, string rootFolder = "")
         {
             User other = cft.Other;
             List<CLanFile> files = cft.Files;
@@ -285,6 +305,12 @@ namespace CLanWPFTest.Networking
 
             sockets[other].Close();
             sockets.Remove(other);
+        }
+
+        public event EventHandler<string[]> FileListReceived;
+        public void OnFileListReceived(string[] list)
+        {
+            FileListReceived?.Invoke(this, list);
         }
     }
 }

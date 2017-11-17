@@ -41,7 +41,7 @@ namespace CLanWPFTest.Networking
             }
             // Decline the request
             byte[] toSend = new Message(App.me, MessageType.NACK, "Maybe next time :/").ToByteArray();
-            CLanTCPManager.Send(toSend, From);
+            CLanTCPManager.Instance.Send(toSend, From);
             return false;
         }
 

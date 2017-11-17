@@ -1,12 +1,14 @@
 ﻿using CLanWPFTest.Networking;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Forms;
 
 namespace CLanWPFTest
@@ -16,10 +18,9 @@ namespace CLanWPFTest
     /// </summary>
     public partial class App : System.Windows.Application
     {
-        /// <summary>
+#region Collections
         /// List containing currently visible users on the network.
         /// It is only updated by the UDPManager, so no need for it to be thread-safe
-        /// </summary>
         public static ObservableCollection<User> OnlineUsers { get; set; }
        
         // User will see one progress bar for each batch of files to the same destinations.
@@ -28,35 +29,62 @@ namespace CLanWPFTest
         // only accesses one element of the list, so it has to be thread-safe
         public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
         public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
-        private static object _transferLock;
-
-        /// <summary>
-        /// Current user
-        /// </summary>
+#endregion
+        // Current user
         public static User me { get; set; }
 
-        private static int KEEP_ALIVE_TIMER_MILLIS = 2 * CLanUDPManager.GetAdvertisementInterval();
+        private NotifyIcon NotifyIcon;
 
-        private NotifyIcon _notifyIcon;
+        private Task listener, advertiser, tcpListener, cleaner;
+        private CancellationTokenSource ctsListener, ctsAdvertiser, ctsTcpListener, ctsCleaner;
 
-        private static Task listener, advertiser, tcpListener, cleaner;
-        private static CancellationTokenSource ctsAd;
+        public MainWindow mw = null;
+        public FileTransferWindow TransferWindow = null;
+        private CLanTCPManager TCPManager;
+        private CLanUDPManager UDPManager;
 
-        public static MainWindow mw = null;
-        public static FileTransferWindow TransferWindow = null;
+        private readonly string AppID = "CLan_Akcora_Corizi_fvbnjefkod9c8ygdbnemkcixusygw";
+        private bool ownsMutex;
+        private Mutex instanceMutex;
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // This method checks if another instance of the program already exists
+            // This means that the user right-clicked on some files, starting a new process.
+            // In this case, the second instance must only pass the files and close immediately
+            instanceMutex = new Mutex(true, AppID, out ownsMutex);
+            if(ownsMutex)
+            {
+                // First instance, start server
+                StartReadParameters(); 
+            }
+            else
+            {
+                // Second instance, start client
+                PassParameters(e.Args);
+                Current.Shutdown();
+                Environment.Exit(0);
+            }
+
             base.OnStartup(e);
 
-            _notifyIcon = new NotifyIcon();
-            _notifyIcon.DoubleClick += (s, args) => ShowUsersWindow();
-            _notifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
-            _notifyIcon.Visible = true;
+            TCPManager = CLanTCPManager.Instance;
+
+            UDPManager = CLanUDPManager.Instance;
+            UDPManager.UserJoin += AddUser;
+            UDPManager.UserLeave += RemoveUser;
+            UDPManager.ToggleOnline += ActivateAdvertising;
+            UDPManager.ToggleOffline += DeactivateAdvertising;
+
+            CLanFileTransfer.TransferAdded += AddTransfer;
+            CLanFileTransfer.TransferRemoved += RemoveTransfer;
+
+            NotifyIcon = new NotifyIcon();
+            NotifyIcon.DoubleClick += (s, args) => ShowUsersWindow();
+            NotifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
+            NotifyIcon.Visible = true;
 
             CreateContextMenu();
-
-            _transferLock = new object();
 
             OnlineUsers = new ObservableCollection<User>();
             IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
@@ -74,36 +102,50 @@ namespace CLanWPFTest
             if (mw == null)
                 mw = new MainWindow();
             if (TransferWindow == null)
+            {
                 TransferWindow = new FileTransferWindow();
+                TransferWindow.Display += ShowTransferWindow;
+                TransferWindow.Closing += CloseTransferWindow;
+            }
             ShowUsersWindow();
         }
 
-        public static void AddUser(User u)
+        #region Users
+        private void AddUser(object sender, User u)
         {
-            if (!OnlineUsers.Contains(u)) {
-                u.lastKeepAlive = DateTime.Now;
-                OnlineUsers.Add(u);
-            }
-            else {
-                User target = OnlineUsers.Single(user => user.Equals(u));
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                if (!OnlineUsers.Contains(u))
+                {
+                    u.lastKeepAlive = DateTime.Now;
+                    OnlineUsers.Add(u);
+                }
+                else
+                {
+                    User target = OnlineUsers.Single(user => user.Equals(u));
 
-                // Refresh the timer for the user
-                target.lastKeepAlive = DateTime.Now;
+                    // Refresh the timer for the user
+                    target.lastKeepAlive = DateTime.Now;
 
-                // Update fields (in case the user updated name or picture)
-                // These modifications will be visible because User implements INotifyPropertyChanged
-                target.Name = u.Name;
-                target.Picture = u.Picture;
-            }
+                    // Update fields (in case the user updated name or picture)
+                    // These modifications will be visible because User implements INotifyPropertyChanged
+                    target.Name = u.Name;
+                    target.Picture = u.Picture;
+                }
+            });            
         }
-
-        public static void RemoveUser(User u)
+        private void RemoveUser(object sender, User u)
         {
-            if (OnlineUsers.Contains(u))
-                OnlineUsers.Remove(u);
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                if (OnlineUsers.Contains(u))
+                    OnlineUsers.Remove(u);
+            });  
         }
+        #endregion
 
-        public static void AddTransfer(CLanFileTransfer cft)
+        #region Transfers
+        private void AddTransfer(object sender, CLanFileTransfer cft)
         {
             switch(cft.Type)
             {
@@ -119,9 +161,9 @@ namespace CLanWPFTest
                     Trace.WriteLine("Invalid transfer-added type, please check your code");
                     break;
             }
+            ShowTransferWindow();
         }
-
-        public static void RemoveTransfer(CLanFileTransfer cft)
+        private void RemoveTransfer(object sender, CLanFileTransfer cft)
         {
             switch (cft.Type)
             {
@@ -138,54 +180,117 @@ namespace CLanWPFTest
                     break;
             }
         }
-        public static void ActivateUserCleaner()
+        #endregion
+
+        #region Background Services
+        private void ActivateAdvertising(object sender = null, EventArgs args = null)
         {
-            cleaner = Task.Run(() => {
-                while (true) {
-                    Trace.WriteLine("Cleaning...");
+            Trace.WriteLine("ActivateAdvertising");
+            ctsAdvertiser = new CancellationTokenSource();
+            CancellationToken ctAdvertiser = ctsAdvertiser.Token;
+
+            ctsListener = new CancellationTokenSource();
+            CancellationToken ctListener = ctsListener.Token;
+
+            listener = Task.Run(() => UDPManager.StartListening(ctListener), ctListener);
+            advertiser = Task.Run(() => UDPManager.StartAdvertisement(ctAdvertiser), ctAdvertiser);
+        }
+        private void DeactivateAdvertising(object sender = null, EventArgs args = null)
+        {
+            Trace.WriteLine("DectivateAdvertising");
+            ctsAdvertiser.Cancel();
+        }
+
+        private void ActivateUserCleaner()
+        {
+            ctsCleaner = new CancellationTokenSource();
+            CancellationToken ctCleaner = ctsCleaner.Token; 
+            cleaner = Task.Run(() => CleanUsers(ctCleaner), ctCleaner);
+        }
+        private void DeactivateUserCleaner()
+        {
+            Trace.WriteLine("DectivateUserCleaner");
+            ctsCleaner.Cancel();
+        }
+        private void CleanUsers(CancellationToken ct)
+        {
+            do
+            {
+                try
+                {
                     DateTime now = DateTime.Now;
-                    foreach (User u in OnlineUsers) {
-                        if((now.Subtract(u.lastKeepAlive)).Seconds > KEEP_ALIVE_TIMER_MILLIS / 1000) {
+                    foreach (User u in OnlineUsers)
+                    {
+                        if ((now.Subtract(u.lastKeepAlive)).Milliseconds > UDPManager.KEEP_ALIVE_TIMER_MILLIS)
+                        {
                             Trace.WriteLine("User is too old, removing");
-                            Current.Dispatcher.BeginInvoke(new Action(() => RemoveUser(u)));
+                            UDPManager.OnUserLeave(u);
                         }
                     }
-                    Thread.Sleep(KEEP_ALIVE_TIMER_MILLIS);
+                    Thread.Sleep(UDPManager.KEEP_ALIVE_TIMER_MILLIS);
                 }
-            });
+                catch (OperationCanceledException oce)
+                {
+                    Trace.WriteLine("Terminating cleaning" + oce.Message);
+                    return;
+                }
+            } while (!ct.WaitHandle.WaitOne(UDPManager.KEEP_ALIVE_TIMER_MILLIS));
         }
 
-        public static void ActivateAdvertising()
+        private void ActivateTCPListener()
         {
-            ctsAd = new CancellationTokenSource();
-            CancellationToken ctAd = ctsAd.Token;
-
-            listener = Task.Run(() => CLanUDPManager.StartAdListening());
-            advertiser = Task.Run(() => CLanUDPManager.StartBroadcastAdvertisement(ctAd), ctAd);
+            ctsTcpListener = new CancellationTokenSource();
+            CancellationToken ctTcpListener = ctsTcpListener.Token;
+            tcpListener = Task.Run(() => TCPManager.StartListening(ctTcpListener), ctTcpListener);
         }
-
-        public static void ActivateTCPListener()
+        private void DeactivateTCPListener()
         {
-            tcpListener = Task.Run(() => CLanTCPManager.StartListening());
+            Trace.WriteLine("DectivateTCPListening");
+            ctsTcpListener.Cancel();
         }
+        #endregion
 
-        public static void DeactivateAdvertising()
+        #region Right Click
+        private void PassParameters(string[] args)
         {
-            ctsAd.Cancel();
-        }
+            using (NamedPipeClientStream client = new NamedPipeClientStream(AppID))
+            using (StreamWriter writer = new StreamWriter(client))
+            {
+                client.Connect(200);
 
-        private void CreateContextMenu()
+                foreach (String argument in args)
+                    writer.WriteLine(argument);
+            }
+        }
+        private void StartReadParameters()
         {
-            _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
-            _notifyIcon.ContextMenuStrip.Items.Add("Apri CLan").Click += (s, e) => ShowUsersWindow();
-            _notifyIcon.ContextMenuStrip.Items.Add("Impostazioni").Click += (s, e) => ShowSettings();
-            _notifyIcon.ContextMenuStrip.Items.Add("Attiva modalità privata").Click += (s, e) => TraySwitchToPrivate(s);
-            _notifyIcon.ContextMenuStrip.Items.Add("Esci").Click += (s, e) => Current.Shutdown();
-        }
+            Task.Run(() =>
+            {
+                while(true)
+                {
+                    using (NamedPipeServerStream server = new NamedPipeServerStream(AppID))
+                    using (StreamReader reader = new StreamReader(server))
+                    {
+                        server.WaitForConnection();
 
+                        List<String> arguments = new List<String>();
+                        while (server.IsConnected)
+                        {
+                            arguments.Add(reader.ReadLine());
+                            Trace.WriteLine(arguments.Last());
+                        }
+                        // Here i have the list of files for the current right click
+                    }
+                }
+            });            
+        }
+        #endregion
+
+        #region Windows
         private void ShowUsersWindow()
         {
-            if (mw.IsVisible) { 
+            if (mw.IsVisible)
+            {
                 if (mw.WindowState == WindowState.Minimized)
                     mw.WindowState = WindowState.Normal;
                 mw.Activate();
@@ -193,6 +298,32 @@ namespace CLanWPFTest
             else
                 mw.Show();
             mw._mainFrame.Navigate(new UsersWindow());
+        }
+
+        private void ShowTransferWindow(object sender = null, EventArgs e = null)
+        {
+            App.Current.Dispatcher.Invoke(() => TransferWindow.Show());
+        }
+        private void CloseTransferWindow(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Do not close the window if there are ongoing file transfers,
+            // Otherwise you lose the chance to check them and stop them
+            if (IncomingTransfers.Count != 0 || OutgoingTransfers.Count != 0)
+            {
+                e.Cancel = true;
+                TransferWindow.WindowState = WindowState.Minimized;
+            }
+        }
+#endregion
+
+        #region TrayIcon
+        private void CreateContextMenu()
+        {
+            NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
+            NotifyIcon.ContextMenuStrip.Items.Add("Apri CLan").Click += (s, e) => ShowUsersWindow();
+            NotifyIcon.ContextMenuStrip.Items.Add("Impostazioni").Click += (s, e) => ShowSettings();
+            NotifyIcon.ContextMenuStrip.Items.Add("Attiva modalità privata").Click += (s, e) => TraySwitchToPrivate(s);
+            NotifyIcon.ContextMenuStrip.Items.Add("Esci").Click += (s, e) => Current.Shutdown();
         }
 
         private void ShowSettings()
@@ -210,7 +341,7 @@ namespace CLanWPFTest
 
         private void TraySwitchToPrivate(object sender)
         {
-            CLanUDPManager.GoOffline();
+            UDPManager.GoOffline();
             // Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
             if (menuItem != null) {
@@ -222,7 +353,7 @@ namespace CLanWPFTest
 
         private void TraySwitchToPublic(object sender)
         {
-            CLanUDPManager.GoOnline();
+            UDPManager.GoOnline();
             // Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
             if (menuItem != null) {
@@ -234,15 +365,23 @@ namespace CLanWPFTest
 
         protected override void OnExit(ExitEventArgs e)
         {
-            Trace.WriteLine("OnExit");
-            CLanUDPManager.GoOffline();
-            // Close all windows
-            foreach (Window window in Current.Windows)
-                window.Close();
+            if(instanceMutex != null && ownsMutex)
+            {
+                instanceMutex.ReleaseMutex();
+                instanceMutex = null;
 
-            _notifyIcon.Dispose();
-            _notifyIcon = null;
+                Trace.WriteLine("OnExit");
+                UDPManager.GoOffline();
+                
+                // Close all windows
+                foreach (Window window in Current.Windows)
+                    window.Close();
+
+                NotifyIcon.Dispose();
+                NotifyIcon = null;
+            }           
             base.OnExit(e);
         }        
     }
+#endregion
 }

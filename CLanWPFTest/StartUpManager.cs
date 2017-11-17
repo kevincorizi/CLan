@@ -11,6 +11,12 @@ namespace CLanWPFTest
                 if(key.GetValue("CLan") == null)
                     key.SetValue("CLan", "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"");
             }
+
+            /*using (RegistryKey key = Registry.ClassesRoot.OpenSubKey("*\\shell", true))
+            {
+                if (key.GetValue("Condividi con CLan") == null)
+                    key.SetValue("Condividi con CLan", System.Reflection.Assembly.GetExecutingAssembly().Location + " %1");
+            }*/
         }
 
         public static void RemoveApplicationFromCurrentUserStartup()
