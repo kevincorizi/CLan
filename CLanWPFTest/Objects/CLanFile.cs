@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace CLanWPFTest.Objects
@@ -48,6 +47,57 @@ namespace CLanWPFTest.Objects
                 }
             }
             // files.ForEach((x) => Trace.WriteLine(x.Name));
+            return files;
+        }
+
+        public static List<CLanFile> EnforceDuplicatePolicy(List<CLanFile> files, string root)
+        {
+            foreach (CLanFile f in files)
+            {
+                string directoryName = Path.GetDirectoryName(f.Name);
+                // If incoming file is in folder
+                if (directoryName.Length > 0)
+                {
+                    // If there is no current folder with the same name, create it
+                    // Note that this will be always valid for subfolders
+                    // If there is a folder with that name, apply the policy selected by the user
+
+                    if (Directory.Exists(root + directoryName))
+                    {
+                        // A folder with that name already exists
+                        if (SettingsManager.DefaultRenameOnDuplicate)
+                        {
+                            // Apply renaming policy
+                            // Need to change directoryName to something that does not exist
+                            string newDirectoryName = directoryName;
+                            for (int i = 1; ; i++)
+                            {
+                                newDirectoryName = newDirectoryName + " (" + i + ")";
+                                if (!Directory.Exists(root + newDirectoryName))
+                                    break;
+                            }
+                            directoryName = newDirectoryName;
+                        }
+                    }
+                    Directory.CreateDirectory(root + directoryName);                
+                }
+
+                // Check if the file already exists and apply duplicate policy
+                if (File.Exists(root + f.Name))
+                {
+                    if (SettingsManager.DefaultRenameOnDuplicate)
+                    {
+                        string newFileName = f.Name;
+                        for (int i = 1; ; i++)
+                        {
+                            newFileName = Path.GetFileNameWithoutExtension(f.Name) + " (" + i + ")" + Path.GetExtension(f.Name);
+                            if (!File.Exists(root + newFileName))
+                                break;
+                        }
+                        f.Name = newFileName;
+                    }
+                }
+            }
             return files;
         }
     }

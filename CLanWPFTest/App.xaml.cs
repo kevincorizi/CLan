@@ -30,7 +30,6 @@ namespace CLanWPFTest
         // only accesses one element of the list, so it has to be thread-safe
         public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
         public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
-
         public static ObservableCollection<CLanFile> SelectedFiles { get; set; }
         #endregion
         // Current user
@@ -98,6 +97,7 @@ namespace CLanWPFTest
             me = new User(CLanWPFTest.Properties.Settings.Default.Name);
 
             ActivateAdvertising();
+            ActivateUDPListener();
             ActivateUserCleaner();
             ActivateTCPListener();
 
@@ -190,11 +190,6 @@ namespace CLanWPFTest
             Trace.WriteLine("ActivateAdvertising");
             ctsAdvertiser = new CancellationTokenSource();
             CancellationToken ctAdvertiser = ctsAdvertiser.Token;
-
-            ctsListener = new CancellationTokenSource();
-            CancellationToken ctListener = ctsListener.Token;
-
-            listener = Task.Run(() => UDPManager.StartListening(ctListener), ctListener);
             advertiser = Task.Run(() => UDPManager.StartAdvertisement(ctAdvertiser), ctAdvertiser);
         }
         private void DeactivateAdvertising(object sender = null, EventArgs args = null)
@@ -202,16 +197,29 @@ namespace CLanWPFTest
             Trace.WriteLine("DectivateAdvertising");
             ctsAdvertiser.Cancel();
         }
+        private void ActivateUDPListener()
+        {
+            Trace.WriteLine("ActivateUDPListener");
+            ctsListener = new CancellationTokenSource();
+            CancellationToken ctListener = ctsListener.Token;
+            listener = Task.Run(() => UDPManager.StartListening(ctListener), ctListener);
+        }
+        private void DeactivateUDPListener()
+        {
+            Trace.WriteLine("DectivateUDPListener");
+            ctsListener.Cancel();
+        }
 
         private void ActivateUserCleaner()
         {
+            Trace.WriteLine("ActivateUserCleaner");           
             ctsCleaner = new CancellationTokenSource();
             CancellationToken ctCleaner = ctsCleaner.Token; 
             cleaner = Task.Run(() => CleanUsers(ctCleaner), ctCleaner);
         }
         private void DeactivateUserCleaner()
         {
-            Trace.WriteLine("DectivateUserCleaner");
+            Trace.WriteLine("DeactivateUserCleaner");
             ctsCleaner.Cancel();
         }
         private void CleanUsers(CancellationToken ct)
@@ -335,7 +343,6 @@ namespace CLanWPFTest
             NotifyIcon.ContextMenuStrip.Items.Add("Attiva modalità privata").Click += (s, e) => TraySwitchToPrivate(s);
             NotifyIcon.ContextMenuStrip.Items.Add("Esci").Click += (s, e) => Current.Shutdown();
         }
-
         private void ShowSettings()
         {
             if (mw.IsVisible)
@@ -348,7 +355,6 @@ namespace CLanWPFTest
                 mw.Show();
             mw._mainFrame.Navigate(new SettingsPage());
         }
-
         private void TraySwitchToPrivate(object sender)
         {
             UDPManager.GoOffline();
@@ -360,7 +366,6 @@ namespace CLanWPFTest
                 menuItem.Click += (s, e) => TraySwitchToPublic(s);
             }
         }
-
         private void TraySwitchToPublic(object sender)
         {
             UDPManager.GoOnline();
@@ -372,26 +377,34 @@ namespace CLanWPFTest
                 menuItem.Click += (s, e) => TraySwitchToPrivate(s);
             }
         }
-
         protected override void OnExit(ExitEventArgs e)
         {
             if(instanceMutex != null && ownsMutex)
             {
+                Trace.WriteLine("OnExit");
                 instanceMutex.ReleaseMutex();
                 instanceMutex = null;
+                Trace.WriteLine("Mutex released");
 
-                Trace.WriteLine("OnExit");
-                UDPManager.GoOffline();
-                
+                DeactivateAdvertising();
+                Trace.WriteLine("DeactivateAdvertising");
+                DeactivateUDPListener();
+                Trace.WriteLine("DeactivateUDPListener");
+                DeactivateTCPListener();
+                Trace.WriteLine("DeactivateTCPListener");
+                DeactivateUserCleaner();
+                Trace.WriteLine("DeactivateUserCleaner");
+
                 // Close all windows
                 foreach (Window window in Current.Windows)
                     window.Close();
 
                 NotifyIcon.Dispose();
                 NotifyIcon = null;
+                Trace.WriteLine("NotifyIcon disposed");
             }           
             base.OnExit(e);
         }        
     }
-#endregion
+    #endregion
 }

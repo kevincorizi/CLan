@@ -7,9 +7,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
-using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace CLanWPFTest.Networking
 {
@@ -155,26 +152,20 @@ namespace CLanWPFTest.Networking
             if (bw.CancellationPending)
                 e.Cancel = true;
         }
-
         private void WorkerStartReceive(object sender, DoWorkEventArgs e)
         {
             // This method starts when we accept the file request (but before we inform the other), so we already have
             // all the information about it. We know the sender, how many files and
             // the size, name and path of each of them
-            Trace.WriteLine("CTF.CS - WORKERSTARTRECEIVE");
-
             // Since we accepted the request, we may have to specify a save path, according to our settings
             // The client confirms the transfer only after the path has been specified
             // Please note that it is not possible to cancel the transfer during this phase: it will be again possible
             // during the transfer itself
+            Trace.WriteLine("CTF.CS - WORKERSTARTRECEIVE");
 
             // Check if the user wants to use the default download folder or if it wants to change it
-            string root = "";
-            if (!Properties.Settings.Default.DefaultAskSavePath && Properties.Settings.Default.DefaultSavePath != "") // If ASK is not default behaviour
-            {
-                root = Properties.Settings.Default.DefaultSavePath; // Then start saving there
-            }
-            else
+            string root = SettingsManager.DefaultSavePath;
+            if (!SettingsManager.SaveInDefaultPath) // If ASK is not default behaviour
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
@@ -197,8 +188,7 @@ namespace CLanWPFTest.Networking
             Store();
             TCPManager.ReceiveFiles(this, root);
             Unstore();
-        }
-        
+        }      
 
         private void WorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -211,7 +201,6 @@ namespace CLanWPFTest.Networking
                 Trace.WriteLine("Operation completed: " + e.Result);
             }
         }
-
         private void WorkerReportProgress(object sender, ProgressChangedEventArgs e)
         {
             Progress = e.ProgressPercentage;

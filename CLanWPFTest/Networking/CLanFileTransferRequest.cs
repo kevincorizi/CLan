@@ -1,5 +1,6 @@
 ﻿using CLanWPFTest.Objects;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -23,42 +24,43 @@ namespace CLanWPFTest.Networking
             return JsonConvert.DeserializeObject<CLanFileTransferRequest>(data, CLanJSON.settings());
         }
 
-        public bool Prompt()
+        public void Prompt()
         {
             // Check if the user wants to accept all file transfers
-            if (Properties.Settings.Default.DefaultAcceptTransfer == true)
+            if (SettingsManager.DefaultAcceptTransfer)
             {
-                AcceptTransfer();
-                return true;
+                OnTransferAccepted();
+                return;
             }
-
             // Ask the user to accept or decline the file transfer
             MessageBoxResult result = MessageBox.Show(this.ToString(), "CLan Incoming Files", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                AcceptTransfer();
-                return true;
+                OnTransferAccepted();
+                return;
             }
-            // Decline the request
-            byte[] toSend = new Message(App.me, MessageType.NACK, "Maybe next time :/").ToByteArray();
-            CLanTCPManager.Instance.Send(toSend, From);
-            return false;
-        }
-
-        private void AcceptTransfer()
-        {
-            CLanFileTransfer cft = new CLanFileTransfer(From, Files, CLanTransferType.RECEIVE);
-            cft.Start();    // Start the working thread, that will also ask for the save directory
+            OnTransferRefused();       
         }
 
         public override string ToString()
         {
             string s = From.Name + " wants to send the following files: \n";
-            foreach (CLanFile f in Files)
-            {
-                s += f.Name + " " + "(" + f.Size + " bytes)\n";
-            }
+            Files.ForEach((f) => s += f.Name + " " + "(" + f.Size + " bytes)\n");
             return s;
         }
+
+        #region EVENTS
+        public event EventHandler TransferAccepted;
+        public event EventHandler TransferRefused;
+
+        public void OnTransferAccepted()
+        {
+            TransferAccepted?.Invoke(this, EventArgs.Empty);
+        }
+        public void OnTransferRefused()
+        {
+            TransferRefused?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
     }
 }

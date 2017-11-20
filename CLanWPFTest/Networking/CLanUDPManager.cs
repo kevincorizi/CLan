@@ -13,9 +13,6 @@ namespace CLanWPFTest.Networking
         public readonly int ADVERTISEMENT_INTERVAL;
         public readonly int KEEP_ALIVE_TIMER_MILLIS;
 
-        private UdpClient inUDP;
-        private UdpClient outUDP;
-
         private static CLanUDPManager instance = null;
         private static readonly object _lock = new object();
 
@@ -23,8 +20,6 @@ namespace CLanWPFTest.Networking
         {
             ADVERTISEMENT_INTERVAL = 5000;
             KEEP_ALIVE_TIMER_MILLIS = 2 * ADVERTISEMENT_INTERVAL;
-            inUDP = new UdpClient(udpPort);
-            outUDP = new UdpClient();
         }
 
         public static CLanUDPManager Instance
@@ -44,68 +39,74 @@ namespace CLanWPFTest.Networking
         {
             ct.ThrowIfCancellationRequested();
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
-            do {
-                try {
-                    byte[] bytes = (new Message(App.me, MessageType.HELLO, "")).ToByteArray();
-                    await outUDP.SendAsync(bytes, bytes.Length, ip);
+            using (UdpClient outUDP = new UdpClient())
+            {
+                try
+                {
+                    do
+                    {
+                        byte[] bytes = (new Message(App.me, MessageType.HELLO, "")).ToByteArray();
+                        await outUDP.SendAsync(bytes, bytes.Length, ip);
+                    }
+                    while (!ct.WaitHandle.WaitOne(ADVERTISEMENT_INTERVAL));     // Sleeps for AD_IN seconds but wakes up if token is canceled
                 }
-                catch (OperationCanceledException oce) {
+                catch (OperationCanceledException oce)
+                {
+                    byte[] bytes = (new Message(App.me, MessageType.BYE, "Farewell, cruel world!")).ToByteArray();
+                    outUDP.Send(bytes, bytes.Length, ip);
                     Trace.WriteLine("Terminating advertisement" + oce.Message);
-                    return;
                 }
                 catch (SocketException se)
                 {
                     Trace.WriteLine("Connection error: " + se.Message);
-                }
+                }              
             }
-            while (!ct.WaitHandle.WaitOne(ADVERTISEMENT_INTERVAL));     // Sleeps for AD_IN seconds but wakes up if token is canceled
             Trace.WriteLine("Exiting advertisement");
         }
 
         public async Task StartListening(CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            while(true) {
+            using (UdpClient inUDP = new UdpClient(udpPort))
+            {
                 try
                 {
-                    UdpReceiveResult res = await inUDP.ReceiveAsync();
-                    if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
-                        continue;
-
-                    Message m = Message.GetMessage(res.Buffer);
-                    m.sender.Ip = res.RemoteEndPoint.Address;
-                    switch (m.messageType)
+                    while (true)
                     {
-                        case MessageType.HELLO:
-                            OnUserJoin(m.sender);
-                            Trace.WriteLine("RECEIVED HELLO UDP FROM " + m.sender.Ip.ToString());
-                            break;
-                        case MessageType.BYE:
-                            OnUserLeave(m.sender);
-                            break;
-                        default:
-                            Trace.WriteLine("Invalid message");
-                            break;
+                        UdpReceiveResult res = await inUDP.ReceiveAsync();
+                        if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
+                            continue;
+
+                        Message m = Message.GetMessage(res.Buffer);
+                        m.sender.Ip = res.RemoteEndPoint.Address;
+                        switch (m.messageType)
+                        {
+                            case MessageType.HELLO:
+                                OnUserJoin(m.sender);
+                                Trace.WriteLine("RECEIVED HELLO UDP FROM " + m.sender.Ip.ToString());
+                                break;
+                            case MessageType.BYE:
+                                OnUserLeave(m.sender);
+                                break;
+                            default:
+                                Trace.WriteLine("Invalid message");
+                                break;
+                        }
                     }
                 }
                 catch (OperationCanceledException oce)
                 {
                     Trace.WriteLine("Terminating listening" + oce.Message);
-                    return;
                 }
                 catch (SocketException se)
                 {
                     Trace.WriteLine("Connection error in UDP listener" + se.Message);
-                    return;
                 }
             }
         }
 
         public void GoOffline()
         {
-            byte[] bytes = (new Message(App.me, MessageType.BYE, "Farewell, cruel world!")).ToByteArray();
-            IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
-            outUDP.Send(bytes, bytes.Length, ip);
             OnToggleOffline();
         }
         public void GoOnline()
