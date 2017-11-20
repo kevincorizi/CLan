@@ -110,7 +110,6 @@
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StartUpManager.cs" />
     <Compile Include="Objects\User.cs" />
     <Compile Include="FileTransferWindow.xaml.cs">
       <DependentUpon>FileTransferWindow.xaml</DependentUpon>

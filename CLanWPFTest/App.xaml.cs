@@ -18,7 +18,7 @@ namespace CLanWPFTest
     /// </summary>
     public partial class App : System.Windows.Application
     {
-#region Collections
+        #region Collections
         /// List containing currently visible users on the network.
         /// It is only updated by the UDPManager, so no need for it to be thread-safe
         public static ObservableCollection<User> OnlineUsers { get; set; }
@@ -29,7 +29,7 @@ namespace CLanWPFTest
         // only accesses one element of the list, so it has to be thread-safe
         public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
         public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
-#endregion
+        #endregion
         // Current user
         public static User me { get; set; }
 
@@ -62,6 +62,8 @@ namespace CLanWPFTest
             {
                 // Second instance, start client
                 PassParameters(e.Args);
+                string files = string.Join("\n", e.Args);
+                System.Windows.MessageBox.Show(files);
                 Current.Shutdown();
                 Environment.Exit(0);
             }
@@ -96,8 +98,6 @@ namespace CLanWPFTest
             ActivateAdvertising();
             ActivateUserCleaner();
             ActivateTCPListener();
-
-            StartUpManager.AddApplicationToCurrentUserStartup();
 
             if (mw == null)
                 mw = new MainWindow();
