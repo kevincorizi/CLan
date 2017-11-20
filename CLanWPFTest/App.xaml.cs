@@ -1,4 +1,5 @@
 ﻿using CLanWPFTest.Networking;
+using CLanWPFTest.Objects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +30,8 @@ namespace CLanWPFTest
         // only accesses one element of the list, so it has to be thread-safe
         public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
         public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
+
+        public static ObservableCollection<CLanFile> SelectedFiles { get; set; }
         #endregion
         // Current user
         public static User me { get; set; }
@@ -62,8 +65,6 @@ namespace CLanWPFTest
             {
                 // Second instance, start client
                 PassParameters(e.Args);
-                string files = string.Join("\n", e.Args);
-                System.Windows.MessageBox.Show(files);
                 Current.Shutdown();
                 Environment.Exit(0);
             }
@@ -91,6 +92,7 @@ namespace CLanWPFTest
             OnlineUsers = new ObservableCollection<User>();
             IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
             OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
+            SelectedFiles = new ObservableCollection<CLanFile>();
 
             // Initialize current user with name from last saved settings
             me = new User(CLanWPFTest.Properties.Settings.Default.Name);
@@ -274,14 +276,22 @@ namespace CLanWPFTest
                         server.WaitForConnection();
 
                         List<String> arguments = new List<String>();
-                        while (server.IsConnected)
+                        while (server.IsConnected && !reader.EndOfStream)
                         {
                             arguments.Add(reader.ReadLine());
-                            Trace.WriteLine(arguments.Last());
                         }
                         // Here i have the list of files for the current right click
+                        StoreParameters(arguments);
                     }
                 }
+            });            
+        }
+        private void StoreParameters(List<string> parameters)
+        {
+            List<CLanFile> batchFiles = CLanFile.GetFiles(parameters);
+            Current.Dispatcher.Invoke(() =>
+            {
+                batchFiles.ForEach(SelectedFiles.Add);
             });            
         }
         #endregion

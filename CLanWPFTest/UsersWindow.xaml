@@ -12,7 +12,7 @@
 
     <Grid  ShowGridLines="False" VerticalAlignment="Stretch">
         <Grid ShowGridLines="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="0,0,0,112" BorderThickness="0">
+            <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="0,0,188,112" BorderThickness="0">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="4" />
@@ -34,6 +34,17 @@
 
                 </ListView.ItemContainerStyle>
             </ListView>
+            <ListView Name="FileList" ItemsSource="{Binding Path=SelectedFiles, Source={x:Static Application.Current}}" Background="Transparent" Margin="412,0,0,112" BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <Label Content="{Binding Name}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <Label Content="{Binding RelativePath}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
         </Grid>
         <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
         <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="36"  BorderThickness="0"   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8" Width="120" BorderBrush="#FF33A0EC" Margin="232,338,248,26"/>
