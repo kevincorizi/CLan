@@ -37,7 +37,6 @@ namespace CLanWPFTest.Networking
 
         public async Task StartAdvertisement(CancellationToken ct)
         {
-            ct.ThrowIfCancellationRequested();
             IPEndPoint ip = new IPEndPoint(IPAddress.Broadcast, udpPort);
             using (UdpClient outUDP = new UdpClient())
             {
@@ -49,26 +48,26 @@ namespace CLanWPFTest.Networking
                         await outUDP.SendAsync(bytes, bytes.Length, ip);
                     }
                     while (!ct.WaitHandle.WaitOne(ADVERTISEMENT_INTERVAL));     // Sleeps for AD_IN seconds but wakes up if token is canceled
-                }
-                catch (OperationCanceledException oce)
-                {
-                    byte[] bytes = (new Message(App.me, MessageType.BYE, "Farewell, cruel world!")).ToByteArray();
-                    outUDP.Send(bytes, bytes.Length, ip);
-                    Trace.WriteLine("Terminating advertisement" + oce.Message);
+
+                    if(ct.IsCancellationRequested)
+                    {
+                        byte[] bytes = (new Message(App.me, MessageType.BYE, "Farewell, cruel world!")).ToByteArray();
+                        outUDP.Send(bytes, bytes.Length, ip);
+                        Trace.WriteLine("Terminating advertisement");
+                    }
                 }
                 catch (SocketException se)
                 {
                     Trace.WriteLine("Connection error: " + se.Message);
                 }              
             }
-            Trace.WriteLine("Exiting advertisement");
         }
 
         public async Task StartListening(CancellationToken ct)
         {
-            ct.ThrowIfCancellationRequested();
             using (UdpClient inUDP = new UdpClient(udpPort))
             {
+                ct.Register(() => inUDP.Close());
                 try
                 {
                     while (true)
@@ -94,9 +93,9 @@ namespace CLanWPFTest.Networking
                         }
                     }
                 }
-                catch (OperationCanceledException oce)
+                catch (ObjectDisposedException ode)
                 {
-                    Trace.WriteLine("Terminating listening" + oce.Message);
+                    Trace.WriteLine("Terminating UDP Listener");
                 }
                 catch (SocketException se)
                 {

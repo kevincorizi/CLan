@@ -41,12 +41,14 @@ namespace CLanWPFTest.Networking
         /// Start listening for new TCP connections
         /// </summary>
         public void StartListening(CancellationToken ct)
-        {            
+        {           
             try
             {
-                ct.ThrowIfCancellationRequested();
                 TcpListener listener = new TcpListener(App.me.Ip, tcpListeningPort);
                 listener.Start();
+
+                ct.Register(() => listener.Stop());
+
                 while (true)
                 {
                     Socket client = listener.AcceptSocket();
@@ -56,15 +58,15 @@ namespace CLanWPFTest.Networking
                     t.Start();
                 }
             }
-            catch (OperationCanceledException oce)
-            {
-                Trace.WriteLine("Terminating TCP listening" + oce.Message);
-                return;
-            }
             catch (SocketException se)
             {
-                Trace.WriteLine("Connection error in TCP listener" + se.Message);
-                return;
+                if(se.SocketErrorCode == SocketError.Interrupted)
+                {
+                    Trace.WriteLine("Terminating TCP Listener");
+                } else
+                {
+                    Trace.WriteLine("Connection error in TCP listener" + se.ErrorCode);
+                }      
             }
         }
 

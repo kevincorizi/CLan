@@ -226,25 +226,22 @@ namespace CLanWPFTest
         {
             do
             {
-                try
+                DateTime now = DateTime.Now;
+                foreach (User u in OnlineUsers)
                 {
-                    DateTime now = DateTime.Now;
-                    foreach (User u in OnlineUsers)
+                    if ((now.Subtract(u.lastKeepAlive)).Milliseconds > UDPManager.KEEP_ALIVE_TIMER_MILLIS)
                     {
-                        if ((now.Subtract(u.lastKeepAlive)).Milliseconds > UDPManager.KEEP_ALIVE_TIMER_MILLIS)
-                        {
-                            Trace.WriteLine("User is too old, removing");
-                            UDPManager.OnUserLeave(u);
-                        }
+                        Trace.WriteLine("User is too old, removing");
+                        UDPManager.OnUserLeave(u);
                     }
-                    Thread.Sleep(UDPManager.KEEP_ALIVE_TIMER_MILLIS);
                 }
-                catch (OperationCanceledException oce)
-                {
-                    Trace.WriteLine("Terminating cleaning" + oce.Message);
-                    return;
-                }
+                Thread.Sleep(UDPManager.KEEP_ALIVE_TIMER_MILLIS);
             } while (!ct.WaitHandle.WaitOne(UDPManager.KEEP_ALIVE_TIMER_MILLIS));
+                
+            if(ct.IsCancellationRequested)
+            {
+                Trace.WriteLine("Terminating cleaning");
+            }
         }
 
         private void ActivateTCPListener()
@@ -387,13 +384,9 @@ namespace CLanWPFTest
                 Trace.WriteLine("Mutex released");
 
                 DeactivateAdvertising();
-                Trace.WriteLine("DeactivateAdvertising");
                 DeactivateUDPListener();
-                Trace.WriteLine("DeactivateUDPListener");
                 DeactivateTCPListener();
-                Trace.WriteLine("DeactivateTCPListener");
                 DeactivateUserCleaner();
-                Trace.WriteLine("DeactivateUserCleaner");
 
                 // Close all windows
                 foreach (Window window in Current.Windows)
