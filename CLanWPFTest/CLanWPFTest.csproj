@@ -174,7 +174,6 @@
     <Resource Include="Images\backwardButton.png" />
     <Resource Include="Images\forwardButton.png" />
     <Resource Include="Images\logo.png" />
-    <Resource Include="Images\upload.png" />
     <Resource Include="Images\user.png" />
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +222,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\TrayIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\uploadFile.png" />
+    <Resource Include="Images\uploadFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\menu.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

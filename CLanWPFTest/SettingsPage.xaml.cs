@@ -101,6 +101,7 @@ namespace CLanWPFTest
             {
                 NavigationService.GoBack();
             }
+            //UsersWindow.TransparencyLayer.Visibility = Visibility.Collapsed;
         }
 
         // DEBUG

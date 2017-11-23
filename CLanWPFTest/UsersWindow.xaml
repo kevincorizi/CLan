@@ -9,7 +9,29 @@
         Title="CLan - Share instantly!" 
         d:DesignWidth="600" d:DesignHeight="400">
 
+    <Page.Resources>
+        <Style x:Key="MyButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
 
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    
     <Grid  ShowGridLines="False" VerticalAlignment="Stretch">
         <Grid ShowGridLines="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="0,0,188,112" BorderThickness="0">
@@ -48,8 +70,10 @@
         </Grid>
         <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
         <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="36"  BorderThickness="0"   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8" Width="120" BorderBrush="#FF33A0EC" Margin="232,338,248,26"/>
-        <Button Content="Settings" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="45" FontSize="15" BorderThickness="0" Click="Settings_Click" Margin="0,0,0,360" Background="#FF66B5F8" BorderBrush="#FF3A84B7" Width="120" />
+        <Button Style="{StaticResource MyButton}" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="64" FontSize="15" BorderThickness="0" Click="Settings_Click"  Width="86">
+            <Image Source="images/menu.png" Height="33" Width="39"/>
+        </Button>
         <TextBlock TextWrapping="Wrap" Text="Private" Margin="0,33,31,0" Foreground="#FFA0A0A0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-
+        <Grid x:Name="TransparencyLayer" Visibility="Collapsed" Opacity="0.6" Height="670" Background="White" />
     </Grid>
 </Page>

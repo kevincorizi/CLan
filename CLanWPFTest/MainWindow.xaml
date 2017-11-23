@@ -10,6 +10,7 @@
         <BitmapImage x:Key="backgroundBrush"
                      UriSource="images/background.jpg"/>
     </Window.Resources>
+    
     <Window.Width>
         <Binding Source="{StaticResource backgroundBrush}" Path="PixelWidth"/>
     </Window.Width>

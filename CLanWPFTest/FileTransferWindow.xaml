@@ -6,15 +6,8 @@
         xmlns:local="clr-namespace:CLanWPFTest"
         mc:Ignorable="d"
         Title="CLan - Share instantly!" Height="300" Width="890">
-    <Window.Background>
-        <ImageBrush>
-            <ImageBrush.ImageSource>
-                <BitmapImage UriSource="/Images/background.jpg"/>
-            </ImageBrush.ImageSource>
-        </ImageBrush>
-    </Window.Background>
     <StackPanel>
-        <TextBlock>Trasferimenti in entrata</TextBlock>
+        <TextBlock>Incoming transfers</TextBlock>
         <ListView x:Name="IncomingProgressBar" ItemsSource="{Binding Source={x:Static local:App.IncomingTransfers}}" Width="800">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -32,7 +25,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <TextBlock>Trasferimenti in uscita</TextBlock>
+        <TextBlock>Outgoing transfers</TextBlock>
         <ListView x:Name="OutgoingProgressBar" ItemsSource="{Binding Source={x:Static local:App.OutgoingTransfers}}" Width="800">
             <ListView.ItemTemplate>
                 <DataTemplate>

@@ -10,7 +10,7 @@
         <Style x:Key="MyButton" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Cursor" Value="Hand" />
-            
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -22,7 +22,7 @@
                                 <Setter Property="Opacity" Value="0.7" />
                             </Trigger>
                         </ControlTemplate.Triggers>
-                        
+
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -30,7 +30,7 @@
     </Page.Resources>
 
     <Grid>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="187*" />
             <RowDefinition Height="271*" />
@@ -41,13 +41,6 @@
             <ColumnDefinition Width="168*" />
             <ColumnDefinition Width="119*" />
         </Grid.ColumnDefinitions>
-        
-        <Button x:Name="uploadButton"  Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="81,53,78,0">
-            <Image Source="images/upload.png"/>
-           
-        </Button>
-        
-        <TextBlock x:Name="selectText" HorizontalAlignment="Center" Margin="10,0,0,0" TextWrapping="Wrap" Text="Select a file" Foreground="#FFB9B2B2" FontSize="20" Grid.Column="1" Grid.Row="1"/>
         <Button x:Name="continueButton" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="0" Click="continueClick" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="81,53,78,0" Visibility="Hidden">
             <Button.Background>
                 <ImageBrush>
@@ -58,8 +51,16 @@
             </Button.Background>
         </Button>
 
-        <TextBlock x:Name="continueText" HorizontalAlignment="Center" Margin="5,0,0,0" TextWrapping="Wrap" Text="Continue" Foreground="#FFB9B2B2" FontSize="20" Grid.Column="1" Grid.Row="1" Visibility="Hidden"></TextBlock>
+        <TextBlock x:Name="continueText" HorizontalAlignment="Center" Margin="5,0,0,0" TextWrapping="Wrap" Text="Continue" Foreground="#FFB9B2B2" FontSize="20" Grid.Column="1" Grid.Row="1" Visibility="Hidden"/>
+        <Button x:Name="uploadFileButton" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch"  BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="200,10,0,43" Width="216" Grid.ColumnSpan="2">
+            <Image Source="images/uploadFile.png"/>
 
+        </Button>
+        <Button x:Name="uploadFolderButton" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch"  BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="229,10,0,43" Width="216" Grid.ColumnSpan="2" Grid.Column="1">
+            <Image Source="images/uploadFolder.png"/>
+
+        </Button>
+        
     </Grid>
 
 </Page>
