@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -14,34 +16,29 @@ namespace CLanWPFTest
         public SettingsPage()
         {
             InitializeComponent();
+            Trace.WriteLine(Properties.Settings.Default.DefaultNetworkInterface);
+
+            InterfacesList.SelectedItem = InterfacesList.Items.OfType<NetworkInterface>().
+                FirstOrDefault(i => i.Id.CompareTo(Properties.Settings.Default.DefaultNetworkInterface) == 0);
         }
-
-        private void General_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
             SelectPicture sp = new SelectPicture();
             sp.Show();
         } 
-
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();
             dialog.ShowDialog();
             string filePath = dialog.SelectedPath;
             PathText.Text = filePath;
-
-            // Update value in settings (this is not yet saved, it will be when the user presses the Save button)
-            Properties.Settings.Default.DefaultSavePath = filePath;
         }
 
+        #region NAME
         private void EditName_Click(object sender, RoutedEventArgs e)
         {
             TransparencyLayer.Visibility = Visibility.Visible;
-            NameBox.Visibility = Visibility.Visible;           
+            NameBox.Visibility = Visibility.Visible;
         }
 
         private void SaveNameButton_Click(object sender, RoutedEventArgs e)
@@ -67,22 +64,27 @@ namespace CLanWPFTest
             // Clear InputBox.
             InputTextBox.Text = String.Empty;
         }
+        #endregion
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             // Now the modifications to settings become permanent
 
             // Check checkbox status
+            Properties.Settings.Default.DefaultPrivate = (PrivateRadio.IsChecked == true);
             Properties.Settings.Default.DefaultAcceptTransfer = (AcceptAllTransfers.IsChecked == true);
             Properties.Settings.Default.DefaultAskSavePath = (UseDefaultPath.IsChecked != true);
-
+            Properties.Settings.Default.DefaultSavePath = (PathText.Text);
+            // Name is set individually
+            // Picture is saved individually
+            // TODO: backgroundpath
+            // TODO: defaultrename
+            Properties.Settings.Default.DefaultNetworkInterface = (InterfacesList.SelectedItem as NetworkInterface).Id;
             Properties.Settings.Default.Save();
-            // DisplaySettings("Settings saved");
 
             // Update data for current session
             App.me.Name = Properties.Settings.Default.Name;
             App.me.Picture = Properties.Settings.Default.PicturePath;
-            Trace.WriteLine("Current session updated");
 
             if(NavigationService.CanGoBack)
             {
@@ -94,14 +96,12 @@ namespace CLanWPFTest
         {
             // Discard pending changes to settings
             Properties.Settings.Default.Reload();
-            // DisplaySettings("Settings discarded");
 
             // Go back to previous window
             if (NavigationService.CanGoBack)
             {
                 NavigationService.GoBack();
             }
-            //UsersWindow.TransparencyLayer.Visibility = Visibility.Collapsed;
         }
 
         // DEBUG
@@ -112,11 +112,6 @@ namespace CLanWPFTest
             {
                 Trace.WriteLine(currentProperty.Name + ": " + currentProperty.DefaultValue);
             }
-        }
-
-        private void AcceptAllTransfers_Checked(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

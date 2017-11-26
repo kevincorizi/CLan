@@ -63,7 +63,7 @@
             
             <Label x:Name="label" Content="Notifications" HorizontalAlignment="Left" Margin="40,0,0,0" Height="30" Width="143" FontSize="15" FontWeight="Bold" VerticalAlignment="Top" />
 
-            <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" Margin="45,0,0,0"  Checked="AcceptAllTransfers_Checked" />
+            <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" Margin="45,0,0,0"/>
             <CheckBox x:Name="checkBox1" Content="Hide all notifications" Margin="45,0,0,0"/>
 
             <Label x:Name="label2" Content="Storage" HorizontalAlignment="Left" Margin="40,10,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
@@ -75,8 +75,8 @@
             <Label x:Name="label3" Content="Privacy" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
             <TextBlock HorizontalAlignment="Left" Margin="45,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30"><Run Text="Default mode"/><Run Text=":"/></TextBlock>
 
-            <RadioButton Content="Private" HorizontalAlignment="Left" Margin="159,-30,0,0" VerticalAlignment="Top"  IsChecked="{extensions:SettingBinding DefaultPrivate}"/>
-            <RadioButton Content="Public" HorizontalAlignment="Left" Margin="243,-30,0,0" VerticalAlignment="Top" Height="26" Width="116" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}"/>
+            <RadioButton x:Name="PrivateRadio" Content="Private" HorizontalAlignment="Left" Margin="159,-30,0,0" VerticalAlignment="Top"  IsChecked="{extensions:SettingBinding DefaultPrivate}"/>
+            <RadioButton x:Name="PublicRadio" Content="Public" HorizontalAlignment="Left" Margin="243,-30,0,0" VerticalAlignment="Top" Height="26" Width="116" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}"/>
 
             <Label x:Name="label1" Content="Customization" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
             <Button x:Name="background" Content="" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top" Width="100" Height="100" BorderThickness="0" Style="{StaticResource MyButton}" >

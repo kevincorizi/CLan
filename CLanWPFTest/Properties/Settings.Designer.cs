@@ -97,7 +97,7 @@ namespace CLanWPFTest.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("/Images/background.png")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string BackgroundPath {
             get {
                 return ((string)(this["BackgroundPath"]));
@@ -116,6 +116,18 @@ namespace CLanWPFTest.Properties {
             }
             set {
                 this["DefaultRenameFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultNetworkInterface {
+            get {
+                return ((string)(this["DefaultNetworkInterface"]));
+            }
+            set {
+                this["DefaultNetworkInterface"] = value;
             }
         }
     }

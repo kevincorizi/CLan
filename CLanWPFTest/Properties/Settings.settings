@@ -21,10 +21,13 @@
       <Value Profile="(Default)">CLan User</Value>
     </Setting>
     <Setting Name="BackgroundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">/Images/background.png</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DefaultRenameFile" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DefaultNetworkInterface" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
