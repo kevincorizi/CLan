@@ -48,6 +48,7 @@ namespace CLanWPFTest
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
+            
             this.NavigationService.Navigate(new SettingsPage());
         }
 

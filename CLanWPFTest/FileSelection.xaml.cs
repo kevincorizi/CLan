@@ -39,9 +39,33 @@ namespace CLanWPFTest
 
             files = CLanFile.GetFiles(sFiles);
 
-            uploadButton.Visibility = Visibility.Hidden;
+            uploadFileButton.Visibility = Visibility.Hidden;
+            uploadFolderButton.Visibility = Visibility.Hidden;
             continueButton.Visibility = Visibility.Visible;
-            selectText.Visibility = Visibility.Hidden;
+            
+            continueText.Visibility = Visibility.Visible;
+            continueButton.IsEnabled = true;
+        }
+
+        private void selectFolder_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog fd = new CommonOpenFileDialog();    // Opens a window to choose the file from the pc
+            fd.Multiselect = true;
+            fd.EnsureValidNames = true;
+            fd.EnsureFileExists = true;
+            fd.EnsurePathExists = true;
+            CommonFileDialogResult result = fd.ShowDialog();
+            if (result != CommonFileDialogResult.Ok)
+                return;
+
+            List<String> sFiles = new List<string>(fd.FileNames);   // The list of entries selected by the user
+
+            files = CLanFile.GetFiles(sFiles);
+
+            uploadFileButton.Visibility = Visibility.Hidden;
+            uploadFolderButton.Visibility = Visibility.Hidden;
+            continueButton.Visibility = Visibility.Visible;
+            
             continueText.Visibility = Visibility.Visible;
             continueButton.IsEnabled = true;
         }
