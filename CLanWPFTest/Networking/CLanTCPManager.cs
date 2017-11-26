@@ -144,33 +144,45 @@ namespace CLanWPFTest.Networking
                     using (NetworkStream stream = new NetworkStream(sockets[other]))
                     using (FileStream fstream = new FileStream(f.RelativePath, FileMode.Open, FileAccess.Read))
                     {
-                        if (stream.CanWrite)
+                        try
                         {
-                            int oldProgress = 0;
-                            while (currentSentSize < f.Size && !bw.CancellationPending)
+                            if (stream.CanWrite)
                             {
-                                Array.Clear(buffer, 0, BUFFER_SIZE);
-                                int size = fstream.Read(buffer, 0, BUFFER_SIZE);
-                                stream.Write(buffer, 0, size);
-                                currentSentSize += size;
-                                sentSize += size;
-                                int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
-                                if (oldProgress != progress)
+                                int oldProgress = 0;
+                                while (currentSentSize < f.Size && !bw.CancellationPending)
                                 {
-                                    oldProgress = progress;
-                                    bw.ReportProgress(progress);
+                                    Array.Clear(buffer, 0, BUFFER_SIZE);
+                                    int size = fstream.Read(buffer, 0, BUFFER_SIZE);
+                                    stream.Write(buffer, 0, size);
+                                    currentSentSize += size;
+                                    sentSize += size;
+                                    int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
+                                    if (oldProgress != progress)
+                                    {
+                                        oldProgress = progress;
+                                        bw.ReportProgress(progress);
+                                    }
+                                }
+
+                                // I am the sender and I stopped the transfer
+                                if (bw.CancellationPending)
+                                {
+                                    Trace.WriteLine("Transfer was cancelled by me");
+                                    break;
                                 }
                             }
-
-                            if (currentSentSize != f.Size)
-                            {
-                                Trace.WriteLine("Transfer was cancelled by me");
-                            }
                         }
+                        catch (IOException ioe)
+                        {
+                            // I am the sender and the receiver stopped the transfer
+                            Trace.WriteLine("The receiver stopped the transfer");
+                            break;
+                        } 
                     }
+
+                    
                 }
             }
-
             sockets.Remove(other);
         }
         public void ReceiveFiles(CLanFileTransfer cft, string rootFolder)
@@ -210,11 +222,9 @@ namespace CLanWPFTest.Networking
                             while (currentReceivedSize < f.Size && !bw.CancellationPending)
                             {
                                 Array.Clear(buffer, 0, BUFFER_SIZE);
-                                int size = 0;
-                                if(f.Size - currentReceivedSize >= BUFFER_SIZE)
-                                    size = stream.Read(buffer, 0, BUFFER_SIZE);
-                                else
-                                    size = stream.Read(buffer, 0, (int)(f.Size - currentReceivedSize));
+                                int size = stream.Read(buffer, 0, (int)Math.Min(BUFFER_SIZE, f.Size - currentReceivedSize));
+                                if (size <= 0)  // I am receiving and the sender closed the transfer
+                                    break;
                                 fstream.Write(buffer, 0, size);
                                 currentReceivedSize += size;
                                 receivedSize += size;
@@ -225,12 +235,26 @@ namespace CLanWPFTest.Networking
                                     bw.ReportProgress(progress);
                                 }
                             }
-
-                            if (currentReceivedSize != f.Size)
-                            {
-                                Trace.WriteLine("Transfer was cancelled by me");
-                            }
                         }
+                    }
+                    if (bw.CancellationPending)
+                    {
+                        // I am the receiver and I stopped the transfer
+                        // Delete pending file
+                        File.Delete(rootFolder + f.Name);
+
+                        // It will jump out of the foreach, closing the socket, causing an exception to occur on the other side,
+                        // that will be catched to acknowledged the end of the transfer
+                        break;
+                    }
+                    if (currentReceivedSize != f.Size)
+                    {
+                        // I am the receiver and the sender stopped the transfer
+                        Trace.WriteLine("Transfer was cancelled by the sender");
+
+                        // Delete pending file
+                        File.Delete(rootFolder + f.Name);
+                        break;
                     }
                     Trace.WriteLine("File received");
                 }
