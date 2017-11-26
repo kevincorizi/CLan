@@ -134,6 +134,9 @@ namespace CLanWPFTest.Networking
             {
                 foreach (CLanFile f in files)
                 {
+                    if (bw.CancellationPending)
+                        break;
+
                     // Update the View
                     cft.CurrentFile = f.Name;
 
@@ -143,7 +146,7 @@ namespace CLanWPFTest.Networking
                         if (stream.CanWrite)
                         {
                             int oldProgress = 0;
-                            while (sentSize < totalSize)
+                            while (sentSize < totalSize && !bw.CancellationPending)
                             {
                                 Array.Clear(buffer, 0, BUFFER_SIZE);
                                 int size = fstream.Read(buffer, 0, BUFFER_SIZE);
@@ -155,6 +158,11 @@ namespace CLanWPFTest.Networking
                                     oldProgress = progress;
                                     bw.ReportProgress(progress);
                                 }
+                            }
+
+                            if(sentSize != totalSize)
+                            {
+                                Trace.WriteLine("Transfer was cancelled by me");
                             }
                         }
                     }
@@ -185,6 +193,8 @@ namespace CLanWPFTest.Networking
                 // so I can simply receive them
                 foreach (CLanFile f in files)
                 {
+                    if (bw.CancellationPending)
+                        break;
                     // Update the View
                     cft.CurrentFile = f.Name;
 
@@ -194,7 +204,7 @@ namespace CLanWPFTest.Networking
                         if (stream.CanRead)
                         {
                             int oldProgress = 0;
-                            while (receivedSize < totalSize)
+                            while (receivedSize < totalSize && !bw.CancellationPending)
                             {
                                 Array.Clear(buffer, 0, BUFFER_SIZE);
                                 int size = stream.Read(buffer, 0, BUFFER_SIZE);
@@ -206,6 +216,11 @@ namespace CLanWPFTest.Networking
                                     oldProgress = progress;
                                     bw.ReportProgress(progress);
                                 }
+                            }
+
+                            if(receivedSize < totalSize)
+                            {
+                                Trace.WriteLine("Transfer was cancelled by me");
                             }
                         }
                     }

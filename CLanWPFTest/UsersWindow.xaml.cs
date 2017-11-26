@@ -1,6 +1,7 @@
 ﻿using CLanWPFTest.Networking;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -31,25 +32,30 @@ namespace CLanWPFTest
 
         private void ContinueClick(object sender, RoutedEventArgs e)
         {
-            List<User> users = new List<User>();
-            users.Add(UserList.SelectedItem as User);
-
-            Trace.WriteLine("UW.XAML.CS" + users.Count.ToString() + " USERS SELECTED");
-            // Open the actual file transfer window, with progress and all
-            if (users != null)
+            List<User> users = UserList.SelectedItems.OfType<User>().ToList();
+            if(FileList.Items.Count > 0)
             {
-                this.NavigationService.Navigate(new FileSelection(users));
+
+                List<Objects.CLanFile> files = FileList.Items.OfType<Objects.CLanFile>().ToList();
+                foreach (User u in users)
+                {
+                    Trace.WriteLine("UW.XAML.CS - ADDING FILE TRANSFER");
+                    CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
+                    cft.Start();
+                }
+                App.SelectedFiles.Clear();
+                Trace.WriteLine(App.SelectedFiles.Count);
             }
             else
             {
-                Trace.WriteLine("No users selected");
+                NavigationService.Navigate(new FileSelection(users));
             }
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             
-            this.NavigationService.Navigate(new SettingsPage());
+            NavigationService.Navigate(new SettingsPage());
         }
 
         private void UserList_Selected(object sender, RoutedEventArgs e)

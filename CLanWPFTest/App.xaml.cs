@@ -110,6 +110,11 @@ namespace CLanWPFTest
                 TransferWindow.Closing += CloseTransferWindow;
             }
             ShowUsersWindow();
+
+            if(e.Args.Length > 0)
+            {
+                StoreParameters(e.Args.ToList());
+            }
         }
 
         #region Users
