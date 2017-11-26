@@ -51,6 +51,16 @@
             <TextBlock x:Name="UserName" Margin="200,-135,0,0" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" VerticalAlignment="Top" Height="30" Width="124" TextAlignment="Left" FontSize="18"/>
             <Button x:Name="EditName" Content="Edit Name" HorizontalAlignment="Left" Margin="200,-70,0,0" VerticalAlignment="Top" Width="103" Height="38"  BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="EditName_Click"/>
 
+                <ComboBox x:Name="InterfacesList" ItemsSource="{Binding Path=Interfaces, Source={x:Static Application.Current}}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Label Content="{Binding Description}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            
             <Label x:Name="label" Content="Notifications" HorizontalAlignment="Left" Margin="40,0,0,0" Height="30" Width="143" FontSize="15" FontWeight="Bold" VerticalAlignment="Top" />
 
             <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" Margin="45,0,0,0"  Checked="AcceptAllTransfers_Checked" />

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,6 +32,7 @@ namespace CLanWPFTest
         public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
         public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
         public static ObservableCollection<CLanFile> SelectedFiles { get; set; }
+        public static ObservableCollection<NetworkInterface> Interfaces { get; set; }
         #endregion
         // Current user
         public static User me { get; set; }
@@ -92,14 +94,11 @@ namespace CLanWPFTest
             IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
             OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
             SelectedFiles = new ObservableCollection<CLanFile>();
+            Interfaces = new ObservableCollection<NetworkInterface>();
+            SetupNetworkInterfaces();
 
             // Initialize current user with name from last saved settings
-            me = new User(CLanWPFTest.Properties.Settings.Default.Name);
-
-            ActivateAdvertising();
-            ActivateUDPListener();
-            ActivateUserCleaner();
-            ActivateTCPListener();
+            StartServices();        
 
             if (mw == null)
                 mw = new MainWindow();
@@ -190,6 +189,30 @@ namespace CLanWPFTest
         #endregion
 
         #region Background Services
+        private void StartServices()
+        {
+            if(IsConnectionActive())
+            {
+                me = new User(CLanWPFTest.Properties.Settings.Default.Name);
+
+                ActivateAdvertising();
+                ActivateUDPListener();
+                ActivateUserCleaner();
+                ActivateTCPListener();
+            }         
+        }
+        private void StopServices()
+        {
+            DeactivateAdvertising();
+            DeactivateUDPListener();
+            DeactivateTCPListener();
+            DeactivateUserCleaner();
+        }
+        private void RestartServices()
+        {
+            StopServices();
+            StartServices();
+        }
         private void ActivateAdvertising(object sender = null, EventArgs args = null)
         {
             Trace.WriteLine("ActivateAdvertising");
@@ -259,6 +282,45 @@ namespace CLanWPFTest
         {
             Trace.WriteLine("DectivateTCPListening");
             ctsTcpListener.Cancel();
+        }
+        #endregion
+
+        #region NETWORK INTERFACES
+        private void SetupNetworkInterfaces()
+        {
+            Interfaces = new ObservableCollection<NetworkInterface>(
+                NetworkInterface.GetAllNetworkInterfaces().Where(
+                    nic => nic.NetworkInterfaceType != NetworkInterfaceType.Loopback && nic.OperationalStatus == OperationalStatus.Up
+                )
+            );
+            NetworkChange.NetworkAvailabilityChanged += ChangeNetworkAvailability;
+        }
+        private void ChangeNetworkAvailability(object sender, NetworkAvailabilityEventArgs e)
+        {
+            SetupNetworkInterfaces();
+            Trace.WriteLine("Network availability changed");
+            if(e.IsAvailable)
+            {
+                StartServices();
+            }
+            else
+            {
+                StopServices();
+            }
+        }
+        
+        private bool IsConnectionActive()
+        {
+            foreach(NetworkInterface nic in Interfaces)
+            {
+          
+                if(nic.OperationalStatus == OperationalStatus.Up)
+                {
+                    Trace.WriteLine(nic.Description);
+                    return true;
+                }
+            }
+            return false;
         }
         #endregion
 
@@ -392,10 +454,7 @@ namespace CLanWPFTest
                 instanceMutex = null;
                 Trace.WriteLine("Mutex released");
 
-                DeactivateAdvertising();
-                DeactivateUDPListener();
-                DeactivateTCPListener();
-                DeactivateUserCleaner();
+                StopServices();
 
                 // Close all windows
                 foreach (Window window in Current.Windows)
