@@ -35,6 +35,8 @@ namespace CLanWPFTest.Networking
             }
         }
         [JsonIgnore]
+        public bool IsPending { get; set; }
+        [JsonIgnore]
         private int progress;
         [JsonIgnore]
         public int Progress {
@@ -67,6 +69,8 @@ namespace CLanWPFTest.Networking
             Other = u;
             Files = f;
             Type = t;
+            IsPending = true;
+            CurrentFile = "In attesa di risposta...";
 
             bw = new BackgroundWorker();
             bw.WorkerSupportsCancellation = true;
@@ -113,6 +117,9 @@ namespace CLanWPFTest.Networking
             // 4) Act accordingly
             Trace.WriteLine("CTF.CS - WORKERSTARTSEND");
 
+            // The sender will see the transfer window with a "waiting state" until the other answers
+            Store();
+
             CLanFileTransferRequest req = new CLanFileTransferRequest(App.me, Other, Files);
             byte[] requestData = new Message(App.me, MessageType.SEND, req).ToByteArray();
 
@@ -127,15 +134,12 @@ namespace CLanWPFTest.Networking
                 {
                     case MessageType.ACK:
                         // Destination accepted the transfer
-                        // Show the window with all file transfers
-                        Store();
+                        // Show the window with all file transfers                      
                         TCPManager.SendFiles(this);
-                        Unstore();
                         break;
                     case MessageType.NACK:
                         // Destination refused the transfer
                         Trace.WriteLine("Destination refused the transfer");
-                        Stop();
                         e.Cancel = true;    // Suicide
                         break;
                     default:
@@ -187,7 +191,6 @@ namespace CLanWPFTest.Networking
             // Receive files
             Store();
             TCPManager.ReceiveFiles(this, root);
-            Unstore();
         }      
 
         private void WorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -200,10 +203,12 @@ namespace CLanWPFTest.Networking
             {
                 Trace.WriteLine("Operation completed: " + e.Result);
             }
+            Unstore();
         }
         private void WorkerReportProgress(object sender, ProgressChangedEventArgs e)
         {
             Progress = e.ProgressPercentage;
+            IsPending = false;
         }
 
         #region Events

@@ -14,7 +14,7 @@
                     <StackPanel Width="600">
                         <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
                         <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
-                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}"/>
+                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}"/>
                         <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
                     </StackPanel>
                 </DataTemplate>
@@ -32,7 +32,7 @@
                     <StackPanel Width="600">
                         <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
                         <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
-                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}"/>
+                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}"/>
                         <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
                     </StackPanel>
                 </DataTemplate>
