@@ -130,7 +130,7 @@ namespace CLanWPFTest.Networking
             long sentSize = 0;
             byte[] buffer = new byte[BUFFER_SIZE];
 
-            using(sockets[other])
+            using (sockets[other])
             {
                 foreach (CLanFile f in files)
                 {
@@ -139,6 +139,7 @@ namespace CLanWPFTest.Networking
 
                     // Update the View
                     cft.CurrentFile = f.Name;
+                    long currentSentSize = 0;
 
                     using (NetworkStream stream = new NetworkStream(sockets[other]))
                     using (FileStream fstream = new FileStream(f.RelativePath, FileMode.Open, FileAccess.Read))
@@ -146,11 +147,12 @@ namespace CLanWPFTest.Networking
                         if (stream.CanWrite)
                         {
                             int oldProgress = 0;
-                            while (sentSize < totalSize && !bw.CancellationPending)
+                            while (currentSentSize < f.Size && !bw.CancellationPending)
                             {
                                 Array.Clear(buffer, 0, BUFFER_SIZE);
                                 int size = fstream.Read(buffer, 0, BUFFER_SIZE);
                                 stream.Write(buffer, 0, size);
+                                currentSentSize += size;
                                 sentSize += size;
                                 int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
                                 if (oldProgress != progress)
@@ -160,7 +162,7 @@ namespace CLanWPFTest.Networking
                                 }
                             }
 
-                            if(sentSize != totalSize)
+                            if (currentSentSize != f.Size)
                             {
                                 Trace.WriteLine("Transfer was cancelled by me");
                             }
@@ -197,6 +199,7 @@ namespace CLanWPFTest.Networking
                         break;
                     // Update the View
                     cft.CurrentFile = f.Name;
+                    long currentReceivedSize = 0;
 
                     using (NetworkStream stream = new NetworkStream(sockets[other]))
                     using (FileStream fstream = new FileStream(rootFolder + f.Name, FileMode.OpenOrCreate, FileAccess.Write))
@@ -204,11 +207,16 @@ namespace CLanWPFTest.Networking
                         if (stream.CanRead)
                         {
                             int oldProgress = 0;
-                            while (receivedSize < totalSize && !bw.CancellationPending)
+                            while (currentReceivedSize < f.Size && !bw.CancellationPending)
                             {
                                 Array.Clear(buffer, 0, BUFFER_SIZE);
-                                int size = stream.Read(buffer, 0, BUFFER_SIZE);
+                                int size = 0;
+                                if(f.Size - currentReceivedSize >= BUFFER_SIZE)
+                                    size = stream.Read(buffer, 0, BUFFER_SIZE);
+                                else
+                                    size = stream.Read(buffer, 0, (int)(f.Size - currentReceivedSize));
                                 fstream.Write(buffer, 0, size);
+                                currentReceivedSize += size;
                                 receivedSize += size;
                                 int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(receivedSize) * 100 / Convert.ToDouble(totalSize)));
                                 if (oldProgress != progress)
@@ -218,12 +226,13 @@ namespace CLanWPFTest.Networking
                                 }
                             }
 
-                            if(receivedSize < totalSize)
+                            if (currentReceivedSize != f.Size)
                             {
                                 Trace.WriteLine("Transfer was cancelled by me");
                             }
                         }
                     }
+                    Trace.WriteLine("File received");
                 }
             }
             sockets.Remove(other);

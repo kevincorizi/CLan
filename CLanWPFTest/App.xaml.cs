@@ -328,10 +328,14 @@ namespace CLanWPFTest
         {
             // Do not close the window if there are ongoing file transfers,
             // Otherwise you lose the chance to check them and stop them
+            e.Cancel = true;
             if (IncomingTransfers.Count != 0 || OutgoingTransfers.Count != 0)
             {
-                e.Cancel = true;
                 TransferWindow.WindowState = WindowState.Minimized;
+            }
+            else
+            {
+                TransferWindow.Visibility = Visibility.Hidden;
             }
         }
 #endregion
