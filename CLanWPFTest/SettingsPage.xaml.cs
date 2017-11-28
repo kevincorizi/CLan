@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Timers;
@@ -26,9 +27,17 @@ namespace CLanWPFTest
         }
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
-            SelectPicture sp = new SelectPicture();
-            sp.Show();
+            
+           
+            
+
+            
+            //SelectPicture sp = new SelectPicture();
+            //sp.Show();
         }
+
+        
+
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             timer.Enabled = true;

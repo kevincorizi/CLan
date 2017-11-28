@@ -21,7 +21,7 @@
       <Value Profile="(Default)">CLan User</Value>
     </Setting>
     <Setting Name="BackgroundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">/Images/background.jpg</Value>
     </Setting>
     <Setting Name="DefaultRenameFile" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

@@ -1,10 +1,13 @@
 ﻿using CLanWPFTest.Networking;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace CLanWPFTest
 {
@@ -15,6 +18,8 @@ namespace CLanWPFTest
     public partial class UsersWindow : Page
     {
         int counter = 0;
+        private object _selectPicture;
+
         public UsersWindow()
         {
             InitializeComponent();
@@ -55,26 +60,32 @@ namespace CLanWPFTest
             }
         }
 
+        
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             counter++;
             if(counter % 2 == 1)  // open click
             {
-                while(this._SlidingMenu.Margin.Left != 0)
+                while(this._SlidingMenu.Margin.Left != -10)
                 {
-                    this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 1, 0, 0, 0);
+                    _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 1, 0, 0, 0);
                     this.NavigationService.Refresh();
-                    this._SlidingMenu.UpdateLayout();
-                    // System.Threading.Thread.Sleep(1);
+
 
                 }
-                //NavigationService.Navigate(new SettingsPage());
+                while (this._SlidingMenu.Margin.Left != 0)
+                {
+                    _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 1, 0, 0, 0);
+                    this.NavigationService.Refresh();
+                    System.Threading.Thread.Sleep(1);
+
+                }
             }
             else
             {             
                
-                while (this._SlidingMenu.Margin.Left != -265)
+                while (this._SlidingMenu.Margin.Left != -265)  // close click
                 {
                     this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 1, 0, 0, 0);
                     this.NavigationService.Refresh();   
@@ -84,8 +95,9 @@ namespace CLanWPFTest
 
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
-            SelectPicture sp = new SelectPicture();
-            sp.Show();
+             SelectPicture sp = new SelectPicture();
+             sp.Show();
+            
         }
 
         #region NAME
