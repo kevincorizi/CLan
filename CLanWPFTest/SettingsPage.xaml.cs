@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -13,6 +14,7 @@ namespace CLanWPFTest
     /// </summary>
     public partial class SettingsPage : Page
     {
+        System.Timers.Timer timer = new System.Timers.Timer();
         public SettingsPage()
         {
             InitializeComponent();
@@ -25,7 +27,41 @@ namespace CLanWPFTest
         {
             SelectPicture sp = new SelectPicture();
             sp.Show();
-        } 
+        }
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            timer.Enabled = true;
+            timer.Elapsed += new ElapsedEventHandler(timer_Tick);
+            timer.Start();
+
+            // Check checkbox status
+            Properties.Settings.Default.DefaultAcceptTransfer = (AcceptAllTransfers.IsChecked == true);
+            Properties.Settings.Default.DefaultAskSavePath = (UseDefaultPath.IsChecked != true);
+
+            Properties.Settings.Default.Save();
+
+            // Update data for current session
+            App.me.Name = Properties.Settings.Default.Name;
+            App.me.Picture = Properties.Settings.Default.PicturePath;
+            Trace.WriteLine("Current session updated");
+
+
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+        }
+
+        private void timer_Tick(object source, ElapsedEventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                if (MainGrid.Width > 0)
+                    MainGrid.Width = MainGrid.Width - 10;
+                else
+                    timer.Stop();
+            });
+        }
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();

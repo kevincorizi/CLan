@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:CLanWPFTest"
         xmlns:extensions="clr-namespace:CLanWPFTest.Extensions;assembly=" 
       
-        Title="Settings" Height="670" Width="890">
+        Title="Settings" >
 
 
     <Page.Resources>
@@ -32,84 +32,90 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Grid>
-        <Grid Margin="470,0,0,0" Background="Black" Opacity="0.02">
-        </Grid>
-        <Grid x:Name="MainGrid" Background="White" Margin="10,0,420,0"  >
-        <Rectangle Fill="White" HorizontalAlignment="Left" Height="62" Stroke="LightGray" StrokeThickness='0.5'  VerticalAlignment="Top" Width="551"/>
-        <Label x:Name="label4"  Content="Settings" HorizontalAlignment="Left" Margin="20,12,0,0" FontSize="20" Foreground="Black" VerticalAlignment="Top" />
+
+    <Viewbox Stretch="UniformToFill">
+        <Grid>
+
+            <Grid Margin="470,0,0,0" Background="Black" Opacity="0.02">
+            </Grid>
+            <Grid x:Name="MainGrid" Background="White" Margin="0,0,420,0"  >
+                <Rectangle Fill="White" HorizontalAlignment="Left" Height="62" Stroke="LightGray" StrokeThickness='0.5'  VerticalAlignment="Top" Width="551"/>
+
+                <Rectangle Fill="#FFF9F9F9" HorizontalAlignment="Left" Height="670" VerticalAlignment="Top" Width="35.5"/>
+                <Button Style="{StaticResource MyButton}" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="48.96" FontSize="15" BorderThickness="0" Click="Settings_Click"  Width="114.5" Margin="-37.5,6,0,0">
+                    <Image Source="images/menu.png" Height="33" Width="22.5"/>
+                </Button>
+                <Label x:Name="label4"  Content="Settings" HorizontalAlignment="Left" Margin="60,12,0,0" FontSize="20" Foreground="#FF727272" VerticalAlignment="Top" Width="84" />
+
+                <StackPanel x:Name="sp">
+                    <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="46,90,0,20" VerticalAlignment="Top" Width="116" Height="116" BorderThickness="0" Style="{StaticResource MyButton}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{extensions:SettingBinding PicturePath}"/>
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="changePicture" Content="Set Picture" HorizontalAlignment="Left" Margin="310,-70,0,0" VerticalAlignment="Top" Width="106" Height="38" FontSize="15" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="changePicture_Click"/>
+                    <TextBlock  Margin="200,-110,246,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" FontSize="18" Foreground="#FF76BFFB"/>
+                    <TextBlock x:Name="UserName" Margin="200,-135,0,0" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" VerticalAlignment="Top" Height="30" Width="124" TextAlignment="Left" FontSize="18"/>
+                    <Button x:Name="EditName" Content="Edit Name" HorizontalAlignment="Left" Margin="200,-70,0,0" VerticalAlignment="Top" Width="103" Height="38"  BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="EditName_Click"/>
+
+                    <ComboBox x:Name="InterfacesList" Text="Select the LAN connection" ItemsSource="{Binding Path=Interfaces, Source={x:Static Application.Current}}" Margin="113.5,0,60,0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Label Content="{Binding Description}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Label x:Name="label" Content="Notifications" HorizontalAlignment="Left" Margin="40,0,0,0" Height="30" Width="143" FontSize="15" FontWeight="Bold" VerticalAlignment="Top" />
+
+                    <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" Margin="45,0,0,0"/>
+                    <CheckBox x:Name="checkBox1" Content="Hide all notifications" Margin="45,0,0,0"/>
+
+                    <Label x:Name="label2" Content="Storage" HorizontalAlignment="Left" Margin="40,10,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
+                    <CheckBox x:Name="UseDefaultPath" Content="Use default path" Margin="45,0,0,0" />
+                    <Button x:Name="DownloadPath" Content="Browse" HorizontalAlignment="Left" Margin="340,0,0,0" VerticalAlignment="Top" Width="92" Height="32" BorderThickness="0"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="DownloadPath_Click"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="45,-25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30"><Run Text="Default path"/><Run Text=":"/></TextBlock>
+                    <TextBox x:Name="PathText" HorizontalAlignment="Left" Height="26" Margin="130,-35,0,0" TextWrapping="Wrap" Text="{extensions:SettingBinding DefaultSavePath, Converter={extensions:DefaultSavePathConverter}}" VerticalAlignment="Top" Width="202"/>
+
+                    <Label x:Name="label3" Content="Privacy" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="45,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30"><Run Text="Default mode"/><Run Text=":"/></TextBlock>
+
+                    <RadioButton x:Name="PrivateRadio" Content="Private" HorizontalAlignment="Left" Margin="159,-30,0,0" VerticalAlignment="Top"  IsChecked="{extensions:SettingBinding DefaultPrivate}"/>
+                    <RadioButton x:Name="PublicRadio" Content="Public" HorizontalAlignment="Left" Margin="243,-30,0,0" VerticalAlignment="Top" Height="26" Width="116" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}"/>
+
+                    <Label x:Name="label1" Content="Customization" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
+                    <Button x:Name="background" Content="" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top" Width="100" Height="100" BorderThickness="0" Style="{StaticResource MyButton}" >
+                        <Button.Background>
+                            <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" Stretch="UniformToFill" />
+                        </Button.Background>
+
+                    </Button>
+                    <Button x:Name="ChangeBG" Content="Change Background" HorizontalAlignment="Left" Margin="170,-70,0,0" VerticalAlignment="Top" Width="171" Height="32"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" BorderThickness="0" />
+                    <CheckBox  Content="Night mode" Margin="45,5,0,0"/>
+                </StackPanel>
 
 
-        <StackPanel x:Name="sp">
-            <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="46,90,0,20" VerticalAlignment="Top" Width="116" Height="116" BorderThickness="0" Style="{StaticResource MyButton}">
-                <Button.Background>
-                    <ImageBrush ImageSource="{extensions:SettingBinding PicturePath}"/>
-                </Button.Background>
-            </Button>
-            <Button x:Name="changePicture" Content="Set Picture" HorizontalAlignment="Left" Margin="310,-70,0,0" VerticalAlignment="Top" Width="106" Height="38" FontSize="15" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="changePicture_Click"/>
-            <TextBlock  Margin="15,-110,0,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top"  Width="74" FontSize="18" Foreground="#FF76BFFB"/>
-            <TextBlock x:Name="UserName" Margin="200,-135,0,0" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" VerticalAlignment="Top" Height="30" Width="124" TextAlignment="Left" FontSize="18"/>
-            <Button x:Name="EditName" Content="Edit Name" HorizontalAlignment="Left" Margin="200,-70,0,0" VerticalAlignment="Top" Width="103" Height="38"  BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="EditName_Click"/>
-
-                <ComboBox x:Name="InterfacesList" ItemsSource="{Binding Path=Interfaces, Source={x:Static Application.Current}}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Label Content="{Binding Description}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            
-            <Label x:Name="label" Content="Notifications" HorizontalAlignment="Left" Margin="40,0,0,0" Height="30" Width="143" FontSize="15" FontWeight="Bold" VerticalAlignment="Top" />
-
-            <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" Margin="45,0,0,0"/>
-            <CheckBox x:Name="checkBox1" Content="Hide all notifications" Margin="45,0,0,0"/>
-
-            <Label x:Name="label2" Content="Storage" HorizontalAlignment="Left" Margin="40,10,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
-            <CheckBox x:Name="UseDefaultPath" Content="Use default path" Margin="45,0,0,0" />
-            <Button x:Name="DownloadPath" Content="Browse" HorizontalAlignment="Left" Margin="340,0,0,0" VerticalAlignment="Top" Width="92" Height="32" BorderThickness="0"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="DownloadPath_Click"/>
-            <TextBlock HorizontalAlignment="Left" Margin="45,-25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30"><Run Text="Default path"/><Run Text=":"/></TextBlock>
-            <TextBox x:Name="PathText" HorizontalAlignment="Left" Height="26" Margin="130,-35,0,0" TextWrapping="Wrap" Text="{extensions:SettingBinding DefaultSavePath, Converter={extensions:DefaultSavePathConverter}}" VerticalAlignment="Top" Width="202"/>
-
-            <Label x:Name="label3" Content="Privacy" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
-            <TextBlock HorizontalAlignment="Left" Margin="45,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30"><Run Text="Default mode"/><Run Text=":"/></TextBlock>
-
-            <RadioButton x:Name="PrivateRadio" Content="Private" HorizontalAlignment="Left" Margin="159,-30,0,0" VerticalAlignment="Top"  IsChecked="{extensions:SettingBinding DefaultPrivate}"/>
-            <RadioButton x:Name="PublicRadio" Content="Public" HorizontalAlignment="Left" Margin="243,-30,0,0" VerticalAlignment="Top" Height="26" Width="116" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}"/>
-
-            <Label x:Name="label1" Content="Customization" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="15" FontWeight="Bold"/>
-            <Button x:Name="background" Content="" HorizontalAlignment="Left" Margin="45,0,0,0" VerticalAlignment="Top" Width="100" Height="100" BorderThickness="0" Style="{StaticResource MyButton}" >
-                <Button.Background>
-                    <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" Stretch="UniformToFill" />
-                </Button.Background>
-
-            </Button>
-            <Button x:Name="ChangeBG" Content="Change Background" HorizontalAlignment="Left" Margin="170,-70,0,0" VerticalAlignment="Top" Width="171" Height="32"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" BorderThickness="0" />
-            <CheckBox  Content="Night mode" Margin="45,5,0,0"/>
-        </StackPanel>
-
-
-        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="346,0,0,14" VerticalAlignment="Bottom" Width="92" Height="33" BorderThickness="0" FontSize="15" Click="cancel_Click" RenderTransformOrigin="1.158,0.512"/>
-        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" Margin="0,0,127,13" VerticalAlignment="Bottom" Width="92" Height="34" BorderThickness="0" FontSize="15" Click="SaveButton_Click"/>
-        <Grid x:Name="TransparencyLayer" Visibility="Collapsed" Opacity="0.1" Height="670" Background="White" />
-        <Grid x:Name="NameBox" Visibility="Collapsed" Grid.Column="1" HorizontalAlignment="Left" Height="200" Margin="140,191,0,0" VerticalAlignment="Top" Width="350" Background="White">
-            <Border
+                <Grid x:Name="TransparencyLayer" Visibility="Collapsed" Opacity="0.1" Height="670" Background="White" />
+                <Grid x:Name="NameBox" Visibility="Collapsed" Grid.Column="1" HorizontalAlignment="Left" Height="200" Margin="140,191,0,0" VerticalAlignment="Top" Width="350" Background="White">
+                    <Border
             BorderBrush="#FFDDDDDD"  
             HorizontalAlignment="Center" 
             VerticalAlignment="Center" BorderThickness="0.3" >
-                <StackPanel Height="200" Width="350" >
-                    <TextBlock Margin="17" Text="Edit your name" FontWeight="Bold" FontSize="18" />
-                    <TextBlock Margin="15,15,15,5" Text="Name Surname:"  FontSize="15"/>
-                    <TextBox  Margin="15,2,15,0"  VerticalAlignment="Center" x:Name="InputTextBox" Width="200" Height="25" SelectionBrush="#FFCFEAFF" HorizontalAlignment="Left"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button x:Name="SaveNameButton" Margin="5,17,5,5" Content="Save"  Click="SaveNameButton_Click" FontSize="14" Width="75" Height="35" BorderThickness="0"/>
-                        <Button x:Name="CancelNameButton" Margin="5,17,5,5" Content="Cancel"  Click="CancelNameButton_Click" FontSize="14" Width="75" Height="35" BorderThickness="0"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </Grid>
+                        <StackPanel Height="200" Width="350" >
+                            <TextBlock Margin="17" Text="Edit your name" FontWeight="Bold" FontSize="18" />
+                            <TextBlock Margin="15,15,15,5" Text="Name Surname:"  FontSize="15"/>
+                            <TextBox  Margin="15,2,15,0"  VerticalAlignment="Center" x:Name="InputTextBox" Width="200" Height="25" SelectionBrush="#FFCFEAFF" HorizontalAlignment="Left"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button x:Name="SaveNameButton" Margin="5,17,5,5" Content="Save"  Click="SaveNameButton_Click" FontSize="14" Width="75" Height="35" BorderThickness="0"/>
+                                <Button x:Name="CancelNameButton" Margin="5,17,5,5" Content="Cancel"  Click="CancelNameButton_Click" FontSize="14" Width="75" Height="35" BorderThickness="0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
 
-    </Grid>
-    </Grid>
+            </Grid>
+        </Grid>
+    </Viewbox>
 </Page>
