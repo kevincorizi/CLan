@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLanWPFTest"
-        xmlns:extensions="clr-namespace:CLanWPFTest.Extensions"
+        xmlns:extensions="clr-namespace:CLanWPFTest.Extensions;assembly="
         mc:Ignorable="d"
         Title="CLan - Share instantly!" 
-        d:DesignWidth="600" d:DesignHeight="400">
+       >
 
     <Page.Resources>
         <Style x:Key="MyButton" TargetType="Button">
@@ -31,9 +31,14 @@
             </Setter>
         </Style>
     </Page.Resources>
-    
+
     <Grid  ShowGridLines="False" VerticalAlignment="Stretch">
         <Grid ShowGridLines="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
+            <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="36"  BorderThickness="0"   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8" Width="120" BorderBrush="#FF33A0EC" Margin="232,338,248,26"/>
+
+            <TextBlock TextWrapping="Wrap" Text="Private" Margin="0,33,31,0" Foreground="#FFA0A0A0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+
             <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="0,0,188,112" BorderThickness="0">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -56,7 +61,7 @@
 
                 </ListView.ItemContainerStyle>
             </ListView>
-            <ListView Name="FileList" ItemsSource="{Binding Path=SelectedFiles, Source={x:Static Application.Current}}" Background="Transparent" Margin="412,0,0,112" BorderThickness="0">
+            <ListView Name="FileList" ItemsSource="{Binding Path=SelectedFiles, Source={x:Static Application.Current}}" Background="Transparent" Margin="412,53.96,0,0" BorderThickness="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -66,15 +71,44 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <VirtualizingStackPanel x:Name="_SlidingMenu" Background="#FFF9F9F9" HorizontalAlignment="Left" Width="307" Margin="-265,0,0,0"  VerticalAlignment="Stretch">
+                <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="21,25.5,0,-34.64" VerticalAlignment="Top" Width="101" Height="108.38" BorderThickness="0" Style="{StaticResource MyButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="{extensions:SettingBinding PicturePath}"/>
+                    </Button.Background>
+                </Button>
+                <TextBlock  Margin="44,-24,0,0" TextWrapping="Wrap" Text="online" VerticalAlignment="Top" FontSize="10" Foreground="#FF76BFFB" Width="70"/>
+                <TextBlock x:Name="UserName" Margin="135,-45,0,0" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" VerticalAlignment="Top" Height="30" Width="124" TextAlignment="Left" FontSize="14"/>
+                <Button x:Name="changePicture" Content="Set Picture" HorizontalAlignment="Left" Margin="204,-5,0,-2" VerticalAlignment="Top" Width="60" Height="21" FontSize="9" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="changePicture_Click"/>
+                <Button x:Name="EditName" Content="Edit Name" HorizontalAlignment="Left" Margin="138,-20,0,0" VerticalAlignment="Top" Width="60" Height="21"  BorderThickness="0" BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="EditName_Click" FontSize="9"/>
 
+                <ComboBox x:Name="InterfacesList" Text="Select the LAN connection" ItemsSource="{Binding Path=Interfaces, Source={x:Static Application.Current}}" Margin="47.5,26,60,0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Label Content="{Binding Description}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Label x:Name="label" Content="Notifications" HorizontalAlignment="Left" Margin="20,0,0,0" Height="30" Width="143" FontSize="10" FontWeight="Bold" VerticalAlignment="Top" />
+
+                <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" Margin="25,-7,0,0" FontSize="9"/>
+                <CheckBox x:Name="checkBox1" Content="Hide all notifications" Margin="25,0,0,0" FontSize="9"/>
+
+                <Label x:Name="label2" Content="Storage" HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Height="30" Width="143" FontSize="10" FontWeight="Bold"/>
+                <CheckBox x:Name="UseDefaultPath" Content="Use default path" Margin="25,-7,0,0" FontSize="9" />
+                <Button x:Name="DownloadPath" Content="Browse" HorizontalAlignment="Left" Margin="203,-4,0,0" VerticalAlignment="Top" Width="60" Height="21" BorderThickness="0"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" Click="DownloadPath_Click" FontSize="9"/>
+                <TextBlock HorizontalAlignment="Left" Margin="25,-15,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" FontSize="9"><Run Text="Default path"/><Run Text=":"/></TextBlock>
+                <TextBox x:Name="PathText" HorizontalAlignment="Left" Height="26" Margin="81.167,-40,0,0" Text="{extensions:SettingBinding DefaultSavePath, Converter={extensions:DefaultSavePathConverter}}" VerticalAlignment="Top" Width="116.833" FontSize="9"/>
+
+
+                <Button Style="{StaticResource MyButton}" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="48.96" FontSize="15" BorderThickness="0" Click="Settings_Click"  Width="106.5" Margin="232,-311,0,0">
+                    <Image Source="images/menu.png" Height="33" Width="22.5"/>
+                </Button>
+            </VirtualizingStackPanel>
         </Grid>
-        <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
-        <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="36"  BorderThickness="0"   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8" Width="120" BorderBrush="#FF33A0EC" Margin="232,338,248,26"/>
-        <Rectangle Fill="#FFF9F9F9" HorizontalAlignment="Left" Height="670" VerticalAlignment="Top" Width="35.5"/>
-        <Button Style="{StaticResource MyButton}" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="48.96" FontSize="15" BorderThickness="0" Click="Settings_Click"  Width="114.5" Margin="-37.5,6,0,0">
-            <Image Source="images/menu.png" Height="33" Width="22.5"/>
-        </Button>
-        <TextBlock TextWrapping="Wrap" Text="Private" Margin="0,33,31,0" Foreground="#FFA0A0A0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
         <Grid x:Name="TransparencyLayer" Visibility="Collapsed" Opacity="0.6" Height="670" Background="White" />
     </Grid>
 </Page>

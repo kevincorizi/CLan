@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace CLanWPFTest
 {
@@ -13,12 +14,14 @@ namespace CLanWPFTest
     /// 
     public partial class UsersWindow : Page
     {
+        int counter = 0;
         public UsersWindow()
         {
             InitializeComponent();
 
             this.DataContext = this;
             this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
+            
         }
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
@@ -52,10 +55,54 @@ namespace CLanWPFTest
             }
         }
 
+
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            
-            NavigationService.Navigate(new SettingsPage());
+            counter++;
+            if(counter % 2 == 1)  // open click
+            {
+                while(this._SlidingMenu.Margin.Left != 0)
+                {
+                    this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 1, 0, 0, 0);
+                    this.NavigationService.Refresh();
+                    this._SlidingMenu.UpdateLayout();
+                    // System.Threading.Thread.Sleep(1);
+
+                }
+                //NavigationService.Navigate(new SettingsPage());
+            }
+            else
+            {             
+               
+                while (this._SlidingMenu.Margin.Left != -265)
+                {
+                    this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 1, 0, 0, 0);
+                    this.NavigationService.Refresh();   
+                }
+            }
+        }
+
+        private void changePicture_Click(object sender, RoutedEventArgs e)
+        {
+            SelectPicture sp = new SelectPicture();
+            sp.Show();
+        }
+
+        #region NAME
+        private void EditName_Click(object sender, RoutedEventArgs e)
+        {
+            // TransparencyLayer.Visibility = Visibility.Visible;
+            // NameBox.Visibility = Visibility.Visible;
+        }
+
+        #endregion
+
+        private void DownloadPath_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            dialog.ShowDialog();
+            string filePath = dialog.SelectedPath;
+            PathText.Text = filePath;
         }
 
         private void UserList_Selected(object sender, RoutedEventArgs e)

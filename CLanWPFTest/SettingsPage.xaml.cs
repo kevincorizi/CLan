@@ -15,6 +15,7 @@ namespace CLanWPFTest
     public partial class SettingsPage : Page
     {
         System.Timers.Timer timer = new System.Timers.Timer();
+        
         public SettingsPage()
         {
             InitializeComponent();
