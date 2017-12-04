@@ -18,9 +18,7 @@ namespace CLanWPFTest
             DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory() + @"../../UserAvatars");
             FileInfo[] images = folder.GetFiles("*.png");
             foreach (FileInfo img in images)
-            {
-                Thumbnails.Items.Add(new BitmapImage(new Uri(img.FullName)));
-            }         
+                Thumbnails.Items.Add(new BitmapImage(new Uri(img.FullName)));               
         }
 
         private void listViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -30,7 +28,7 @@ namespace CLanWPFTest
                 string imgpath = (sender as ListViewItem).Content.ToString();
                 Properties.Settings.Default.PicturePath = imgpath;
             }
-            this.Hide();
+            this.Close();
         }
     }
 }

@@ -29,5 +29,8 @@
     <Setting Name="DefaultNetworkInterface" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="CustomBackgroundPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/Images/background.jpg</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

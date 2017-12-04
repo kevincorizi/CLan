@@ -4,22 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLanWPFTest"
+        xmlns:extensions="clr-namespace:CLanWPFTest.Extensions;assembly="
         mc:Ignorable="d"
-        Title="CLan - Share instantly!">
-    <Window.Resources>
-        <BitmapImage x:Key="backgroundBrush"
-                     UriSource="images/background.jpg"/>
-    </Window.Resources>
+        Title="CLan - Share instantly!"
+        Width="900" Height="700">
+        
     
-    <Window.Width>
-        <Binding Source="{StaticResource backgroundBrush}" Path="PixelWidth"/>
-    </Window.Width>
-    <Window.Height>
-        <Binding Source="{StaticResource backgroundBrush}" Path="PixelHeight"/>
-    </Window.Height>
+   
     <Window.Background>
-        <ImageBrush x:Name="imageBrush"
-                    ImageSource="{StaticResource backgroundBrush}"></ImageBrush>
+        <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" />
     </Window.Background>
     
     <Frame x:Name="_mainFrame" NavigationUIVisibility="Hidden"/>

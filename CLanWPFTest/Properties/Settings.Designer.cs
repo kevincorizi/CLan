@@ -130,5 +130,17 @@ namespace CLanWPFTest.Properties {
                 this["DefaultNetworkInterface"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/Images/background.jpg")]
+        public string CustomBackgroundPath {
+            get {
+                return ((string)(this["CustomBackgroundPath"]));
+            }
+            set {
+                this["CustomBackgroundPath"] = value;
+            }
+        }
     }
 }

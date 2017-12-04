@@ -31,7 +31,7 @@ namespace CLanWPFTest
     {
         int counter = 0;
         private object _selectPicture;
-        
+        bool isWindowOpen = false;
         public UsersWindow()
         {
             InitializeComponent();
@@ -116,9 +116,24 @@ namespace CLanWPFTest
 
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
-             SelectPicture sp = new SelectPicture();
-             sp.Show();
+
+            // Prevent the user from opening the same window twice 
             
+            foreach (Window w in App.Current.Windows)
+            {
+                if (w is SelectPicture)
+                {
+                    isWindowOpen = true;
+                    w.Activate();
+                }
+            }
+
+            if (!isWindowOpen)
+            {
+                SelectPicture newwindow = new SelectPicture();
+                newwindow.Show();
+            }
+
         }
 
         #region NAME
@@ -141,6 +156,19 @@ namespace CLanWPFTest
         private void UserList_Selected(object sender, RoutedEventArgs e)
         {
             _continue.IsEnabled = true;
+        }
+
+        private void ChangeBG_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+                       
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = fd.FileName;
+                Properties.Settings.Default.BackgroundPath = fileName;
+                
+            }
         }
     }
 }

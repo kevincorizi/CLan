@@ -126,7 +126,7 @@
                     </Button.Background>
 
                 </Button>
-                <Button x:Name="ChangeBG" Content="Change Background" HorizontalAlignment="Left" Margin="136,-70,0,0" VerticalAlignment="Top" Width="120" Height="21"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" BorderThickness="0" FontSize="10" />
+                <Button x:Name="ChangeBG" Content="Change Background" HorizontalAlignment="Left" Margin="136,-70,0,0" VerticalAlignment="Top" Width="115" Height="21"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" BorderThickness="0" FontSize="10" Click="ChangeBG_Click" />
                 <CheckBox  Content="Night mode" Margin="25,5,0,0" FontSize="10"/>
 
 

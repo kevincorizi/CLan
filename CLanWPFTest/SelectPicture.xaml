@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:CLanWPFTest"
         xmlns:extensions="clr-namespace:CLanWPFTest.Extensions"
         mc:Ignorable="d"
-        Title="Select Picture" Height="423.901" Width="646.621">
+        Title="Select Picture" Height="420" Width="600">
     <ListView Name="Thumbnails" >
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
-                <UniformGrid Columns="4" />
+                <UniformGrid Columns="4" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </ItemsPanelTemplate>
         </ListView.ItemsPanel>
         <ListView.ItemTemplate>
