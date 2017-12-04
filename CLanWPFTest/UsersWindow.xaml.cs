@@ -7,19 +7,31 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-
+using System.Windows.Threading;
 namespace CLanWPFTest
 {
     /// <summary>
     /// Logica di interazione per MainWindow.xaml
     /// </summary>
     /// 
+    public static class ExtensionMethods
+    {
+        private static System.Action EmptyDelegate = delegate () { };
+
+        public static void Refresh(this UIElement uiElement)
+        {
+            uiElement.Dispatcher.Invoke(DispatcherPriority.Render, EmptyDelegate);
+        }
+    }
+
     public partial class UsersWindow : Page
     {
         int counter = 0;
         private object _selectPicture;
-
+        
         public UsersWindow()
         {
             InitializeComponent();
@@ -59,7 +71,7 @@ namespace CLanWPFTest
                 NavigationService.Navigate(new FileSelection(users));
             }
         }
-
+        
         
 
         private void Settings_Click(object sender, RoutedEventArgs e)
@@ -67,28 +79,37 @@ namespace CLanWPFTest
             counter++;
             if(counter % 2 == 1)  // open click
             {
-                while(this._SlidingMenu.Margin.Left != -10)
+                
+                while (this._SlidingMenu.Margin.Left != -10)
                 {
-                    _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 1, 0, 0, 0);
-                    this.NavigationService.Refresh();
-
+                    _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 0.5, 0, 0, 0);
+                    
+                    this._SlidingMenu.Refresh();
 
                 }
                 while (this._SlidingMenu.Margin.Left != 0)
                 {
-                    _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 1, 0, 0, 0);
-                    this.NavigationService.Refresh();
+                    _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 0.5, 0, 0, 0);
+                    this._SlidingMenu.Refresh();
                     System.Threading.Thread.Sleep(1);
-
+                    
                 }
+                
             }
             else
             {             
                
-                while (this._SlidingMenu.Margin.Left != -265)  // close click
+                while (this._SlidingMenu.Margin.Left != -255)  // close click
                 {
-                    this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 1, 0, 0, 0);
-                    this.NavigationService.Refresh();   
+                    this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
+                    this._SlidingMenu.Refresh();
+                }
+                while (this._SlidingMenu.Margin.Left != -265)
+                {
+                    _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
+                    this._SlidingMenu.Refresh();
+                    System.Threading.Thread.Sleep(1);
+
                 }
             }
         }

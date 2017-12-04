@@ -8,8 +8,10 @@
         mc:Ignorable="d"
         Title="CLan - Share instantly!" 
        >
+    
 
     <Page.Resources>
+        
         <Style x:Key="MyButton" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Cursor" Value="Hand" />
@@ -31,8 +33,9 @@
             </Setter>
         </Style>
     </Page.Resources>
-
+    
     <Grid  ShowGridLines="False" VerticalAlignment="Stretch">
+        
         <Grid ShowGridLines="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ToggleButton x:Name="PrivateMode" Height="45"  BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="15" Width="152" Background="#FF66B5F8" Foreground="#FFA4D5FF" Margin="0,0,-28,0" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
             <Button x:Name="_continue" Click="ContinueClick" Content="Send" Height="36"  BorderThickness="0"   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Background="#FF66B5F8" Width="120" BorderBrush="#FF33A0EC" Margin="232,338,248,26"/>
@@ -71,7 +74,14 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            
+
             <VirtualizingStackPanel x:Name="_SlidingMenu" Background="#FFEFF4F9" HorizontalAlignment="Left" Width="307" Margin="-265,0,0,0"  VerticalAlignment="Stretch">
+                <Border Name="border">
+                    <Border.RenderTransform>
+                        <TranslateTransform x:Name="borderTransform"/>
+                    </Border.RenderTransform>
+                </Border>
                 <Button x:Name="userImage" Content="" HorizontalAlignment="Left" Margin="21,25.5,0,-34.64" VerticalAlignment="Top" Width="101" Height="108.38" BorderThickness="0" Style="{StaticResource MyButton}">
                     <Button.Background>
                         <ImageBrush ImageSource="{extensions:SettingBinding PicturePath}"/>
