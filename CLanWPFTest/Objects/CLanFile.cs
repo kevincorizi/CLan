@@ -36,7 +36,7 @@ namespace CLanWPFTest.Objects
                     foreach (string f in Directory.EnumerateFiles(p, "*", SearchOption.AllDirectories))
                     {
                         // Now i have all the possible subdirectories of that folder and all files included
-                        String relativeName = f.Replace(folderName, "");
+                        String relativeName = f.Replace(folderName, "");    // This maintains folder structure from the root on
                         files.Add(new CLanFile(f, relativeName));
                     }
                 }
@@ -46,15 +46,15 @@ namespace CLanWPFTest.Objects
                     files.Add(new CLanFile(p));
                 }
             }
-            // files.ForEach((x) => Trace.WriteLine(x.Name));
             return files;
         }
 
         public static List<CLanFile> EnforceDuplicatePolicy(List<CLanFile> files, string root)
         {
+            List<string> myDirectories = new List<string>();
             foreach (CLanFile f in files)
             {
-                string directoryName = Path.GetDirectoryName(f.Name);
+                string directoryName = Path.GetDirectoryName(f.Name);   // f.Name maintains the folders from the root on
                 // If incoming file is in folder
                 if (directoryName.Length > 0)
                 {
@@ -62,7 +62,7 @@ namespace CLanWPFTest.Objects
                     // Note that this will be always valid for subfolders
                     // If there is a folder with that name, apply the policy selected by the user
 
-                    if (Directory.Exists(root + directoryName))
+                    if (Directory.Exists(root + directoryName) && !myDirectories.Contains(root + directoryName))
                     {
                         // A folder with that name already exists
                         if (SettingsManager.DefaultRenameOnDuplicate)
@@ -72,14 +72,23 @@ namespace CLanWPFTest.Objects
                             string newDirectoryName = directoryName;
                             for (int i = 1; ; i++)
                             {
-                                newDirectoryName = newDirectoryName + " (" + i + ")";
+                                newDirectoryName = directoryName + " (" + i + ")";
                                 if (!Directory.Exists(root + newDirectoryName))
                                     break;
+                            }
+                            // If the name of the parent directory changes, this must be propagated to all CLanFiles starting from the same parent
+                            foreach (CLanFile f2 in files)
+                            {
+                                if(Path.GetDirectoryName(f2.Name).Split(Path.DirectorySeparatorChar)[0].CompareTo(directoryName) == 0)
+                                {
+                                    files[files.IndexOf(f2)].Name = newDirectoryName + f2.Name.Substring(directoryName.Length);
+                                }
                             }
                             directoryName = newDirectoryName;
                         }
                     }
-                    Directory.CreateDirectory(root + directoryName);                
+                    Directory.CreateDirectory(root + directoryName);
+                    myDirectories.Add(root + directoryName);
                 }
 
                 // Check if the file already exists and apply duplicate policy
