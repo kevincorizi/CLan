@@ -62,6 +62,8 @@ namespace CLanWPFTest.Networking
         }
         [JsonIgnore]
         CLanTCPManager TCPManager;
+        [JsonIgnore]
+        public Socket currentSocket;
 
         public CLanFileTransfer(User u, List<CLanFile> f, CLanTransferType t)
         {
@@ -120,13 +122,21 @@ namespace CLanWPFTest.Networking
             // The sender will see the transfer window with a "waiting state" until the other answers
             Store();
 
-            CLanFileTransferRequest req = new CLanFileTransferRequest(App.me, Other, Files);
-            byte[] requestData = new Message(App.me, MessageType.SEND, req).ToByteArray();
-
-            Socket otherSocket = TCPManager.GetConnection(Other);
-            TCPManager.Send(requestData, Other);
-
-            byte[] responseData = TCPManager.Receive(otherSocket);
+            try
+            {
+                currentSocket = TCPManager.GetConnection(Other);
+                CLanFileTransferRequest req = new CLanFileTransferRequest(App.me, Other, Files);
+                byte[] requestData = new Message(App.me, MessageType.SEND, req).ToByteArray();
+                TCPManager.Send(requestData, currentSocket);
+            }
+            catch (SocketException se)
+            {
+                    Trace.WriteLine("Socket exception sending request");
+                    e.Cancel = true;
+                    return;
+            }
+            
+            byte[] responseData = TCPManager.Receive(currentSocket);
             if (responseData != null)
             {
                 Message responseMessage = Message.GetMessage(responseData);
@@ -183,10 +193,10 @@ namespace CLanWPFTest.Networking
                     root = fbd.FileName + Path.DirectorySeparatorChar;
                 });
             }
-
+            currentSocket = TCPManager.GetConnection(Other);
             // Confirm the transfer
             byte[] toSend = new Message(App.me, MessageType.ACK, "My body is ready!").ToByteArray();
-            TCPManager.Send(toSend, Other);
+            TCPManager.Send(toSend, currentSocket);
 
             // Receive files
             Store();

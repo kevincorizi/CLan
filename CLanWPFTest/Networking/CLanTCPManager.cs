@@ -14,16 +14,14 @@ namespace CLanWPFTest.Networking
     class CLanTCPManager
     {
         private int tcpListeningPort = 20001;
-        private int secondInstancePort = 20003;
         private int BUFFER_SIZE = 1024;
-        private Dictionary<User, Socket> sockets;
+        private Dictionary<User, Socket> socketBuffer;
 
         private static CLanTCPManager instance = null;
         private static readonly object _lock = new object();
-       
-        private CLanTCPManager()
-        {
-            sockets = new Dictionary<User, Socket>();
+
+        private CLanTCPManager() {
+            socketBuffer = new Dictionary<User, Socket>();
         }
         public static CLanTCPManager Instance {
             get
@@ -75,25 +73,13 @@ namespace CLanWPFTest.Networking
         {
             // This method is already being executed in a separate thread
             Trace.WriteLine("New connection!");
-            User source = App.OnlineUsers.SingleOrDefault(u => u.Ip.Equals((client.RemoteEndPoint as IPEndPoint).Address));
-            if (source == null)
-            {
-                Trace.WriteLine("Incoming connection from non-listed user, probably in private mode");
-                // There is going to be a socket not listed in the sockets list, for now
-            }
-            else if (!sockets.ContainsKey(source))
-            {
-                sockets.Add(source, client);
-            }
-
             byte[] data = Receive(client);
             // Trace.WriteLine(Encoding.ASCII.GetString(data));
             Message m = Message.GetMessage(data);
-            if (!sockets.ContainsValue(client))
-            {
-                // This means that the sender was probably in private mode and therefore not inserted yet
-                sockets.Add(m.sender, client);
-            }
+
+            User source = m.sender;
+            socketBuffer.Add(source, client);
+
             CLanFileTransferRequest req = CLanFileTransferRequest.GetRequest(m.message.ToString());
             req.TransferAccepted += HandleTransferAccepted;
             req.TransferRefused += HandleTransferRefused;
@@ -110,27 +96,24 @@ namespace CLanWPFTest.Networking
             // Decline the request
             CLanFileTransferRequest req = sender as CLanFileTransferRequest;
             byte[] toSend = new Message(App.me, MessageType.NACK, "Maybe next time :/").ToByteArray();
-            Send(toSend, req.From);
+            Send(toSend, socketBuffer[req.From]);
+
+            // Flush the buffer
+            socketBuffer.Remove(req.From);
         }
         #endregion
 
         public void SendFiles(CLanFileTransfer cft)
         {
-            User other = cft.Other;
+            Socket other = cft.currentSocket;
             List<CLanFile> files = cft.Files;
             BackgroundWorker bw = cft.BW;
-
-            if (!sockets.ContainsKey(other) || !sockets[other].Connected)
-            {
-                Trace.WriteLine("Cannot send file to non-existing or disconnected client");
-                return;
-            }
 
             long totalSize = files.Sum(f => f.Size);
             long sentSize = 0;
             byte[] buffer = new byte[BUFFER_SIZE];
 
-            using (sockets[other])
+            using (other)
             {
                 foreach (CLanFile f in files)
                 {
@@ -141,7 +124,7 @@ namespace CLanWPFTest.Networking
                     cft.CurrentFile = f.Name;
                     long currentSentSize = 0;
 
-                    using (NetworkStream stream = new NetworkStream(sockets[other]))
+                    using (NetworkStream stream = new NetworkStream(other))
                     using (FileStream fstream = new FileStream(f.RelativePath, FileMode.Open, FileAccess.Read))
                     {
                         try
@@ -183,25 +166,18 @@ namespace CLanWPFTest.Networking
                     
                 }
             }
-            sockets.Remove(other);
         }
         public void ReceiveFiles(CLanFileTransfer cft, string rootFolder)
         {
-            User other = cft.Other;
+            Socket other = cft.currentSocket;
             List<CLanFile> files = CLanFile.EnforceDuplicatePolicy(cft.Files, rootFolder);
             BackgroundWorker bw = cft.BW;
-
-            if (!sockets.ContainsKey(other) || !sockets[other].Connected)
-            {
-                Trace.WriteLine("Cannot receive file from non-existing or disconnected client");
-                return;
-            }
 
             long totalSize = files.Sum(f => f.Size);
             long receivedSize = 0;
             byte[] buffer = new byte[BUFFER_SIZE];
 
-            using (sockets[other])
+            using (other)
             {
                 // Here I already applied the renaming/overwriting policy for duplicate files, 
                 // so I can simply receive them
@@ -213,7 +189,7 @@ namespace CLanWPFTest.Networking
                     cft.CurrentFile = f.Name;
                     long currentReceivedSize = 0;
 
-                    using (NetworkStream stream = new NetworkStream(sockets[other]))
+                    using (NetworkStream stream = new NetworkStream(other))
                     using (FileStream fstream = new FileStream(rootFolder + f.Name, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         if (stream.CanRead)
@@ -259,33 +235,29 @@ namespace CLanWPFTest.Networking
                     Trace.WriteLine("File received");
                 }
             }
-            sockets.Remove(other);
         }
 
         #region UTILITIES
         public Socket GetConnection(User dest)
         {
             IPEndPoint i = new IPEndPoint(dest.Ip, tcpListeningPort);
-            if (!sockets.ContainsKey(dest))
-            {
-                sockets.Add(dest, new Socket(SocketType.Stream, ProtocolType.IP));
+            if (socketBuffer.ContainsKey(dest))
+            {                
+                Socket tmp = socketBuffer[dest];
+                if (!tmp.Connected)
+                    tmp.Connect(i);
+                socketBuffer.Remove(dest);
+                return tmp;
             }
-            if (!sockets[dest].Connected)
-            {
-                sockets[dest].Connect(i);
-            }
-            return sockets[dest];
+            
+            Socket s = new Socket(SocketType.Stream, ProtocolType.IP);
+            s.Connect(i);
+            return s;
         }
-        public void Send(byte[] message, User dest)
+        public void Send(byte[] message, Socket dest)
         {
-            if (!sockets.ContainsKey(dest) || !sockets[dest].Connected)
-            {
-                Trace.WriteLine("Cannot send TCP message to non-existing or disconnected client");
-                return;
-            }
-
             // Uses the GetStream public method to return the NetworkStream.
-            NetworkStream netStream = new NetworkStream(sockets[dest]);
+            NetworkStream netStream = new NetworkStream(dest);
 
             if (netStream.CanWrite)
             {
@@ -295,8 +267,8 @@ namespace CLanWPFTest.Networking
             else
             {
                 Console.WriteLine("You cannot write data to this stream.");
-                sockets[dest].Close();
-                // Closing the tcpClient instance does not close the network stream.
+                dest.Close();
+                // Closing the socket instance does not close the network stream.
                 netStream.Close();
                 return;
             }

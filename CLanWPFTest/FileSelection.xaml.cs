@@ -78,6 +78,11 @@ namespace CLanWPFTest
                 CLanFileTransfer cft = new CLanFileTransfer(u, files, CLanTransferType.SEND);
                 cft.Start();
             }
+
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
         }
     }
 }
