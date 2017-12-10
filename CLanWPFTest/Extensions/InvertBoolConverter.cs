@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace CLanWPFTest.Extensions
+namespace CLan.Extensions
 {
     [ValueConversion(typeof(bool), typeof(bool))]
     public class InvertBoolConverter : BaseBindingConverter, IValueConverter

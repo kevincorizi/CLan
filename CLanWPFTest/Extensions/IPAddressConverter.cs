@@ -3,7 +3,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace CLanWPFTest.Extensions
+namespace CLan.Extensions
 {
     class IPAddressConverter : JsonConverter
     {

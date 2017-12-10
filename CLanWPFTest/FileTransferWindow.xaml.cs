@@ -1,9 +1,9 @@
-﻿using CLanWPFTest.Networking;
+﻿using CLan.Networking;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace CLanWPFTest
+namespace CLan
 {
     /// <summary>
     /// Interaction logic for fileTransfer.xaml

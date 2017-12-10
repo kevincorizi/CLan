@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-namespace CLanWPFTest
+namespace CLan
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

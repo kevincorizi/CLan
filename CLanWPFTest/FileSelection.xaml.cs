@@ -1,5 +1,5 @@
-﻿using CLanWPFTest.Networking;
-using CLanWPFTest.Objects;
+﻿using CLan.Networking;
+using CLan.Objects;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace CLanWPFTest
+namespace CLan
 {
     /// <summary>
     /// Interaction logic for selectFile.xaml

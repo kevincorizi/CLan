@@ -1,4 +1,4 @@
-﻿using CLanWPFTest.Networking;
+﻿using CLan.Networking;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-namespace CLanWPFTest
+namespace CLan
 {
     /// <summary>
     /// Logica di interazione per MainWindow.xaml

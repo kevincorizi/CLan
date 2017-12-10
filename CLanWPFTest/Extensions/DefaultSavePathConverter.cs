@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace CLanWPFTest.Extensions
+namespace CLan.Extensions
 {
     [ValueConversion(typeof(string), typeof(string))]
     public class DefaultSavePathConverter : BaseBindingConverter, IValueConverter

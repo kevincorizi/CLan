@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 
-namespace CLanWPFTest
+namespace CLan
 {
     public class User : IEquatable<User>, INotifyPropertyChanged
     {

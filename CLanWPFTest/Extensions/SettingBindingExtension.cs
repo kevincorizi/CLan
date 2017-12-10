@@ -1,6 +1,6 @@
 ﻿using System.Windows.Data;
 
-namespace CLanWPFTest.Extensions
+namespace CLan.Extensions
 {
     public class SettingBindingExtension : Binding
     {

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Markup;
 
-namespace CLanWPFTest.Extensions
+namespace CLan.Extensions
 {
     public abstract class BaseBindingConverter : MarkupExtension
     {

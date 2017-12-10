@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 
-namespace CLanWPFTest
+namespace CLan
 {
     /// <summary>
     /// Interaction logic for SettingsPage.xaml

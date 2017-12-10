@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
-namespace CLanWPFTest
+namespace CLan
 {
     /// <summary>
     /// Interaction logic for SelectPicture.xaml

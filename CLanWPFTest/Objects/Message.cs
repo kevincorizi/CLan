@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace CLanWPFTest
+namespace CLan
 {
     public enum MessageType { HELLO, BYE, SEND, ACK, NACK };
     public class Message

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLanWPFTest", "CLanWPFTest\CLanWPFTest.csproj", "{3E78EF23-C851-40D6-A16D-D5CFF23A57C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLan", "CLanWPFTest\CLan.csproj", "{3E78EF23-C851-40D6-A16D-D5CFF23A57C4}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{56727F8D-1783-471D-8C29-DB5C6F022877}"
 EndProject

@@ -1,4 +1,4 @@
-﻿using CLanWPFTest.Objects;
+﻿using CLan.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace CLanWPFTest.Networking
+namespace CLan.Networking
 {
     class CLanTCPManager
     {

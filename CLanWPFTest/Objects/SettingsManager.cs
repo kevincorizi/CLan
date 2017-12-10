@@ -1,4 +1,4 @@
-﻿namespace CLanWPFTest.Objects
+﻿namespace CLan.Objects
 {
     class SettingsManager
     {

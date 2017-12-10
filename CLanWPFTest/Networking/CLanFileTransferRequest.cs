@@ -1,10 +1,10 @@
-﻿using CLanWPFTest.Objects;
+﻿using CLan.Objects;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace CLanWPFTest.Networking
+namespace CLan.Networking
 {
     public class CLanFileTransferRequest
     {

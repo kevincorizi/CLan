@@ -1,8 +1,8 @@
-﻿using CLanWPFTest.Extensions;
+﻿using CLan.Extensions;
 using Newtonsoft.Json;
 using System.Diagnostics;
 
-namespace CLanWPFTest
+namespace CLan
 {
     class CLanJSON
     {

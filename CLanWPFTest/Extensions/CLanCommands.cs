@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace CLanWPFTest.Extensions
+namespace CLan.Extensions
 {
     public static class CLanCommands
     {

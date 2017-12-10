@@ -1,4 +1,4 @@
-﻿using CLanWPFTest.Objects;
+﻿using CLan.Objects;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 
-namespace CLanWPFTest.Networking
+namespace CLan.Networking
 {
     // This class will be used on both sides of the transfer, either for sending or receiving
     public enum CLanTransferType { SEND, RECEIVE };

@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CLanWPFTest.Networking
+namespace CLan.Networking
 {
     public class CLanUDPManager
     {

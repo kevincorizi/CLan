@@ -1,5 +1,5 @@
-﻿using CLanWPFTest.Networking;
-using CLanWPFTest.Objects;
+﻿using CLan.Networking;
+using CLan.Objects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace CLanWPFTest
+namespace CLan
 {
     /// <summary>
     /// Logica di interazione per App.xaml
@@ -85,7 +85,7 @@ namespace CLanWPFTest
 
             NotifyIcon = new NotifyIcon();
             NotifyIcon.DoubleClick += (s, args) => ShowUsersWindow();
-            NotifyIcon.Icon = CLanWPFTest.Properties.Resources.TrayIcon;
+            NotifyIcon.Icon = CLan.Properties.Resources.TrayIcon;
             NotifyIcon.Visible = true;
 
             CreateContextMenu();
@@ -193,7 +193,7 @@ namespace CLanWPFTest
         {
             if(IsConnectionActive())
             {
-                me = new User(CLanWPFTest.Properties.Settings.Default.Name);
+                me = new User(CLan.Properties.Settings.Default.Name);
 
                 ActivateAdvertising();
                 ActivateUDPListener();

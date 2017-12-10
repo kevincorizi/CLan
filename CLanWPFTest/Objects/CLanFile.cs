@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace CLanWPFTest.Objects
+namespace CLan.Objects
 {
     public class CLanFile
     {
