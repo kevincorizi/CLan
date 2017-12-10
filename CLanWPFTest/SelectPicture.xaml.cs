@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,18 +16,21 @@ namespace CLan
         public SelectPicture()
         {
             InitializeComponent();
-            DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory() + @"../../UserAvatars");
-            FileInfo[] images = folder.GetFiles("*.png");
-            foreach (FileInfo img in images)
-                Thumbnails.Items.Add(new BitmapImage(new Uri(img.FullName)));               
+            foreach (string s in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+            {
+                if (s.StartsWith("CLan.UserAvatars."))
+                {
+                    Thumbnails.Items.Add(new BitmapImage(new Uri("pack://application:,,,/UserAvatars/" + s.Substring("CLan.UserAvatars.".Length))));
+                }
+            }           
         }
 
         private void listViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (Thumbnails.SelectedItems.Count > 0)
             {
-                string imgpath = (sender as ListViewItem).Content.ToString();
-                Properties.Settings.Default.PicturePath = imgpath;
+                string imgname = new FileInfo(((sender as ListViewItem).Content as BitmapImage).UriSource.AbsolutePath).Name;
+                Properties.Settings.Default.PicturePath = "UserAvatars/" + imgname;
             }
             this.Close();
         }
