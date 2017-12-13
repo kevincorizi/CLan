@@ -170,5 +170,18 @@ namespace CLan
                 
             }
         }
+
+        private void ChangeBGgallery_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = fd.FileName;
+                Properties.Settings.Default.BackgroundPath = fileName;
+
+            }
+        }
     }
 }

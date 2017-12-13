@@ -7,7 +7,7 @@
         mc:Ignorable="d"
       
         xmlns:local="clr-namespace:CLan"
-        xmlns:extensions="clr-namespace:CLan.Extensions" 
+        xmlns:extensions="clr-namespace:CLan.Extensions"  
       
         Title="Settings" >
 
@@ -92,7 +92,10 @@
                         </Button.Background>
 
                     </Button>
-                    <Button x:Name="ChangeBG" Content="Change Background" HorizontalAlignment="Left" Margin="170,-70,0,0" VerticalAlignment="Top" Width="171" Height="32"  BorderBrush="{x:Null}" Background="#FF76BFFB" Foreground="White" BorderThickness="0" />
+
+                    <Button x:Name="ChangeBG" Content="Choose from file" HorizontalAlignment="Left" Margin="170,-40,0,0" VerticalAlignment="Top" Width="171" Height="32"  BorderBrush="{x:Null}" Foreground="#FF76BFFB" Background="White" BorderThickness="0"  />
+                    <Button x:Name="ChangeBGgallery" Content="Choose from gallery" HorizontalAlignment="Left" Margin="170,-70,0,0" VerticalAlignment="Top" Width="171" Height="32"  BorderBrush="{x:Null}" Foreground="#FF76BFFB" Background="White" BorderThickness="0"  />
+
                     <CheckBox  Content="Night mode" Margin="45,5,0,0"/>
                 </StackPanel>
 
