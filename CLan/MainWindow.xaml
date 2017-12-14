@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:CLan"
         xmlns:extensions="clr-namespace:CLan.Extensions;assembly=" 
         mc:Ignorable="d"
-        Title="CLan - Share instantly!"
-        Width="900" Height="700">
+        Title="CLan - Share instantly!"       
+        WindowStartupLocation="CenterScreen"
+        Width="900" Height="700" MinWidth="700" MinHeight="600">
 
     <Window.Background>
         <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" Stretch="UniformToFill" />

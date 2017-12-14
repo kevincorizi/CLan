@@ -191,12 +191,18 @@ namespace CLan
 
         private void _nightMode(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.DarkBackgroundPath;
+            var bc = new BrushConverter();
+            if(Properties.Settings.Default.BackgroundPath == Properties.Settings.Default.SwapBackgroundPath)
+                Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.DarkBackgroundPath;
+            _SlidingMenu.Background = (Brush)bc.ConvertFrom("#7e8489"); 
         }
 
         private void _notNightMode(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.SwapBackgroundPath;
+            var bc = new BrushConverter();
+            if (Properties.Settings.Default.BackgroundPath == Properties.Settings.Default.DarkBackgroundPath)
+                Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.SwapBackgroundPath;
+            _SlidingMenu.Background = (Brush)bc.ConvertFrom("#FFEFF4F9");
         }
     }
 }

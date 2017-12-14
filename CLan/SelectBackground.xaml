@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:CLan"
         xmlns:extensions="clr-namespace:CLan.Extensions"
         mc:Ignorable="d"
-        Title="Select Background" Height="420" Width="600">
+        WindowStartupLocation="CenterScreen"
+        Title="Select Background" Height="420" Width="600" ResizeMode="NoResize">
     <ListView Name="Thumbnails" >
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
