@@ -245,9 +245,6 @@
     <Resource Include="Images\label.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="clanLogo.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
