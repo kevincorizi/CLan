@@ -158,7 +158,7 @@ namespace CLan
             _continue.IsEnabled = true;
         }
 
-        private void ChangeBG_Click(object sender, RoutedEventArgs e)
+        private void ChangeBGfile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog();
             fd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
@@ -173,15 +173,30 @@ namespace CLan
 
         private void ChangeBGgallery_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fd = new OpenFileDialog();
-            fd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
-
-            if (fd.ShowDialog() == DialogResult.OK)
+            foreach (Window w in App.Current.Windows)
             {
-                string fileName = fd.FileName;
-                Properties.Settings.Default.BackgroundPath = fileName;
-
+                if (w is SelectBackground)
+                {
+                    isWindowOpen = true;
+                    w.Activate();
+                }
             }
+
+            if (!isWindowOpen)
+            {
+                SelectBackground newwindow = new SelectBackground();
+                newwindow.Show();
+            }
+        }
+
+        private void _nightMode(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.DarkBackgroundPath;
+        }
+
+        private void _notNightMode(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.SwapBackgroundPath;
         }
     }
 }

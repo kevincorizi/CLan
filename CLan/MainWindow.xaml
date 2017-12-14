@@ -8,12 +8,10 @@
         mc:Ignorable="d"
         Title="CLan - Share instantly!"
         Width="900" Height="700">
-        
-    
-   
+
     <Window.Background>
-        <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" />
+        <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" Stretch="UniformToFill" />
     </Window.Background>
-    
-    <Frame x:Name="_mainFrame" NavigationUIVisibility="Hidden"/>
+
+    <Frame x:Name="_mainFrame" NavigationUIVisibility="Hidden" />
 </Window>

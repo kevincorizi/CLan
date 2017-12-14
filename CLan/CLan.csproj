@@ -123,12 +123,12 @@
     <Compile Include="SelectPicture.xaml.cs">
       <DependentUpon>SelectPicture.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Objects\User.cs" />
     <Compile Include="FileTransferWindow.xaml.cs">
       <DependentUpon>FileTransferWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectBackground.xaml.cs">
+      <DependentUpon>SelectBackground.xaml</DependentUpon>
     </Compile>
     <Page Include="FileSelection.xaml">
       <SubType>Designer</SubType>
@@ -139,10 +139,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectPicture.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -159,6 +155,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="FileTransferWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectBackground.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -182,7 +182,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\background.jpg" />
@@ -192,18 +194,18 @@
     <Resource Include="Images\user.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UserAvatars\user01.png" />
-    <EmbeddedResource Include="UserAvatars\user10.png" />
-    <EmbeddedResource Include="UserAvatars\user11.png" />
-    <EmbeddedResource Include="UserAvatars\user12.png" />
-    <EmbeddedResource Include="UserAvatars\user02.png" />
-    <EmbeddedResource Include="UserAvatars\user03.png" />
-    <EmbeddedResource Include="UserAvatars\user04.png" />
-    <EmbeddedResource Include="UserAvatars\user05.png" />
-    <EmbeddedResource Include="UserAvatars\user06.png" />
-    <EmbeddedResource Include="UserAvatars\user07.png" />
-    <EmbeddedResource Include="UserAvatars\user08.png" />
-    <EmbeddedResource Include="UserAvatars\user09.png" />
+    <Resource Include="UserAvatars\user01.png" />
+    <Resource Include="UserAvatars\user10.png" />
+    <Resource Include="UserAvatars\user11.png" />
+    <Resource Include="UserAvatars\user12.png" />
+    <Resource Include="UserAvatars\user02.png" />
+    <Resource Include="UserAvatars\user03.png" />
+    <Resource Include="UserAvatars\user04.png" />
+    <Resource Include="UserAvatars\user05.png" />
+    <Resource Include="UserAvatars\user06.png" />
+    <Resource Include="UserAvatars\user07.png" />
+    <Resource Include="UserAvatars\user08.png" />
+    <Resource Include="UserAvatars\user09.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -232,6 +234,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BackgroundImages\bg-1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\label.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

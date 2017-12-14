@@ -29,7 +29,10 @@
     <Setting Name="DefaultNetworkInterface" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="CustomBackgroundPath" Type="System.String" Scope="User">
+    <Setting Name="DarkBackgroundPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/Images/darkTheme.jpg</Value>
+    </Setting>
+    <Setting Name="SwapBackgroundPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">/Images/background.jpg</Value>
     </Setting>
   </Settings>

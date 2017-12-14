@@ -407,10 +407,11 @@ namespace CLan
         {
             NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
             NotifyIcon.ContextMenuStrip.Items.Add("Apri CLan").Click += (s, e) => ShowUsersWindow();
-            NotifyIcon.ContextMenuStrip.Items.Add("Impostazioni").Click += (s, e) => ShowSettings();
+            //NotifyIcon.ContextMenuStrip.Items.Add("Impostazioni").Click += (s, e) => ShowSettings();
             NotifyIcon.ContextMenuStrip.Items.Add("Attiva modalità privata").Click += (s, e) => TraySwitchToPrivate(s);
             NotifyIcon.ContextMenuStrip.Items.Add("Esci").Click += (s, e) => Current.Shutdown();
         }
+        /*
         private void ShowSettings()
         {
             if (mw.IsVisible)
@@ -423,6 +424,7 @@ namespace CLan
                 mw.Show();
             mw._mainFrame.Navigate(new SettingsPage());
         }
+        */
         private void TraySwitchToPrivate(object sender)
         {
             UDPManager.GoOffline();
