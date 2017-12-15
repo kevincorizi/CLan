@@ -10,8 +10,9 @@
        >
 
 
-    <Page.Resources>
 
+    <Page.Resources>
+   
         <Style x:Key="MyButton" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Cursor" Value="Hand" />
@@ -33,7 +34,7 @@
             </Setter>
         </Style>
     </Page.Resources>
-
+    
     <Grid  ShowGridLines="False" VerticalAlignment="Stretch">
 
         <Grid ShowGridLines="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -42,7 +43,7 @@
 
             <TextBlock TextWrapping="Wrap" Text="Private" Margin="0,33,31,0" Foreground="#FFA0A0A0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
 
-            <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="0,0,188,112" BorderThickness="0">
+            <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}" Background="Transparent" Margin="42,95.893,188,136" BorderThickness="0" VerticalAlignment="Top" HorizontalAlignment="Center">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="4" />
@@ -52,13 +53,14 @@
                     <DataTemplate>
                         <StackPanel>
                             <Image Source="{Binding Picture}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                            <Label Content="{Binding Name}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                            <Label Content="{Binding Name}" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Width" Value="120"/>
+                        <Setter Property="Height" Value="140"/>
                         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="UserList_Selected" />
                     </Style>
 

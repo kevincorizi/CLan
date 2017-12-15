@@ -73,8 +73,8 @@ namespace CLan.Networking
                     while (true)
                     {
                         UdpReceiveResult res = await inUDP.ReceiveAsync();
-                        if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
-                            continue;
+                        //if (res.RemoteEndPoint.Address.Equals(App.me.Ip))  // Ignore messages that I sent
+                        //    continue;
 
                         Message m = Message.GetMessage(res.Buffer);
                         m.sender.Ip = res.RemoteEndPoint.Address;
