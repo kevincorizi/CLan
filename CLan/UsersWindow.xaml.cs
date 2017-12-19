@@ -78,38 +78,32 @@ namespace CLan
         {
             counter++;
             if(counter % 2 == 1)  // open click
-            {
-                
+            {               
                 while (this._SlidingMenu.Margin.Left != -10)
                 {
                     _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 0.5, 0, 0, 0);
                     
                     this._SlidingMenu.Refresh();
-
                 }
                 while (this._SlidingMenu.Margin.Left != 0)
                 {
                     _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left + 0.5, 0, 0, 0);
                     this._SlidingMenu.Refresh();
-                    System.Threading.Thread.Sleep(1);
-                    
+                    System.Threading.Thread.Sleep(1);                    
                 }
-                
             }
             else
-            {             
-               
-                while (this._SlidingMenu.Margin.Left != -255)  // close click
+            {                           
+                while (this._SlidingMenu.Margin.Left != -290)  // close click
                 {
                     this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
                     this._SlidingMenu.Refresh();
                 }
-                while (this._SlidingMenu.Margin.Left != -265)
+                while (this._SlidingMenu.Margin.Left != -300)
                 {
                     _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
                     this._SlidingMenu.Refresh();
                     System.Threading.Thread.Sleep(1);
-
                 }
             }
         }
