@@ -30,7 +30,6 @@ namespace CLan
     public partial class UsersWindow : Page
     {
         int counter = 0;
-        private object _selectPicture;
         bool isWindowOpen = false;
         public UsersWindow()
         {
@@ -197,6 +196,11 @@ namespace CLan
             if (Properties.Settings.Default.BackgroundPath == Properties.Settings.Default.DarkBackgroundPath)
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.SwapBackgroundPath;
             _SlidingMenu.Background = (Brush)bc.ConvertFrom("#FFEFF4F9");
+        }
+
+        private void FlushQueue_Click(object sender, RoutedEventArgs e)
+        {
+            App.SelectedFiles.Clear();
         }
     }
 }

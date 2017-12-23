@@ -109,56 +109,66 @@
             </StackPanel>
         </StackPanel>
         <DockPanel Width="{Binding ElementName=usersListPage,Path=ActualWidth}">
-            <StackPanel Margin="20, 20, 70, 20" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+            <StackPanel Margin="20, 20, 70, 20" DockPanel.Dock="Right" VerticalAlignment="Stretch">
                 <ToggleButton x:Name="PrivateMode" HorizontalAlignment="Right" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
                 <TextBlock Text="Private" HorizontalAlignment="Right"/>
             </StackPanel>
-            <StackPanel Margin="20, 0, 70, 20" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
+            <StackPanel Margin="20, 20, 0, 20" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
                 <Button x:Name="_continue" Click="ContinueClick" 
                         Content="Continua" Background="#FF66B5F8"
                         Width="200"/>
                 <Image Source="Images/label.png" Width="400"/>
             </StackPanel>
-            <Grid Margin="20, 0, 70, 20">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <ListView Name="UserList" Grid.Column="0" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}"
+                <StackPanel Grid.Column="0" Margin="20, 20, 0, 20">
+                    <Label Content="Online users" HorizontalAlignment="Left" FontSize="15" FontWeight="Bold"/>
+                    <ListView Name="UserList" ItemsSource="{Binding Path=OnlineUsers, Source={x:Static Application.Current}}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"></WrapPanel>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Image Source="{Binding Picture}" HorizontalAlignment="Left"/>
-                                <Label Content="{Binding Name}" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Width" Value="120"/>
-                            <Setter Property="Height" Value="140"/>
-                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="UserList_Selected" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-                <ListView Name="FileList" Grid.Column="2" ItemsSource="{Binding Path=SelectedFiles, Source={x:Static Application.Current}}" DockPanel.Dock="Right">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Label Content="{Binding Name}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                <Label Content="{Binding RelativePath}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"></WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Image Source="{Binding Picture}" HorizontalAlignment="Left"/>
+                                    <Label Content="{Binding Name}" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Width" Value="120"/>
+                                <Setter Property="Height" Value="140"/>
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="UserList_Selected" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </StackPanel>
+                
+                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+                <DockPanel Grid.Column="2" Margin="20, 20, 0, 20">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <Label Content="Queued files" HorizontalAlignment="Left" FontSize="15" FontWeight="Bold" DockPanel.Dock="Top"/>
+                        <Label x:Name="FlushQueue" HorizontalAlignment="Right" Content="Remove files from queue" Foreground="#FF76BFFB" FontSize="15" Cursor="Hand" MouseLeftButtonDown="FlushQueue_Click"/>
+                    </StackPanel>
+                    <ListView Name="FileList" ItemsSource="{Binding Path=SelectedFiles, Source={x:Static Application.Current}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Label Content="{Binding Name}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <Label Content="{Binding RelativePath}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DockPanel>
             </Grid>
         </DockPanel>
     </StackPanel>
