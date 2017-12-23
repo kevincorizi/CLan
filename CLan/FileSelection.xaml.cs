@@ -31,43 +31,32 @@ namespace CLan
             fd.EnsureValidNames = true;
             fd.EnsureFileExists = true;
             fd.EnsurePathExists = true;
-            CommonFileDialogResult result = fd.ShowDialog();
-            if (result != CommonFileDialogResult.Ok)
-                return;
 
-            List<String> sFiles = new List<string>(fd.FileNames);   // The list of entries selected by the user
-
-            files = CLanFile.GetFiles(sFiles);
-
-            uploadFileButton.Visibility = Visibility.Hidden;
-            uploadFolderButton.Visibility = Visibility.Hidden;
-            continueButton.Visibility = Visibility.Visible;
-            
-            continueText.Visibility = Visibility.Visible;
-            continueButton.IsEnabled = true;
+            selectFilesOrFolders(fd);
         }
 
         private void selectFolder_Click(object sender, RoutedEventArgs e)
         {
-            CommonOpenFileDialog fd = new CommonOpenFileDialog();    // Opens a window to choose the file from the pc
+            CommonOpenFileDialog fd = new CommonOpenFileDialog();
             fd.Multiselect = true;
-            fd.EnsureValidNames = true;
-            fd.EnsureFileExists = true;
-            fd.EnsurePathExists = true;
-            CommonFileDialogResult result = fd.ShowDialog();
+            fd.IsFolderPicker = true;
+            fd.AllowNonFileSystemItems = true;
+
+            selectFilesOrFolders(fd);
+        }
+
+        private void selectFilesOrFolders(CommonOpenFileDialog cofd)
+        {
+            CommonFileDialogResult result = cofd.ShowDialog();
             if (result != CommonFileDialogResult.Ok)
                 return;
 
-            List<String> sFiles = new List<string>(fd.FileNames);   // The list of entries selected by the user
+            List<String> sFiles = new List<string>(cofd.FileNames);   // The list of entries selected by the user
 
             files = CLanFile.GetFiles(sFiles);
 
-            uploadFileButton.Visibility = Visibility.Hidden;
-            uploadFolderButton.Visibility = Visibility.Hidden;
-            continueButton.Visibility = Visibility.Visible;
-            
-            continueText.Visibility = Visibility.Visible;
-            continueButton.IsEnabled = true;
+            selectionButtonBox.Visibility = Visibility.Hidden;
+            continueButtonBox.Visibility = Visibility.Visible;
         }
 
         private void continueClick(object sender, RoutedEventArgs e)
@@ -82,6 +71,23 @@ namespace CLan
             if (NavigationService.CanGoBack)
             {
                 NavigationService.GoBack();
+            }
+        }
+
+        private void SelectBack_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(continueButtonBox.Visibility == Visibility.Visible)  // Files or folders already selected, flush and restore view
+            {
+                files.Clear();
+                continueButtonBox.Visibility = Visibility.Hidden;
+                selectionButtonBox.Visibility = Visibility.Visible;              
+            }
+            else
+            {
+                if (NavigationService.CanGoBack)
+                {
+                    NavigationService.GoBack();
+                }
             }
         }
     }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLan"
         mc:Ignorable="d"
-        Title="CLan - share instantly!" Height="670" Width="890">
+        Title="CLan - share instantly!">
     <Page.Resources>
         <Style x:Key="MyButton" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -22,45 +22,51 @@
                                 <Setter Property="Opacity" Value="0.7" />
                             </Trigger>
                         </ControlTemplate.Triggers>
-
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
     </Page.Resources>
-
     <Grid>
-
         <Grid.RowDefinitions>
-            <RowDefinition Height="187*" />
-            <RowDefinition Height="271*" />
-            <RowDefinition Height="212*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="300" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="113*" />
-            <ColumnDefinition Width="168*" />
-            <ColumnDefinition Width="119*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button x:Name="continueButton" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  BorderThickness="0" Click="continueClick" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="81,53,78,0" Visibility="Hidden">
-            <Button.Background>
-                <ImageBrush>
-                    <ImageBrush.ImageSource>
-                        <BitmapImage UriSource="images/forwardButton.png"/>
-                    </ImageBrush.ImageSource>
-                </ImageBrush>
-            </Button.Background>
-        </Button>
-
-        <TextBlock x:Name="continueText" HorizontalAlignment="Center" Margin="5,0,0,0" TextWrapping="Wrap" Text="Continue" Foreground="#FFB9B2B2" FontSize="20" Grid.Column="1" Grid.Row="1" Visibility="Hidden"/>
-        <Button x:Name="uploadFileButton" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch"  BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="200,10,0,43" Width="216" Grid.ColumnSpan="2">
-            <Image Source="images/uploadFile.png"/>
-
-        </Button>
-        <Button x:Name="uploadFolderButton" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Stretch"  BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="229,10,0,43" Width="216" Grid.ColumnSpan="2" Grid.Column="1">
-            <Image Source="images/uploadFolder.png"/>
-
-        </Button>
-        
+        <DockPanel Grid.Row="1" Grid.Column="1" x:Name="continueButtonBox" Visibility="Hidden">
+            <Button  
+                DockPanel.Dock="Top"  
+                Height="250"
+                BorderThickness="0" Click="continueClick" 
+                Style="{StaticResource MyButton}">
+                <Image Source="images/forwardButton.png"/>
+            </Button>
+            <TextBlock HorizontalAlignment="Center" 
+                       Margin="0, 20, 0, 0" Text="Continue" 
+                       Foreground="#FFB9B2B2" FontSize="20"
+                       DockPanel.Dock="Bottom"/>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="False" x:Name="selectionButtonBox">
+            <StackPanel DockPanel.Dock="Left">
+                <Button BorderThickness="0" Click="selectFile_Click" Style="{StaticResource MyButton}" Width="220">
+                    <Image Source="images/uploadFile.png"/>
+                </Button>
+                <Label HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Content="Select files"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right">
+                <Button BorderThickness="0" Click="selectFolder_Click" Style="{StaticResource MyButton}" Width="220">
+                    <Image Source="images/uploadFolder.png"/>
+                </Button>
+                <Label HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Content="Select folder"/>
+            </StackPanel>
+        </DockPanel>
+        <DockPanel Grid.Row="2" Grid.Column="1">
+            <Label x:Name="SelectBack" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Go back" Foreground="#FF76BFFB" FontSize="15" Cursor="Hand" MouseLeftButtonDown="SelectBack_Click"/>
+        </DockPanel>
     </Grid>
-
 </Page>
