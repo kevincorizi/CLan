@@ -5,43 +5,66 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLan"
         mc:Ignorable="d"
-        Title="CLan - Share instantly!" Height="300" Width="890">
-    <StackPanel>
-        <TextBlock>Incoming transfers</TextBlock>
-        <ListView x:Name="IncomingProgressBar" ItemsSource="{Binding Source={x:Static local:App.IncomingTransfers}}" Width="800">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Width="600">
-                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
-                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
-                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}"/>
-                        <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+        Title="CLan - Share instantly!" Width="620" MaxWidth="620">
+    <StackPanel Margin="10, 10, 10, 10">
+        <Label Content="Incoming transfers" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+        <ListView x:Name="IncomingProgressBar" ItemsSource="{Binding Source={x:Static local:App.IncomingTransfers}}">
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Width" Value="800"/>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MaxWidth="600"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock DockPanel.Dock="Left" Margin="0, 0, 20, 0" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name, StringFormat=From {0}}"/>
+                            <TextBlock DockPanel.Dock="Right" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
+                        </DockPanel>
+                        <DockPanel Grid.Row="1" Grid.Column="0">
+                            <Button Click="cancel_Click" DockPanel.Dock="Right" Margin="20, 0, 0, 0"  Background="#FF76BFFB" Foreground="White" BorderThickness="0">Cancel</Button>
+                            <ProgressBar Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}" Foreground="#FF76BFFB" Background="#7776BFFB" BorderThickness="0" DockPanel.Dock="Left"/>
+                        </DockPanel>
+                       
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
-        <TextBlock>Outgoing transfers</TextBlock>
-        <ListView x:Name="OutgoingProgressBar" ItemsSource="{Binding Source={x:Static local:App.OutgoingTransfers}}" Width="800">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Width="600">
-                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name}"/>
-                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
-                        <ProgressBar HorizontalAlignment="Center" Width="600" Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}"/>
-                        <Button HorizontalAlignment="Center" Click="cancel_Click">Cancel</Button>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+        <Label Content="Outgoing transfers" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+        <ListView x:Name="OutgoingProgressBar" ItemsSource="{Binding Source={x:Static local:App.OutgoingTransfers}}">
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Width" Value="800"/>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MaxWidth="600"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock DockPanel.Dock="Left" Margin="0, 0, 20, 0" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name, StringFormat=To {0}}"/>
+                            <TextBlock DockPanel.Dock="Right" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile}"/>
+                        </DockPanel>
+                        <DockPanel Grid.Row="1" Grid.Column="0">
+                            <Button Click="cancel_Click" DockPanel.Dock="Right" Margin="20, 0, 0, 0"  Background="#FF76BFFB" Foreground="White" BorderThickness="0">Cancel</Button>
+                            <ProgressBar Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}" Foreground="#FF76BFFB" Background="#7776BFFB" BorderThickness="0" DockPanel.Dock="Left"/>
+                        </DockPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
     </StackPanel>
     

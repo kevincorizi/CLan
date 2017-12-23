@@ -72,7 +72,7 @@ namespace CLan.Networking
             Files = f;
             Type = t;
             IsPending = true;
-            CurrentFile = "In attesa di risposta...";
+            CurrentFile = "Waiting for " + Other.Name + "...";
 
             bw = new BackgroundWorker();
             bw.WorkerSupportsCancellation = true;

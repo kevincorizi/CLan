@@ -121,7 +121,7 @@ namespace CLan.Networking
                         break;
 
                     // Update the View
-                    cft.CurrentFile = f.Name;
+                    cft.CurrentFile = "Current file: " + f.Name;
                     long currentSentSize = 0;
 
                     using (NetworkStream stream = new NetworkStream(other))
@@ -186,7 +186,7 @@ namespace CLan.Networking
                     if (bw.CancellationPending)
                         break;
                     // Update the View
-                    cft.CurrentFile = f.Name;
+                    cft.CurrentFile = "Current file: " + f.Name;
                     long currentReceivedSize = 0;
 
                     using (NetworkStream stream = new NetworkStream(other))
