@@ -22,7 +22,6 @@
                                 <Setter Property="Opacity" Value="0.7" />
                             </Trigger>
                         </ControlTemplate.Triggers>
-
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -30,7 +29,7 @@
     </Page.Resources>
 
     <StackPanel Orientation="Horizontal" >
-        <StackPanel x:Name="_SlidingMenu" Background="#FFEFF4F9" 
+        <DockPanel x:Name="_SlidingMenu" Background="#FFEFF4F9" 
                                     HorizontalAlignment="Left" 
                                     Width="350" Margin="-300,0,0,0"  
                                     VerticalAlignment="Stretch">
@@ -39,75 +38,81 @@
                     <TranslateTransform x:Name="borderTransform"/>
                 </Border.RenderTransform>
             </Border>
-            <Button Style="{StaticResource MyButton}" HorizontalAlignment="Right" FontSize="15" Width="50" Height="50" BorderThickness="0" Click="Settings_Click">
+            <Button Style="{StaticResource MyButton}" DockPanel.Dock="Top" HorizontalAlignment="Right" FontSize="15" Width="50" Height="50" BorderThickness="0" Click="Settings_Click">
                 <Image Source="images/menu.png" Width="30" Height="30"/>
             </Button>
-            <StackPanel Orientation="Vertical"
+            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                <StackPanel Orientation="Vertical"
                         Margin="20, 0, 50, 20">
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel Orientation="Vertical">
-                        <Image x:Name="userImage" Width="80" Height="80" Source="{extensions:SettingBinding PicturePath}"></Image>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Margin="20, 0, 0, 0">
+                    <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock x:Name="UserName" TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" FontSize="16"/>
-                            <TextBlock TextWrapping="Wrap" Text="online" FontSize="10" Foreground="#FF76BFFB"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
-                            <Button x:Name="changePicture" Content="Set Picture" FontSize="9" Background="#FF76BFFB" Foreground="White" Click="changePicture_Click"/>
-                            <Button x:Name="EditName" Content="Edit Name" Margin="10, 0, 0, 0" Background="#FF76BFFB" Foreground="White" Click="EditName_Click" FontSize="9"/>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel>
-                    <ComboBox x:Name="InterfacesList" Text="Select the LAN connection" ItemsSource="{Binding Path=Interfaces, Source={x:Static Application.Current}}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <Label Content="{Binding Description}" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-                    <StackPanel Margin="0, 20, 0, 0">
-                        <Label x:Name="label" Content="Notifications" HorizontalAlignment="Left" FontSize="11" FontWeight="Bold"/>
-                        <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" FontSize="10"/>
-                        <CheckBox x:Name="checkBox1" Content="Hide all notifications" FontSize="10"/>
-                    </StackPanel>
-                    <StackPanel Margin="0, 20, 0, 0">
-                        <Label x:Name="label2" Content="Storage" FontSize="11" FontWeight="Bold"/>
-                        <CheckBox x:Name="UseDefaultPath" Content="Use default path" FontSize="10" />
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox x:Name="PathText" Width="180" Text="{extensions:SettingBinding DefaultSavePath, Converter={extensions:DefaultSavePathConverter}}" FontSize="10"/>
-                            <Button x:Name="DownloadPath" Margin="10, 0, 0, 0" Width="80" Content="Browse" Background="#FF76BFFB" Foreground="White" Click="DownloadPath_Click" FontSize="9"/>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Margin="0, 20, 0, 0">
-                        <Label x:Name="label3" Content="Privacy" HorizontalAlignment="Left" FontSize="11" FontWeight="Bold"/>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Left" FontSize="10" Margin="0, 0, 50, 0">Default mode</TextBlock>
-                            <RadioButton x:Name="PrivateRadio" Margin="0, 0, 20, 0" Content="Private" IsChecked="{extensions:SettingBinding DefaultPrivate}" FontSize="10"/>
-                            <RadioButton x:Name="PublicRadio" Content="Public" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}" FontSize="10"/>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Margin="0, 20, 0, 0">
-                        <Label x:Name="label1" Content="Customization" FontSize="11" FontWeight="Bold"/>
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="background" Content="" Width="100" Height="100" Style="{StaticResource MyButton}" >
-                                <Button.Background>
-                                    <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" />
-                                </Button.Background>
+                            <Button x:Name="changePicture" Foreground="Transparent" Background="Transparent" BorderThickness="0" Width="100" Height="100" Padding="0" Click="changePicture_Click">
+                                <Image x:Name="userImage" Width="100" Height="100" Source="{extensions:SettingBinding PicturePath}"/>
                             </Button>
-                            <StackPanel VerticalAlignment="Center">
-                                <Button x:Name="ChangeBGgallery" Content="Choose from gallery" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="10" Click="ChangeBGgallery_Click" />
-                                <Button x:Name="ChangeBGfile" Content="Choose from file" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="10" Click="ChangeBGfile_Click"  />
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="20, 0, 0, 0">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock x:Name="UserName" TextWrapping="Wrap" Text="{extensions:SettingBinding Name}" FontSize="24"/>
+                                <TextBlock TextWrapping="Wrap" Text="online" FontSize="16" Foreground="#FF76BFFB"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                                <Button x:Name="EditName" Content="Edit Name" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="EditName_Click" FontSize="16"/>
                             </StackPanel>
                         </StackPanel>
-                        <CheckBox  Content="Night mode" FontSize="10" Checked="_nightMode" Unchecked="_notNightMode"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <StackPanel Margin="0, 20, 0, 0">
+                            <Label Padding="0" Content="Networking" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+                            <ComboBox x:Name="InterfacesList" Text="Select the LAN connection" ItemsSource="{Binding Path=Interfaces, Source={x:Static Application.Current}}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Label Padding="0" Content="{Binding Description}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Margin="0, 20, 0, 0">
+                            <Label Padding="0" Content="Notifications" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+                            <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" FontSize="16"/>
+                            <CheckBox x:Name="checkBox1" Content="Hide all notifications" FontSize="16"/>
+                        </StackPanel>
+                        <StackPanel Margin="0, 20, 0, 0">
+                            <Label Padding="0" Content="Storage" FontSize="20" FontWeight="Bold"/>
+                            <CheckBox x:Name="UseDefaultPath" Content="Use default path" FontSize="16" />
+                            <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                                <TextBox x:Name="PathText" Width="170" Text="{extensions:SettingBinding DefaultSavePath, Converter={extensions:DefaultSavePathConverter}}" FontSize="16"/>
+                                <Button x:Name="DownloadPath" Margin="10, 0, 0, 0" Width="100" Content="Browse" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="DownloadPath_Click" FontSize="16"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Margin="0, 20, 0, 0">
+                            <Label Content="Default privacy" Padding="0" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+                            <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
+                                <RadioButton x:Name="PrivateRadio" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0, 0, 20, 0" Content="Private" IsChecked="{extensions:SettingBinding DefaultPrivate}" FontSize="16"/>
+                                <RadioButton x:Name="PublicRadio" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Public" IsChecked="{extensions:SettingBinding DefaultPrivate, Converter={extensions:InvertBoolConverter}}" FontSize="16"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Margin="0, 20, 0, 0">
+                            <Label Padding="0" Content="Customization" FontSize="20" FontWeight="Bold"/>
+                            <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
+                                <Button x:Name="background" Content="" Width="100" Height="100" Style="{StaticResource MyButton}" >
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="{extensions:SettingBinding BackgroundPath}" />
+                                    </Button.Background>
+                                </Button>
+                                <StackPanel VerticalAlignment="Center">
+                                    <Button x:Name="ChangeBGgallery" Content="Choose from gallery" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="16" Click="ChangeBGgallery_Click" />
+                                    <Button x:Name="ChangeBGfile" Content="Choose from file" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="16" Click="ChangeBGfile_Click"  />
+                                </StackPanel>
+                            </StackPanel>
+                            <CheckBox Margin="0, 10, 0, 0" Content="Night mode" FontSize="16" Checked="_nightMode" Unchecked="_notNightMode"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </StackPanel>
+            </ScrollViewer>
+            
+        </DockPanel>
         <DockPanel Width="{Binding ElementName=usersListPage,Path=ActualWidth}">
             <StackPanel Margin="20, 20, 70, 20" DockPanel.Dock="Right" VerticalAlignment="Stretch">
                 <ToggleButton x:Name="PrivateMode" HorizontalAlignment="Right" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
