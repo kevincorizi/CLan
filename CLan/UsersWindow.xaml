@@ -28,22 +28,28 @@
         </Style>
     </Page.Resources>
 
-    <StackPanel Orientation="Horizontal" >
-        <DockPanel x:Name="_SlidingMenu" Background="#FFEFF4F9" 
+    <StackPanel Orientation="Horizontal">
+        <DockPanel x:Name="_SlidingMenu" Background="#FFEFF4F9"
                                     HorizontalAlignment="Left" 
-                                    Width="350" Margin="-300,0,0,0"  
+                                    Width="370" Margin="-320,0,0,0"  
                                     VerticalAlignment="Stretch">
             <Border Name="border">
                 <Border.RenderTransform>
                     <TranslateTransform x:Name="borderTransform"/>
                 </Border.RenderTransform>
             </Border>
-            <Button Style="{StaticResource MyButton}" DockPanel.Dock="Top" HorizontalAlignment="Right" FontSize="15" Width="50" Height="50" BorderThickness="0" Click="Settings_Click">
-                <Image Source="images/menu.png" Width="30" Height="30"/>
-            </Button>
+            <StackPanel Background="#22000000" DockPanel.Dock="Right" VerticalAlignment="Stretch" Width="50">
+                <Button Style="{StaticResource MyButton}" Width="50" Height="50" Padding="10, 10, 10, 10" BorderThickness="0" Click="Settings_Click">
+                    <Image Source="images/menu.png" Width="30" Height="30"/>
+                </Button>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20, 20, 20, 20">
+                <Button x:Name="SaveSettings" Width="100" HorizontalAlignment="Right" Content="Save" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="SaveSettings_Click"  FontSize="16"/>
+                <Button x:Name="UndoSettings" Width="100" HorizontalAlignment="Right" Margin="20, 0, 0, 0" Content="Cancel" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="UndoSettings_Click"  FontSize="16"/>
+            </StackPanel>
             <ScrollViewer VerticalScrollBarVisibility="Hidden">
                 <StackPanel Orientation="Vertical"
-                        Margin="20, 0, 50, 20">
+                        Margin="20, 20, 20, 20">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical">
                             <Button x:Name="changePicture" Foreground="Transparent" Background="Transparent" BorderThickness="0" Width="100" Height="100" Padding="0" Click="changePicture_Click">
@@ -109,7 +115,9 @@
                             <CheckBox Margin="0, 10, 0, 0" Content="Night mode" FontSize="16" Checked="_nightMode" Unchecked="_notNightMode"/>
                         </StackPanel>
                     </StackPanel>
+                    
                 </StackPanel>
+                
             </ScrollViewer>
             
         </DockPanel>

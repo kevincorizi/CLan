@@ -39,11 +39,12 @@ namespace CLan
             this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
             
         }
+
+        // Top toggle controller
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
             CLanUDPManager.Instance.GoOffline();
         }
-
         private void PrivateMode_Unchecked(object sender, RoutedEventArgs e)
         {
             CLanUDPManager.Instance.GoOnline();
@@ -54,7 +55,6 @@ namespace CLan
             List<User> users = UserList.SelectedItems.OfType<User>().ToList();
             if(FileList.Items.Count > 0)
             {
-
                 List<Objects.CLanFile> files = FileList.Items.OfType<Objects.CLanFile>().ToList();
                 foreach (User u in users)
                 {
@@ -72,7 +72,7 @@ namespace CLan
         }
         
         
-
+        // Settings menu icon toggle
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             counter++;
@@ -93,12 +93,12 @@ namespace CLan
             }
             else
             {                           
-                while (this._SlidingMenu.Margin.Left != -290)  // close click
+                while (this._SlidingMenu.Margin.Left != -310)  // close click
                 {
                     this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
                     this._SlidingMenu.Refresh();
                 }
-                while (this._SlidingMenu.Margin.Left != -300)
+                while (this._SlidingMenu.Margin.Left != -320)
                 {
                     _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
                     this._SlidingMenu.Refresh();
@@ -109,9 +109,7 @@ namespace CLan
 
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
-
-            // Prevent the user from opening the same window twice 
-            
+            // Prevent the user from opening the same window twice            
             foreach (Window w in App.Current.Windows)
             {
                 if (w is SelectPicture)
@@ -120,30 +118,21 @@ namespace CLan
                     w.Activate();
                 }
             }
-
             if (!isWindowOpen)
             {
                 SelectPicture newwindow = new SelectPicture();
                 newwindow.Show();
             }
-
         }
-
-        #region NAME
-        private void EditName_Click(object sender, RoutedEventArgs e)
-        {
-            // TransparencyLayer.Visibility = Visibility.Visible;
-            // NameBox.Visibility = Visibility.Visible;
-        }
-
-        #endregion
 
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();
-            dialog.ShowDialog();
-            string filePath = dialog.SelectedPath;
-            PathText.Text = filePath;
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = dialog.SelectedPath;
+                PathText.Text = filePath;
+            }
         }
 
         private void UserList_Selected(object sender, RoutedEventArgs e)
@@ -159,8 +148,7 @@ namespace CLan
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 string fileName = fd.FileName;
-                Properties.Settings.Default.BackgroundPath = fileName;
-                
+                Properties.Settings.Default.BackgroundPath = fileName;            
             }
         }
 
@@ -174,7 +162,6 @@ namespace CLan
                     w.Activate();
                 }
             }
-
             if (!isWindowOpen)
             {
                 SelectBackground newwindow = new SelectBackground();
@@ -201,6 +188,21 @@ namespace CLan
         private void FlushQueue_Click(object sender, RoutedEventArgs e)
         {
             App.SelectedFiles.Clear();
+        }
+
+        private void EditName_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void UndoSettings_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
