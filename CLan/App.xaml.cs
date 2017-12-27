@@ -195,7 +195,10 @@ namespace CLan
             {
                 me = new User(SettingsManager.Username);
 
-                ActivateAdvertising();
+                if(SettingsManager.DefaultPublicMode)
+                {
+                    ActivateAdvertising();
+                }              
                 ActivateUDPListener();
                 ActivateUserCleaner();
                 ActivateTCPListener();
@@ -223,7 +226,7 @@ namespace CLan
         private void DeactivateAdvertising(object sender = null, EventArgs args = null)
         {
             Trace.WriteLine("DectivateAdvertising");
-            ctsAdvertiser.Cancel();
+            ctsAdvertiser?.Cancel();
         }
         private void ActivateUDPListener()
         {

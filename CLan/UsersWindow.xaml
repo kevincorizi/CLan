@@ -155,7 +155,11 @@
         </DockPanel>
         <DockPanel Width="{Binding ElementName=usersListPage,Path=ActualWidth}">
             <StackPanel Margin="20, 20, 70, 20" DockPanel.Dock="Right" VerticalAlignment="Stretch">
-                <ToggleButton x:Name="PrivateMode" HorizontalAlignment="Right" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked"/>
+                <ToggleButton x:Name="PrivateMode" HorizontalAlignment="Right" Checked="PrivateMode_Checked" Unchecked="PrivateMode_Unchecked">
+                    <ToggleButton.IsChecked>
+                        <Binding Source="{x:Static objects:SettingsManager.DefaultPrivateMode}" Mode="OneWay"/>
+                    </ToggleButton.IsChecked>
+                </ToggleButton>
                 <TextBlock Text="Private" HorizontalAlignment="Right"/>
             </StackPanel>
             <StackPanel Margin="20, 20, 0, 20" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
