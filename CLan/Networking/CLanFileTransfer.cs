@@ -54,6 +54,24 @@ namespace CLan.Networking
             }
         }
         [JsonIgnore]
+        private TimeSpan secondsLeft;
+        [JsonIgnore]
+        public TimeSpan SecondsLeft
+        {
+            get
+            {
+                return secondsLeft;
+            }
+            set
+            {
+                if (value.CompareTo(secondsLeft) != 0)
+                {
+                    secondsLeft = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        [JsonIgnore]
         private BackgroundWorker bw;
         [JsonIgnore]
         public BackgroundWorker BW
@@ -219,6 +237,11 @@ namespace CLan.Networking
         {
             Progress = e.ProgressPercentage;
             IsPending = false;
+        }
+
+        public void UpdateTimeLeft(long seconds)
+        {
+            SecondsLeft = TimeSpan.FromMilliseconds(seconds * 1000);
         }
 
         #region Events

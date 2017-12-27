@@ -112,6 +112,7 @@ namespace CLan.Networking
             long totalSize = files.Sum(f => f.Size);
             long sentSize = 0;
             byte[] buffer = new byte[BUFFER_SIZE];
+            Stopwatch sw = Stopwatch.StartNew();
 
             using (other)
             {
@@ -132,6 +133,7 @@ namespace CLan.Networking
                             if (stream.CanWrite)
                             {
                                 int oldProgress = 0;
+                                long oldSecondsLeft = 0;
                                 while (currentSentSize < f.Size && !bw.CancellationPending)
                                 {
                                     Array.Clear(buffer, 0, BUFFER_SIZE);
@@ -139,11 +141,24 @@ namespace CLan.Networking
                                     stream.Write(buffer, 0, size);
                                     currentSentSize += size;
                                     sentSize += size;
+                                    
                                     int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
+
+                                    long sizeUpToNow = sentSize;
+                                    long timeUpToNow = sw.ElapsedMilliseconds;
+                                    long sizeLeft = totalSize - sentSize;
+                                    long timeLeft = (timeUpToNow * sizeLeft) / sizeUpToNow;
+                                    long secondsLeft = timeLeft / 1000;
+
                                     if (oldProgress != progress)
                                     {
                                         oldProgress = progress;
                                         bw.ReportProgress(progress);
+                                    }
+                                    if (oldSecondsLeft != secondsLeft)
+                                    {
+                                        oldSecondsLeft = secondsLeft;
+                                        cft.UpdateTimeLeft(secondsLeft);
                                     }
                                 }
 
@@ -176,6 +191,7 @@ namespace CLan.Networking
             long totalSize = files.Sum(f => f.Size);
             long receivedSize = 0;
             byte[] buffer = new byte[BUFFER_SIZE];
+            Stopwatch sw = Stopwatch.StartNew();
 
             using (other)
             {
@@ -195,6 +211,7 @@ namespace CLan.Networking
                         if (stream.CanRead)
                         {
                             int oldProgress = 0;
+                            long oldSecondsLeft = 0;
                             while (currentReceivedSize < f.Size && !bw.CancellationPending)
                             {
                                 Array.Clear(buffer, 0, BUFFER_SIZE);
@@ -205,10 +222,22 @@ namespace CLan.Networking
                                 currentReceivedSize += size;
                                 receivedSize += size;
                                 int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(receivedSize) * 100 / Convert.ToDouble(totalSize)));
+
+                                long sizeUpToNow = receivedSize;
+                                long timeUpToNow = sw.ElapsedMilliseconds;
+                                long sizeLeft = totalSize - receivedSize;
+                                long timeLeft = (timeUpToNow * sizeLeft) / sizeUpToNow;
+                                long secondsLeft = timeLeft / 1000;
+
                                 if (oldProgress != progress)
                                 {
                                     oldProgress = progress;
                                     bw.ReportProgress(progress);
+                                }
+                                if (oldSecondsLeft != secondsLeft)
+                                {
+                                    oldSecondsLeft = secondsLeft;
+                                    cft.UpdateTimeLeft(secondsLeft);
                                 }
                             }
                         }
