@@ -96,6 +96,7 @@ namespace CLan
             SelectedFiles = new ObservableCollection<CLanFile>();
             Interfaces = new ObservableCollection<NetworkInterface>();
             SetupNetworkInterfaces();
+            NetworkChange.NetworkAvailabilityChanged += ChangeNetworkAvailability;
 
             // Initialize current user with name from last saved settings
             StartServices();        
@@ -295,8 +296,7 @@ namespace CLan
                 NetworkInterface.GetAllNetworkInterfaces().Where(
                     nic => nic.NetworkInterfaceType != NetworkInterfaceType.Loopback && nic.OperationalStatus == OperationalStatus.Up
                 )
-            );
-            NetworkChange.NetworkAvailabilityChanged += ChangeNetworkAvailability;
+            );           
         }
         private void ChangeNetworkAvailability(object sender, NetworkAvailabilityEventArgs e)
         {
@@ -314,15 +314,9 @@ namespace CLan
         
         private bool IsConnectionActive()
         {
-            foreach(NetworkInterface nic in Interfaces)
-            {
-          
-                if(nic.OperationalStatus == OperationalStatus.Up)
-                {
-                    Trace.WriteLine(nic.Description);
-                    return true;
-                }
-            }
+            SetupNetworkInterfaces();
+            if (Interfaces.Count != 0)
+                return true;
             return false;
         }
         #endregion
@@ -410,24 +404,9 @@ namespace CLan
         {
             NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
             NotifyIcon.ContextMenuStrip.Items.Add("Apri CLan").Click += (s, e) => ShowUsersWindow();
-            //NotifyIcon.ContextMenuStrip.Items.Add("Impostazioni").Click += (s, e) => ShowSettings();
             NotifyIcon.ContextMenuStrip.Items.Add("Attiva modalità privata").Click += (s, e) => TraySwitchToPrivate(s);
             NotifyIcon.ContextMenuStrip.Items.Add("Esci").Click += (s, e) => Current.Shutdown();
         }
-        /*
-        private void ShowSettings()
-        {
-            if (mw.IsVisible)
-            {
-                if (mw.WindowState == WindowState.Minimized)
-                    mw.WindowState = WindowState.Normal;
-                mw.Activate();
-            }
-            else
-                mw.Show();
-            mw._mainFrame.Navigate(new SettingsPage());
-        }
-        */
         private void TraySwitchToPrivate(object sender)
         {
             UDPManager.GoOffline();

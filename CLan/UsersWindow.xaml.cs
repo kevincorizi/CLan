@@ -171,7 +171,8 @@ namespace CLan
             //Properties.Settings.Default.DefaultNetworkInterface = (InterfacesList.SelectedItem as System.Net.NetworkInformation.NetworkInterface).Id;
 
             SettingsManager.DefaultAcceptTransfer = (AcceptAllTransfers.IsChecked == true);
-            SettingsManager.DefaultHideNotifications = (HideAllNotifications.IsChecked == true);
+            SettingsManager.DefaultRenameOnDuplicate = (RenamingPolicy.IsChecked == true);
+            // SettingsManager.DefaultHideNotifications = (HideAllNotifications.IsChecked == true);
 
             SettingsManager.SaveInDefaultPath = (UseDefaultPath.IsChecked != true);
             SettingsManager.DefaultSavePath = (PathText.Text);

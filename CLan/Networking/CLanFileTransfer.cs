@@ -197,7 +197,7 @@ namespace CLan.Networking
 
             // Check if the user wants to use the default download folder or if it wants to change it
             string root = SettingsManager.DefaultSavePath;
-            if (!SettingsManager.SaveInDefaultPath) // If ASK is not default behaviour
+            if (!SettingsManager.SaveInDefaultPath) // If ASK is default behaviour
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {

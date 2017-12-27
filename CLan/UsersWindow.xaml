@@ -71,6 +71,7 @@
                             </StackPanel>
                         </StackPanel>
                     <StackPanel>
+                        <!--
                         <StackPanel Margin="0, 20, 0, 0">
                             <Label Padding="0" Content="Networking" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
                             <ComboBox x:Name="InterfacesList" Text="Select the LAN connection" ItemsSource="{Binding Path=Interfaces, Source={x:Static Application.Current}}">
@@ -83,18 +84,26 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </StackPanel>
+                        -->
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Padding="0" Content="Notifications" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+                            <Label Padding="0" Content="Transfer" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
                             <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" FontSize="16">
                                 <CheckBox.IsChecked>
                                     <Binding Source="{x:Static objects:SettingsManager.DefaultAcceptTransfer}" Mode="OneWay"></Binding>
                                 </CheckBox.IsChecked>
                             </CheckBox>
+                            <CheckBox x:Name="RenamingPolicy" Content="Rename duplicates (no overwrite)" FontSize="16">
+                                <CheckBox.IsChecked>
+                                    <Binding Source="{x:Static objects:SettingsManager.DefaultRenameOnDuplicate}" Mode="OneWay"></Binding>
+                                </CheckBox.IsChecked>
+                            </CheckBox>
+                            <!--
                             <CheckBox x:Name="HideAllNotifications" Content="Hide all notifications" FontSize="16">
                                 <CheckBox.IsChecked>
                                     <Binding Source="{x:Static objects:SettingsManager.DefaultHideNotifications}" Mode="OneWay"></Binding>
                                 </CheckBox.IsChecked>
                             </CheckBox>
+                            -->
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
                             <Label Padding="0" Content="Storage" FontSize="20" FontWeight="Bold"/>
