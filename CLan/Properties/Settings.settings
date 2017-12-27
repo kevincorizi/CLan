@@ -17,9 +17,6 @@
     <Setting Name="PicturePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">/Images/user.png</Value>
     </Setting>
-    <Setting Name="Name" Type="System.String" Scope="User">
-      <Value Profile="(Default)">CLan User</Value>
-    </Setting>
     <Setting Name="BackgroundPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">/Images/background.jpg</Value>
     </Setting>
@@ -34,6 +31,9 @@
     </Setting>
     <Setting Name="SwapBackgroundPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">/Images/background.jpg</Value>
+    </Setting>
+    <Setting Name="HideNotification" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

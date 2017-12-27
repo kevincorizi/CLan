@@ -193,7 +193,7 @@ namespace CLan
         {
             if(IsConnectionActive())
             {
-                me = new User(CLan.Properties.Settings.Default.Name);
+                me = new User(SettingsManager.Username);
 
                 ActivateAdvertising();
                 ActivateUDPListener();

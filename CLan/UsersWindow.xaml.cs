@@ -1,4 +1,5 @@
 ﻿using CLan.Networking;
+using CLan.Objects;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -40,6 +41,11 @@ namespace CLan
             
         }
 
+        // User list selection controller
+        private void UserList_Selected(object sender, RoutedEventArgs e)
+        {
+            _continue.IsEnabled = true;
+        }
         // Top toggle controller
         private void PrivateMode_Checked(object sender, RoutedEventArgs e)
         {
@@ -49,7 +55,12 @@ namespace CLan
         {
             CLanUDPManager.Instance.GoOnline();
         }
-
+        // Top flush controller
+        private void FlushQueue_Click(object sender, RoutedEventArgs e)
+        {
+            App.SelectedFiles.Clear();
+        }
+        // Continue button controller
         private void ContinueClick(object sender, RoutedEventArgs e)
         {
             List<User> users = UserList.SelectedItems.OfType<User>().ToList();
@@ -70,8 +81,7 @@ namespace CLan
                 NavigationService.Navigate(new FileSelection(users));
             }
         }
-        
-        
+            
         // Settings menu icon toggle
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
@@ -107,24 +117,12 @@ namespace CLan
             }
         }
 
+        // Settings controllers
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
-            // Prevent the user from opening the same window twice            
-            foreach (Window w in App.Current.Windows)
-            {
-                if (w is SelectPicture)
-                {
-                    isWindowOpen = true;
-                    w.Activate();
-                }
-            }
-            if (!isWindowOpen)
-            {
-                SelectPicture newwindow = new SelectPicture();
-                newwindow.Show();
-            }
+            SelectPicture newwindow = new SelectPicture();
+            newwindow.ShowDialog(); // Open in modal mode: no other interaction is possible until the window is closed
         }
-
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();
@@ -134,12 +132,6 @@ namespace CLan
                 PathText.Text = filePath;
             }
         }
-
-        private void UserList_Selected(object sender, RoutedEventArgs e)
-        {
-            _continue.IsEnabled = true;
-        }
-
         private void ChangeBGfile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog();
@@ -148,27 +140,15 @@ namespace CLan
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 string fileName = fd.FileName;
-                Properties.Settings.Default.BackgroundPath = fileName;            
+                SettingsManager.BackgroundPicture = fileName;
+                background.Background = new ImageBrush(new BitmapImage(new System.Uri(fileName)));
             }
         }
-
         private void ChangeBGgallery_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Window w in App.Current.Windows)
-            {
-                if (w is SelectBackground)
-                {
-                    isWindowOpen = true;
-                    w.Activate();
-                }
-            }
-            if (!isWindowOpen)
-            {
-                SelectBackground newwindow = new SelectBackground();
-                newwindow.Show();
-            }
+            SelectBackground newwindow = new SelectBackground();
+            newwindow.ShowDialog();
         }
-
         private void _nightMode(object sender, RoutedEventArgs e)
         {
             var bc = new BrushConverter();
@@ -176,7 +156,6 @@ namespace CLan
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.DarkBackgroundPath;
             _SlidingMenu.Background = (Brush)bc.ConvertFrom("#7e8489"); 
         }
-
         private void _notNightMode(object sender, RoutedEventArgs e)
         {
             var bc = new BrushConverter();
@@ -184,25 +163,34 @@ namespace CLan
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.SwapBackgroundPath;
             _SlidingMenu.Background = (Brush)bc.ConvertFrom("#FFEFF4F9");
         }
-
-        private void FlushQueue_Click(object sender, RoutedEventArgs e)
-        {
-            App.SelectedFiles.Clear();
-        }
-
-        private void EditName_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
         {
+            // Update data for current session
+            App.me.Picture = SettingsManager.UserPicture;   // Set in separate window
 
+            //Properties.Settings.Default.DefaultNetworkInterface = (InterfacesList.SelectedItem as System.Net.NetworkInformation.NetworkInterface).Id;
+
+            SettingsManager.DefaultAcceptTransfer = (AcceptAllTransfers.IsChecked == true);
+            SettingsManager.DefaultHideNotifications = (HideAllNotifications.IsChecked == true);
+
+            SettingsManager.SaveInDefaultPath = (UseDefaultPath.IsChecked != true);
+            SettingsManager.DefaultSavePath = (PathText.Text);
+
+            SettingsManager.DefaultPrivateMode = (PrivateRadio.IsChecked == true);
+            SettingsManager.DefaultPublicMode = !SettingsManager.DefaultPrivateMode;
+
+            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(new System.Uri(SettingsManager.BackgroundPicture)));
+
+            // Now the modifications to settings become permanent
+            SettingsManager.Save();
         }
-
         private void UndoSettings_Click(object sender, RoutedEventArgs e)
         {
+            // Discard pending changes to settings
+            SettingsManager.Undo();
 
+            background.Background = new ImageBrush(new BitmapImage(new System.Uri(SettingsManager.BackgroundPicture)));
+            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(new System.Uri(SettingsManager.BackgroundPicture)));
         }
     }
 }
