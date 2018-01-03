@@ -15,7 +15,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PicturePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">/Images/user.png</Value>
+      <Value Profile="(Default)">/UserAvatars/user05.png</Value>
     </Setting>
     <Setting Name="BackgroundPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">/Images/background.jpg</Value>

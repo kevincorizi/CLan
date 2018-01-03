@@ -32,21 +32,21 @@
     <StackPanel Orientation="Horizontal">
         <DockPanel x:Name="_SlidingMenu" Background="#FFEFF4F9"
                                     HorizontalAlignment="Left" 
-                                    Width="370" Margin="-320,0,0,0"  
+                                    Width="370" Margin="-330,0,0,0"  
                                     VerticalAlignment="Stretch">
             <Border Name="border">
                 <Border.RenderTransform>
                     <TranslateTransform x:Name="borderTransform"/>
                 </Border.RenderTransform>
             </Border>
-            <StackPanel Background="#22000000" DockPanel.Dock="Right" VerticalAlignment="Stretch" Width="50">
-                <Button Style="{StaticResource MyButton}" Width="50" Height="50" Padding="10, 10, 10, 10" BorderThickness="0" Click="Settings_Click">
-                    <Image Source="images/menu.png" Width="30" Height="30"/>
+            <StackPanel Background="#FFEFF4F9" DockPanel.Dock="Right" VerticalAlignment="Stretch" Width="40">
+                <Button Style="{StaticResource MyButton}" Width="30" Height="30" Padding="10, 10, 10, 10" BorderThickness="0" Click="Settings_Click">
+                    <Image Source="images/menu.png" Width="20" Height="20"/>
                 </Button>
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20, 20, 20, 20">
-                <Button x:Name="SaveSettings" Width="100" HorizontalAlignment="Right" Content="Save" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="SaveSettings_Click"  FontSize="16"/>
-                <Button x:Name="UndoSettings" Width="100" HorizontalAlignment="Right" Margin="20, 0, 0, 0" Content="Cancel" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="UndoSettings_Click"  FontSize="16"/>
+                <Button x:Name="SaveSettings" Width="100" HorizontalAlignment="Right" Content="Save" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="SaveSettings_Click"  FontSize="14"/>
+                <Button x:Name="UndoSettings" Width="100" HorizontalAlignment="Right" Margin="20, 0, 0, 0" Content="Cancel" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="UndoSettings_Click"  FontSize="14"/>
             </StackPanel>
             <ScrollViewer VerticalScrollBarVisibility="Hidden">
                 <StackPanel Orientation="Vertical"
@@ -67,7 +67,7 @@
                                         <Binding Source="{x:Static objects:SettingsManager.Username}"/>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <TextBlock TextWrapping="Wrap" Text="online" FontSize="16" Foreground="#FF76BFFB"/>
+                                <TextBlock TextWrapping="Wrap" Text="online" FontSize="15" Foreground="#FF76BFFB"/>
                             </StackPanel>
                         </StackPanel>
                     <StackPanel>
@@ -86,13 +86,13 @@
                         </StackPanel>
                         -->
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Padding="0" Content="Transfer" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
-                            <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" FontSize="16">
+                            <Label Padding="0" Content="Transfer" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
+                            <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" FontSize="13">
                                 <CheckBox.IsChecked>
                                     <Binding Source="{x:Static objects:SettingsManager.DefaultAcceptTransfer}" Mode="OneWay"></Binding>
                                 </CheckBox.IsChecked>
                             </CheckBox>
-                            <CheckBox x:Name="RenamingPolicy" Content="Rename duplicates (no overwrite)" FontSize="16">
+                            <CheckBox x:Name="RenamingPolicy" Content="Rename duplicates (no overwrite)" FontSize="13">
                                 <CheckBox.IsChecked>
                                     <Binding Source="{x:Static objects:SettingsManager.DefaultRenameOnDuplicate}" Mode="OneWay"></Binding>
                                 </CheckBox.IsChecked>
@@ -106,30 +106,30 @@
                             -->
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Padding="0" Content="Storage" FontSize="20" FontWeight="Bold"/>
-                            <CheckBox x:Name="UseDefaultPath" Content="Use default path" FontSize="16">
+                            <Label Padding="0" Content="Storage" FontSize="16" FontWeight="Bold"/>
+                            <CheckBox x:Name="UseDefaultPath" Content="Use default path" FontSize="13">
                                 <CheckBox.IsChecked>
                                     <Binding Source="{x:Static objects:SettingsManager.SaveInDefaultPath}" Mode="OneWay"></Binding>
                                 </CheckBox.IsChecked>
                             </CheckBox>
                             <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
-                                <TextBox x:Name="PathText" Width="170" FontSize="16">
+                                <TextBox x:Name="PathText" Width="170" FontSize="13">
                                     <TextBox.Text>
                                         <Binding Source="{x:Static objects:SettingsManager.DefaultSavePath}" Mode="OneWay"/>
                                     </TextBox.Text>
                                 </TextBox>
-                                <Button x:Name="DownloadPath" Margin="10, 0, 0, 0" Width="100" Content="Browse" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="DownloadPath_Click" FontSize="16"/>
+                                <Button x:Name="DownloadPath" Margin="10, 0, 0, 0" Width="100" Content="Browse" BorderThickness="0" Background="#FF76BFFB" Foreground="White" Click="DownloadPath_Click" FontSize="14"/>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Content="Default privacy" Padding="0" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+                            <Label Content="Default privacy" Padding="0" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
-                                <RadioButton x:Name="PrivateRadio" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0, 0, 20, 0" Content="Private" FontSize="16">
+                                <RadioButton x:Name="PrivateRadio" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0, 0, 20, 0" Content="Private" FontSize="13">
                                     <RadioButton.IsChecked>
                                         <Binding Source="{x:Static objects:SettingsManager.DefaultPrivateMode}" Mode="OneWay"></Binding>
                                     </RadioButton.IsChecked>
                                 </RadioButton>
-                                <RadioButton x:Name="PublicRadio" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Public" FontSize="16">
+                                <RadioButton x:Name="PublicRadio" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Public" FontSize="13">
                                     <RadioButton.IsChecked>
                                         <Binding Source="{x:Static objects:SettingsManager.DefaultPublicMode}" Mode="OneWay"></Binding>
                                     </RadioButton.IsChecked>
@@ -137,7 +137,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Padding="0" Content="Customization" FontSize="20" FontWeight="Bold"/>
+                            <Label Padding="0" Content="Customization" FontSize="16" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
                                 <Button x:Name="background" Content="" Width="100" Height="100" Style="{StaticResource MyButton}" >
                                     <Button.Background>
@@ -149,11 +149,11 @@
                                     </Button.Background>
                                 </Button>
                                 <StackPanel VerticalAlignment="Center">
-                                    <Button x:Name="ChangeBGgallery" Content="Choose from gallery" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="16" Click="ChangeBGgallery_Click" />
-                                    <Button x:Name="ChangeBGfile" Content="Choose from file" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="16" Click="ChangeBGfile_Click"  />
+                                    <Button x:Name="ChangeBGgallery" Content="Choose from gallery" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="13" Click="ChangeBGgallery_Click" />
+                                    <Button x:Name="ChangeBGfile" Content="Choose from file" Foreground="#FF76BFFB" Background="Transparent" BorderThickness="0" FontSize="13" Click="ChangeBGfile_Click"  />
                                 </StackPanel>
                             </StackPanel>
-                            <CheckBox Margin="0, 10, 0, 0" Content="Night mode" FontSize="16" Checked="_nightMode" Unchecked="_notNightMode"/>
+                            <CheckBox Margin="0, 10, 0, 0" Content="Night mode" FontSize="13" Checked="_nightMode" Unchecked="_notNightMode"/>
                         </StackPanel>
                     </StackPanel>
                     
@@ -173,8 +173,9 @@
             </StackPanel>
             <StackPanel Margin="20, 20, 0, 20" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch">
                 <Button x:Name="_continue" Click="ContinueClick" 
-                        Content="Continua" Background="#FF66B5F8"
-                        Width="200"/>
+                        Content="Continue" Background="#FF66B5F8"
+                        Width="130"
+                        BorderThickness="0"/>
                 <Image Source="Images/label.png" Width="400"/>
             </StackPanel>
             <Grid>

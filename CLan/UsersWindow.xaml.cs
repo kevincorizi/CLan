@@ -1,5 +1,6 @@
 ﻿using CLan.Networking;
 using CLan.Objects;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -103,12 +104,12 @@ namespace CLan
             }
             else
             {                           
-                while (this._SlidingMenu.Margin.Left != -310)  // close click
+                while (this._SlidingMenu.Margin.Left != -320)  // close click
                 {
                     this._SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
                     this._SlidingMenu.Refresh();
                 }
-                while (this._SlidingMenu.Margin.Left != -320)
+                while (this._SlidingMenu.Margin.Left != -330)
                 {
                     _SlidingMenu.Margin = new Thickness(this._SlidingMenu.Margin.Left - 0.5, 0, 0, 0);
                     this._SlidingMenu.Refresh();
@@ -121,8 +122,14 @@ namespace CLan
         private void changePicture_Click(object sender, RoutedEventArgs e)
         {
             SelectPicture newwindow = new SelectPicture();
-            newwindow.ShowDialog(); // Open in modal mode: no other interaction is possible until the window is closed
+            newwindow.ShowDialog(); // Open in modal mode: no other interaction is possible until the window is closed           
+
+            string stringPath = Properties.Settings.Default.PicturePath;
+            Uri imageUri = new Uri(stringPath, UriKind.Relative);
+            BitmapImage imageBitmap = new BitmapImage(imageUri);
+            this.userImage.Source = imageBitmap;
         }
+
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();
@@ -141,13 +148,14 @@ namespace CLan
             {
                 string fileName = fd.FileName;
                 SettingsManager.BackgroundPicture = fileName;
-                background.Background = new ImageBrush(new BitmapImage(new System.Uri(fileName)));
+                background.Background = new ImageBrush(new BitmapImage(new System.Uri(fileName)));               
             }
         }
         private void ChangeBGgallery_Click(object sender, RoutedEventArgs e)
         {
             SelectBackground newwindow = new SelectBackground();
             newwindow.ShowDialog();
+        
         }
         private void _nightMode(object sender, RoutedEventArgs e)
         {
@@ -180,11 +188,23 @@ namespace CLan
             SettingsManager.DefaultPrivateMode = (PrivateRadio.IsChecked == true);
             SettingsManager.DefaultPublicMode = !SettingsManager.DefaultPrivateMode;
 
-            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(new System.Uri(SettingsManager.BackgroundPicture)));
+            //TODO: The following line gives error when we click on "save" without changing the bg.
+            //App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(new Uri(Properties.Settings.Default.BackgroundPath)));
 
             // Now the modifications to settings become permanent
             SettingsManager.Save();
         }
+
+        public static bool IsValidURI(string uri)
+        {
+            if (!Uri.IsWellFormedUriString(uri, UriKind.Absolute))
+                return false;
+            Uri tmp;
+            if (!Uri.TryCreate(uri, UriKind.Absolute, out tmp))
+                return false;
+            return tmp.Scheme == Uri.UriSchemeHttp || tmp.Scheme == Uri.UriSchemeHttps;
+        }
+
         private void UndoSettings_Click(object sender, RoutedEventArgs e)
         {
             // Discard pending changes to settings

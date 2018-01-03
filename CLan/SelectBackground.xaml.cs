@@ -16,13 +16,10 @@ namespace CLan
         public SelectBackground()
         {
             InitializeComponent();
-            foreach (string s in Assembly.GetExecutingAssembly().GetManifestResourceNames())
-            {
-                if (s.StartsWith("CLan.UserAvatars."))
-                {
-                    Thumbnails.Items.Add(new BitmapImage(new Uri("pack://application:,,,/Images/BackgroundImages//" + s.Substring("CLan.UserAvatars.".Length))));
-                }
-            }
+            DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory() + @"../../BackgroundImages");
+            FileInfo[] images = folder.GetFiles("*.jpg");
+            foreach (FileInfo img in images)
+                Thumbnails.Items.Add(new BitmapImage(new Uri(img.FullName)));
         }
 
         private void listViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -30,7 +27,8 @@ namespace CLan
             if (Thumbnails.SelectedItems.Count > 0)
             {
                 string imgname = new FileInfo(((sender as ListViewItem).Content as BitmapImage).UriSource.AbsolutePath).Name;
-                Properties.Settings.Default.PicturePath = "Images/BackgroundImages/" + imgname;
+                Properties.Settings.Default.BackgroundPath = "/BackgroundImages/" + imgname;
+                Properties.Settings.Default.Save();
             }
             this.Close();
         }
