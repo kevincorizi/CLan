@@ -1,6 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection;
+using System.Resources;
+using System.Linq;
+using System.Collections;
 
 namespace CLan.Objects
 {
@@ -85,33 +89,33 @@ namespace CLan.Objects
         {
             get
             {
-                if (System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName.CompareTo("") == 0)
+                if (System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName == null)
                     return System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                 return System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
             }
         }
 
-        public static string UserPicture
+        public static Uri UserPicture
         {
             get
             {
-                return Properties.Settings.Default.PicturePath;
+                return new Uri(Properties.Settings.Default.PicturePath);
             }
             set
             {
-                Properties.Settings.Default.PicturePath = value;
+                Properties.Settings.Default.PicturePath = value.ToString();
             }
         }
 
-        public static string BackgroundPicture
+        public static Uri BackgroundPicture
         {
             get
             {
-                return Properties.Settings.Default.BackgroundPath;
+                return new Uri(Properties.Settings.Default.BackgroundPath);
             }
             set
             {
-                Properties.Settings.Default.BackgroundPath = value;
+                Properties.Settings.Default.BackgroundPath = value.ToString();
             }
         }
 
@@ -122,6 +126,24 @@ namespace CLan.Objects
         public static void Undo()
         {
             Properties.Settings.Default.Reload();
+        }
+
+        public static string[] GetResourcesUnder(string folder)
+        {
+            folder = folder.ToLower() + "/";
+
+            var assembly = Assembly.GetCallingAssembly();
+            var resourcesName = assembly.GetName().Name + ".g.resources";
+            var stream = assembly.GetManifestResourceStream(resourcesName);
+            var resourceReader = new ResourceReader(stream);
+
+            var resources =
+                from p in resourceReader.OfType<DictionaryEntry>()
+                let theme = (string)p.Key
+                where theme.StartsWith(folder)
+                select theme.Substring(folder.Length);
+
+            return resources.ToArray();
         }
     }
 }

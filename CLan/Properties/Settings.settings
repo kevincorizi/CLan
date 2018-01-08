@@ -15,10 +15,10 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PicturePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">/UserAvatars/user05.png</Value>
+      <Value Profile="(Default)">pack://application:,,,/UserAvatars/user05.png</Value>
     </Setting>
     <Setting Name="BackgroundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">/Images/background.jpg</Value>
+      <Value Profile="(Default)">pack://application:,,,/BackgroundImages/bg-1.jpg</Value>
     </Setting>
     <Setting Name="DefaultRenameFile" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -27,10 +27,10 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DarkBackgroundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">/Images/darkTheme.jpg</Value>
+      <Value Profile="(Default)">pack://application:,,,/BackgroundImages/bg-1.jpg</Value>
     </Setting>
     <Setting Name="SwapBackgroundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">/Images/background.jpg</Value>
+      <Value Profile="(Default)">pack://application:,,,/BackgroundImages/bg-1.jpg</Value>
     </Setting>
     <Setting Name="HideNotification" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CLan.Objects;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -16,19 +17,17 @@ namespace CLan
         public SelectBackground()
         {
             InitializeComponent();
-            DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory() + @"../../BackgroundImages");
-            FileInfo[] images = folder.GetFiles("*.jpg");
-            foreach (FileInfo img in images)
-                Thumbnails.Items.Add(new BitmapImage(new Uri(img.FullName)));
+            String[] images = SettingsManager.GetResourcesUnder("BackgroundImages");
+            foreach (String img in images)
+                Thumbnails.Items.Add(new BitmapImage(new Uri("pack://application:,,,/BackgroundImages/" + img)));
         }
 
         private void listViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (Thumbnails.SelectedItems.Count > 0)
             {
-                string imgname = new FileInfo(((sender as ListViewItem).Content as BitmapImage).UriSource.AbsolutePath).Name;
-                Properties.Settings.Default.BackgroundPath = "/BackgroundImages/" + imgname;
-                Properties.Settings.Default.Save();
+                Uri imgname = ((sender as ListViewItem).Content as BitmapImage).UriSource;
+                SettingsManager.BackgroundPicture = imgname;
             }
             this.Close();
         }

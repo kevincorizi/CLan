@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CLan.Objects;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.Net;
@@ -24,8 +25,8 @@ namespace CLan
             }
         }
 
-        private string picture;
-        public string Picture
+        private Uri picture;
+        public Uri Picture
         {
             get
             {
@@ -33,11 +34,8 @@ namespace CLan
             }
             set
             {
-                if(value.CompareTo(picture) != 0)
-                {
                     picture = value;
                     NotifyPropertyChanged();
-                }
             }
         }
         public IPAddress Ip { get; set; }
@@ -49,9 +47,9 @@ namespace CLan
         {
             this.Name = n;
             if (p == null || p.CompareTo("") == 0)
-                this.Picture = Properties.Settings.Default.PicturePath;
+                this.Picture = SettingsManager.UserPicture;
             else
-                this.Picture = p;
+                this.Picture = new Uri(p);
             if(i == null)
                 this.Ip = GetMyIPAddress();
             else

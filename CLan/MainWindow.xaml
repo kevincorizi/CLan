@@ -12,7 +12,7 @@
     <Window.Background>
         <ImageBrush Stretch="UniformToFill">
             <ImageBrush.ImageSource>
-                <Binding Source="{x:Static objects:SettingsManager.BackgroundPicture}"/>
+                <BitmapImage UriSource="{x:Static objects:SettingsManager.BackgroundPicture}"/>
             </ImageBrush.ImageSource>
         </ImageBrush>
     </Window.Background>

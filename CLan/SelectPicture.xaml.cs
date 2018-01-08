@@ -1,6 +1,10 @@
-﻿using System;
+﻿using CLan.Objects;
+using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,26 +28,21 @@ namespace CLan
     }
     public partial class SelectPicture : Window
     {
-       
-        
         public SelectPicture()
         {    
             InitializeComponent();
-            DirectoryInfo folder = new DirectoryInfo(Directory.GetCurrentDirectory() + @"../../UserAvatars");
-            FileInfo[] images = folder.GetFiles("*.png");
-            foreach (FileInfo img in images)
-                Thumbnails.Items.Add(new BitmapImage(new Uri(img.FullName)));
+            String[] images = SettingsManager.GetResourcesUnder("UserAvatars");
+            foreach (String img in images)
+                Thumbnails.Items.Add(new BitmapImage(new Uri("pack://application:,,,/UserAvatars/" + img)));
         }
-        
 
         private void listViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
             if (Thumbnails.SelectedItems.Count > 0)
             {
-                string imgname = new FileInfo(((sender as ListViewItem).Content as BitmapImage).UriSource.AbsolutePath).Name;               
-                Properties.Settings.Default.PicturePath = "/UserAvatars/" + imgname;
-                Properties.Settings.Default.Save();
+                Uri imgname = ((sender as ListViewItem).Content as BitmapImage).UriSource;               
+                SettingsManager.UserPicture = imgname;
             }
             this.Close();
         }

@@ -124,10 +124,7 @@ namespace CLan
             SelectPicture newwindow = new SelectPicture();
             newwindow.ShowDialog(); // Open in modal mode: no other interaction is possible until the window is closed           
 
-            string stringPath = Properties.Settings.Default.PicturePath;
-            Uri imageUri = new Uri(stringPath, UriKind.Relative);
-            BitmapImage imageBitmap = new BitmapImage(imageUri);
-            this.userImage.Source = imageBitmap;
+            userImage.Source = new BitmapImage(SettingsManager.UserPicture);
         }
 
         private void DownloadPath_Click(object sender, RoutedEventArgs e)
@@ -136,6 +133,8 @@ namespace CLan
             if(dialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = dialog.SelectedPath;
+                if (!filePath.EndsWith("\\"))
+                    filePath += "\\";
                 PathText.Text = filePath;
             }
         }
@@ -147,7 +146,7 @@ namespace CLan
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 string fileName = fd.FileName;
-                SettingsManager.BackgroundPicture = fileName;
+                SettingsManager.BackgroundPicture = new System.Uri(fileName);
                 background.Background = new ImageBrush(new BitmapImage(new System.Uri(fileName)));               
             }
         }
@@ -155,7 +154,7 @@ namespace CLan
         {
             SelectBackground newwindow = new SelectBackground();
             newwindow.ShowDialog();
-        
+            background.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture));
         }
         private void _nightMode(object sender, RoutedEventArgs e)
         {
@@ -189,7 +188,7 @@ namespace CLan
             SettingsManager.DefaultPublicMode = !SettingsManager.DefaultPrivateMode;
 
             //TODO: The following line gives error when we click on "save" without changing the bg.
-            //App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(new Uri(Properties.Settings.Default.BackgroundPath)));
+            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture));
 
             // Now the modifications to settings become permanent
             SettingsManager.Save();
@@ -210,8 +209,10 @@ namespace CLan
             // Discard pending changes to settings
             SettingsManager.Undo();
 
-            background.Background = new ImageBrush(new BitmapImage(new System.Uri(SettingsManager.BackgroundPicture)));
-            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(new System.Uri(SettingsManager.BackgroundPicture)));
+            
+            background.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture));
+            userImage.Source = new BitmapImage(SettingsManager.UserPicture);
+            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture));
         }
     }
 }

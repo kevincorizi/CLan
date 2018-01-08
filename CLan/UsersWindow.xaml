@@ -56,7 +56,7 @@
                             <Button x:Name="changePicture" Foreground="Transparent" Background="Transparent" BorderThickness="0" Width="100" Height="100" Padding="0" Click="changePicture_Click">
                                 <Image x:Name="userImage" Width="100" Height="100">
                                     <Image.Source>
-                                        <Binding Source="{x:Static objects:SettingsManager.UserPicture}"/> 
+                                        <BitmapImage UriSource="{x:Static objects:SettingsManager.UserPicture}"/>
                                     </Image.Source>
                                 </Image>
                             </Button>
@@ -113,7 +113,7 @@
                                 </CheckBox.IsChecked>
                             </CheckBox>
                             <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
-                                <TextBox x:Name="PathText" Width="170" FontSize="13">
+                                <TextBox x:Name="PathText" Width="170" FontSize="13" IsReadOnly="True">
                                     <TextBox.Text>
                                         <Binding Source="{x:Static objects:SettingsManager.DefaultSavePath}" Mode="OneWay"/>
                                     </TextBox.Text>
@@ -143,7 +143,7 @@
                                     <Button.Background>
                                         <ImageBrush>
                                             <ImageBrush.ImageSource>
-                                                <Binding Source="{x:Static objects:SettingsManager.BackgroundPicture}"/>
+                                                <BitmapImage UriSource="{x:Static objects:SettingsManager.BackgroundPicture}"/>
                                             </ImageBrush.ImageSource>
                                         </ImageBrush>
                                     </Button.Background>
