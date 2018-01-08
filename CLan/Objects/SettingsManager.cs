@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace CLan.Objects
 {
@@ -84,6 +85,8 @@ namespace CLan.Objects
         {
             get
             {
+                if (System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName.CompareTo("") == 0)
+                    return System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                 return System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
             }
         }
