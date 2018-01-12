@@ -61,6 +61,10 @@ namespace CLan.Objects
             {
                 return !Properties.Settings.Default.DefaultPrivate;
             }
+            set
+            {
+
+            }
         }
         #endregion
 

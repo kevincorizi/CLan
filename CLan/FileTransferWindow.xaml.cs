@@ -19,5 +19,11 @@ namespace CLan
             CLanFileTransfer cft = (sender as Button).DataContext as CLanFileTransfer;
             cft.Stop();
         }
-    }
+
+        public event EventHandler Display;
+        public void OnDisplay()
+        {
+            Display?.Invoke(this, EventArgs.Empty);
+        }
+}
 }
