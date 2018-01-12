@@ -213,6 +213,7 @@ namespace CLan
         private void ChangeNetworkAvailability(object sender, NetworkAvailabilityEventArgs e)
         {
             Trace.WriteLine("Network availability changed");
+            App.OnlineUsers?.Clear();
             if (e.IsAvailable)
             {
                 StartServices();
