@@ -175,7 +175,8 @@
                 <Button x:Name="_continue" Click="ContinueClick" 
                         Content="Continue" Background="#FF66B5F8"
                         Width="130"
-                        BorderThickness="0"/>
+                        BorderThickness="0"
+                        IsEnabled="False"/>
                 <Image Source="Images/label.png" Width="400"/>
             </StackPanel>
             <Grid>

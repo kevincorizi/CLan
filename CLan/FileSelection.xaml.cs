@@ -9,18 +9,16 @@ using System.Windows.Controls;
 
 namespace CLan
 {
-    /// <summary>
-    /// Interaction logic for selectFile.xaml
-    /// </summary>
-
     public partial class FileSelection : Page
     {
+        // Files selected in the current session
         public List<CLanFile> files;
+        // Users selected for the current session from the UsersWindow
         public List<User> destinations;
         public FileSelection(List<User> users)
         {
             files = new List<CLanFile>();
-            this.destinations = users;
+            destinations = users;
             InitializeComponent();
         }
 
@@ -45,15 +43,19 @@ namespace CLan
             selectFilesOrFolders(fd);
         }
 
+        // A common method that handles both selection of files and folders. The interaction
+        // logic is the same in both cases, the only different thing is how the CommonOpenFileDialog
+        // is instantiated.
         private void selectFilesOrFolders(CommonOpenFileDialog cofd)
         {
             CommonFileDialogResult result = cofd.ShowDialog();
             if (result != CommonFileDialogResult.Ok)
                 return;
 
-            List<String> sFiles = new List<string>(cofd.FileNames);   // The list of entries selected by the user
-
-            files = CLanFile.GetFiles(sFiles);
+            // The list of entries selected by the user
+            List<String> sFiles = new List<string>(cofd.FileNames);   
+            // Converts the list of filenames to actual CLanFile objects, expanding the directory structure if needed
+            files = CLanFile.GetFiles(sFiles);  
 
             selectionButtonBox.Visibility = Visibility.Hidden;
             continueButtonBox.Visibility = Visibility.Visible;
@@ -61,6 +63,7 @@ namespace CLan
 
         private void continueClick(object sender, RoutedEventArgs e)
         {
+            // A separated session is created for the list of files for each user, in a different thread
             foreach (User u in destinations)
             {
                 Trace.WriteLine("FTW.XAML.CS - ADDING FILE TRANSFER");

@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Select Background" Height="420" Width="600" ResizeMode="NoResize">
-    <ListView Name="Thumbnails" >
+    <ListView Name="Thumbnails" SelectionMode="Single">
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
                 <UniformGrid Columns="3" HorizontalAlignment="Center" VerticalAlignment="Center" />

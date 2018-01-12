@@ -15,109 +15,14 @@ using System.Windows.Forms;
 
 namespace CLan
 {
-    /// <summary>
-    /// Logica di interazione per App.xaml
-    /// </summary>
     public partial class App : System.Windows.Application
-    {
-        #region Collections
-        /// List containing currently visible users on the network.
-        /// It is only updated by the UDPManager, so no need for it to be thread-safe
-        public static ObservableCollection<User> OnlineUsers { get; set; }
-       
-        // User will see one progress bar for each batch of files to the same destinations.
-        // In this way we do not clutter the interface too much and we are still able to stay responsive and clear
-        // This list will be modified by multiple threads (one per file transfer). We have to make sure that each thread
-        // only accesses one element of the list, so it has to be thread-safe
-        public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
-        public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
-        public static ObservableCollection<CLanFile> SelectedFiles { get; set; }
-        public static ObservableCollection<NetworkInterface> Interfaces { get; set; }
-        #endregion
-        // Current user
-        public static User me { get; set; }
-
-        private NotifyIcon NotifyIcon;
-
-        private Task listener, advertiser, tcpListener, cleaner;
-        private CancellationTokenSource ctsListener, ctsAdvertiser, ctsTcpListener, ctsCleaner;
-
-        public MainWindow mw = null;
-        public FileTransferWindow TransferWindow = null;
-        private CLanTCPManager TCPManager;
-        private CLanUDPManager UDPManager;
-
-        private readonly string AppID = "CLan_Akcora_Corizi_fvbnjefkod9c8ygdbnemkcixusygw";
-        private bool ownsMutex;
-        private Mutex instanceMutex;
-
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            // This method checks if another instance of the program already exists
-            // This means that the user right-clicked on some files, starting a new process.
-            // In this case, the second instance must only pass the files and close immediately
-            instanceMutex = new Mutex(true, AppID, out ownsMutex);
-            if(ownsMutex)
-            {
-                // First instance, start server
-                StartReadParameters(); 
-            }
-            else
-            {
-                // Second instance, start client
-                PassParameters(e.Args);
-                Current.Shutdown();
-                Environment.Exit(0);
-            }
-
-            base.OnStartup(e);
-
-            TCPManager = CLanTCPManager.Instance;
-
-            UDPManager = CLanUDPManager.Instance;
-            UDPManager.UserJoin += AddUser;
-            UDPManager.UserLeave += RemoveUser;
-            UDPManager.ToggleOnline += ActivateAdvertising;
-            UDPManager.ToggleOffline += DeactivateAdvertising;
-
-            CLanFileTransfer.TransferAdded += AddTransfer;
-            CLanFileTransfer.TransferRemoved += RemoveTransfer;
-
-            NotifyIcon = new NotifyIcon();
-            NotifyIcon.DoubleClick += (s, args) => ShowUsersWindow();
-            NotifyIcon.Icon = CLan.Properties.Resources.TrayIcon;
-            NotifyIcon.Visible = true;
-
-            CreateContextMenu();
-
-            OnlineUsers = new ObservableCollection<User>();
-            IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
-            OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
-            SelectedFiles = new ObservableCollection<CLanFile>();
-            Interfaces = new ObservableCollection<NetworkInterface>();
-            SetupNetworkInterfaces();
-            NetworkChange.NetworkAvailabilityChanged += ChangeNetworkAvailability;
-
-            // Initialize current user with name from last saved settings
-            StartServices();        
-
-            if (mw == null)
-                mw = new MainWindow();
-            if (TransferWindow == null)
-            {
-                TransferWindow = new FileTransferWindow();
-                TransferWindow.Display += ShowTransferWindow;
-                TransferWindow.Closing += CloseTransferWindow;
-            }
-            ShowUsersWindow();
-
-            if(e.Args.Length > 0)
-            {
-                StoreParameters(e.Args.ToList());
-            }
-        }
-
+    {     
         #region Users
+        // The current user
+        public static User me { get; set; }
+        // List containing currently visible users on the network.
+        // It is only manipulated by the App dispatcher, so no need for it to be thread-safe
+        public static ObservableCollection<User> OnlineUsers { get; set; }
         private void AddUser(object sender, User u)
         {
             App.Current.Dispatcher.Invoke(() =>
@@ -130,16 +35,14 @@ namespace CLan
                 else
                 {
                     User target = OnlineUsers.Single(user => user.Equals(u));
-
                     // Refresh the timer for the user
                     target.lastKeepAlive = DateTime.Now;
-
                     // Update fields (in case the user updated name or picture)
                     // These modifications will be visible because User implements INotifyPropertyChanged
                     target.Name = u.Name;
                     target.Picture = u.Picture;
                 }
-            });            
+            });
         }
         private void RemoveUser(object sender, User u)
         {
@@ -147,17 +50,28 @@ namespace CLan
             {
                 if (OnlineUsers.Contains(u))
                     OnlineUsers.Remove(u);
-            });  
+            });
         }
         #endregion
 
         #region Transfers
+        // The user will see one progress bar for each batch of files to the same destination.
+        // In this way we do not clutter the interface too much and we are still able to stay responsive and clear.
+        // Even if this lists are conceptually manipulated by multiple threads, the actual manipulation is
+        // delegated to the TransferWindow dispatcher, so it is not necessary for them to be thread-safe
+        public static ObservableCollection<CLanFileTransfer> IncomingTransfers { get; set; }
+        public static ObservableCollection<CLanFileTransfer> OutgoingTransfers { get; set; }
+
+        // The user can select a certain set of files at each transfer, either via right click
+        // or via graphical interface. Since there is a single point of access to this set, it 
+        // is not necessary for it to be thread-safe
+        public static ObservableCollection<CLanFile> SelectedFiles { get; set; }
         private void AddTransfer(object sender, CLanFileTransfer cft)
         {
-            switch(cft.Type)
+            switch (cft.Type)
             {
                 case CLanTransferType.RECEIVE:
-                    TransferWindow.Dispatcher.Invoke(()=> IncomingTransfers.Add(cft));
+                    TransferWindow.Dispatcher.Invoke(() => IncomingTransfers.Add(cft));
                     Trace.WriteLine("APP.XAML.CS - INCOMING TRANSFER ADDED");
                     break;
                 case CLanTransferType.SEND:
@@ -190,20 +104,26 @@ namespace CLan
         #endregion
 
         #region Background Services
+        private CLanTCPManager TCPManager;
+        private CLanUDPManager UDPManager;
+
+        private Task listener, advertiser, tcpListener, cleaner;
+        private CancellationTokenSource ctsListener, ctsAdvertiser, ctsTcpListener, ctsCleaner;
+
         private void StartServices()
         {
-            if(IsConnectionActive())
+            if (IsConnectionActive())
             {
                 me = new User(SettingsManager.Username);
 
-                if(SettingsManager.DefaultPublicMode)
+                if (SettingsManager.DefaultPublicMode)
                 {
                     ActivateAdvertising();
-                }              
+                }
                 ActivateUDPListener();
                 ActivateUserCleaner();
                 ActivateTCPListener();
-            }         
+            }
         }
         private void StopServices()
         {
@@ -227,7 +147,7 @@ namespace CLan
         private void DeactivateAdvertising(object sender = null, EventArgs args = null)
         {
             Trace.WriteLine("DectivateAdvertising");
-            ctsAdvertiser?.Cancel();
+            ctsAdvertiser?.Cancel();        // May still be null if not started because in private mode
         }
         private void ActivateUDPListener()
         {
@@ -244,9 +164,9 @@ namespace CLan
 
         private void ActivateUserCleaner()
         {
-            Trace.WriteLine("ActivateUserCleaner");           
+            Trace.WriteLine("ActivateUserCleaner");
             ctsCleaner = new CancellationTokenSource();
-            CancellationToken ctCleaner = ctsCleaner.Token; 
+            CancellationToken ctCleaner = ctsCleaner.Token;
             cleaner = Task.Run(() => CleanUsers(ctCleaner), ctCleaner);
         }
         private void DeactivateUserCleaner()
@@ -267,10 +187,9 @@ namespace CLan
                         UDPManager.OnUserLeave(u);
                     }
                 }
-                Thread.Sleep(UDPManager.KEEP_ALIVE_TIMER_MILLIS);
             } while (!ct.WaitHandle.WaitOne(UDPManager.KEEP_ALIVE_TIMER_MILLIS));
-                
-            if(ct.IsCancellationRequested)
+
+            if (ct.IsCancellationRequested)
             {
                 Trace.WriteLine("Terminating cleaning");
             }
@@ -289,20 +208,12 @@ namespace CLan
         }
         #endregion
 
-        #region NETWORK INTERFACES
-        private void SetupNetworkInterfaces()
-        {
-            Interfaces = new ObservableCollection<NetworkInterface>(
-                NetworkInterface.GetAllNetworkInterfaces().Where(
-                    nic => nic.NetworkInterfaceType != NetworkInterfaceType.Loopback && nic.OperationalStatus == OperationalStatus.Up
-                )
-            );           
-        }
+        #region Connectivity Management
+        // This method only notifies changes in the network availability while the app is running
         private void ChangeNetworkAvailability(object sender, NetworkAvailabilityEventArgs e)
         {
-            SetupNetworkInterfaces();
             Trace.WriteLine("Network availability changed");
-            if(e.IsAvailable)
+            if (e.IsAvailable)
             {
                 StartServices();
             }
@@ -311,17 +222,24 @@ namespace CLan
                 StopServices();
             }
         }
-        
+        // This method checks for any active and operational interface to determine if the connection
+        // is available at any moment, expecially at the application startup
         private bool IsConnectionActive()
         {
-            SetupNetworkInterfaces();
-            if (Interfaces.Count != 0)
+            if (NetworkInterface.GetAllNetworkInterfaces().Where(
+                    nic => nic.NetworkInterfaceType != NetworkInterfaceType.Loopback && nic.OperationalStatus == OperationalStatus.Up
+                ).ToList().Count != 0)
                 return true;
             return false;
         }
         #endregion
 
         #region Right Click
+        // A (possibly) unique identifier for the instantiated mutex
+        private readonly string AppID = "CLan_Akcora_Corizi_fvbnjefkod9c8ygdbnemkcixusygw";
+        private bool ownsMutex;
+        private Mutex instanceMutex;
+
         private void PassParameters(string[] args)
         {
             using (NamedPipeClientStream client = new NamedPipeClientStream(AppID))
@@ -337,7 +255,7 @@ namespace CLan
         {
             Task.Run(() =>
             {
-                while(true)
+                while (true)
                 {
                     using (NamedPipeServerStream server = new NamedPipeServerStream(AppID))
                     using (StreamReader reader = new StreamReader(server))
@@ -353,19 +271,22 @@ namespace CLan
                         StoreParameters(arguments);
                     }
                 }
-            });            
+            });
         }
         private void StoreParameters(List<string> parameters)
         {
             List<CLanFile> batchFiles = CLanFile.GetFiles(parameters);
+            // The dispatcher is needed because this method is called from a separated thread
             Current.Dispatcher.Invoke(() =>
             {
                 batchFiles.ForEach(SelectedFiles.Add);
-            });            
+            });
         }
         #endregion
 
         #region Windows
+        public MainWindow mw = null;
+        public FileTransferWindow TransferWindow = null;
         private void ShowUsersWindow()
         {
             if (mw.IsVisible)
@@ -397,15 +318,24 @@ namespace CLan
                 TransferWindow.Visibility = Visibility.Hidden;
             }
         }
-#endregion
+        #endregion
 
         #region TrayIcon
+        private NotifyIcon NotifyIcon;
         private void CreateContextMenu()
         {
+            NotifyIcon = new NotifyIcon();
+            NotifyIcon.DoubleClick += (s, args) => ShowUsersWindow();
+            NotifyIcon.Icon = CLan.Properties.Resources.TrayIcon;
+            NotifyIcon.Visible = true;
+
             NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
-            NotifyIcon.ContextMenuStrip.Items.Add("Apri CLan").Click += (s, e) => ShowUsersWindow();
-            NotifyIcon.ContextMenuStrip.Items.Add("Attiva modalità privata").Click += (s, e) => TraySwitchToPrivate(s);
-            NotifyIcon.ContextMenuStrip.Items.Add("Esci").Click += (s, e) => Current.Shutdown();
+            NotifyIcon.ContextMenuStrip.Items.Add("Open CLan").Click += (s, e) => ShowUsersWindow();
+            if(SettingsManager.DefaultPrivateMode)
+                NotifyIcon.ContextMenuStrip.Items.Add("Public mode").Click += (s, e) => TraySwitchToPublic(s);
+            else
+                NotifyIcon.ContextMenuStrip.Items.Add("Private mode").Click += (s, e) => TraySwitchToPrivate(s);
+            NotifyIcon.ContextMenuStrip.Items.Add("Exit").Click += (s, e) => Current.Shutdown();
         }
         private void TraySwitchToPrivate(object sender)
         {
@@ -413,7 +343,7 @@ namespace CLan
             // Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
             if (menuItem != null) {
-                menuItem.Text = "Attiva modalità pubblica";
+                menuItem.Text = "Public mode";
                 menuItem.Click -= (s, e) => TraySwitchToPrivate(s);
                 menuItem.Click += (s, e) => TraySwitchToPublic(s);
             }
@@ -424,14 +354,17 @@ namespace CLan
             // Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
             if (menuItem != null) {
-                menuItem.Text = "Attiva modalità privata";
+                menuItem.Text = "Private mode";
                 menuItem.Click -= (s, e) => TraySwitchToPublic(s);
                 menuItem.Click += (s, e) => TraySwitchToPrivate(s);
             }
         }
         protected override void OnExit(ExitEventArgs e)
         {
-            if(instanceMutex != null && ownsMutex)
+            // All the shutdown operations are necessary only for the first instance of the app.
+            // This is because any further instance will not start any of the app services,
+            // it will only connect to the pipe, convey a list of files, and terminate 
+            if (instanceMutex != null && ownsMutex)
             {
                 Trace.WriteLine("OnExit");
                 instanceMutex.ReleaseMutex();
@@ -447,9 +380,68 @@ namespace CLan
                 NotifyIcon.Dispose();
                 NotifyIcon = null;
                 Trace.WriteLine("NotifyIcon disposed");
-            }           
+            }
             base.OnExit(e);
-        }        
+        }
+        #endregion
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            // This method checks if another instance of the program already exists
+            // This means that the user right-clicked on some files, starting a new process.
+            // In this case, the second instance must only pass the files and close immediately
+            instanceMutex = new Mutex(true, AppID, out ownsMutex);
+            if (ownsMutex)
+            {
+                // First instance, start server
+                StartReadParameters();
+            }
+            else
+            {
+                // Second instance, start client
+                PassParameters(e.Args);
+                Current.Shutdown();
+                Environment.Exit(0);
+            }
+
+            base.OnStartup(e);
+
+            TCPManager = CLanTCPManager.Instance;
+
+            UDPManager = CLanUDPManager.Instance;
+            UDPManager.UserJoin += AddUser;
+            UDPManager.UserLeave += RemoveUser;
+            UDPManager.ToggleOnline += ActivateAdvertising;
+            UDPManager.ToggleOffline += DeactivateAdvertising;
+
+            CLanFileTransfer.TransferAdded += AddTransfer;
+            CLanFileTransfer.TransferRemoved += RemoveTransfer;
+
+            CreateContextMenu();
+
+            OnlineUsers = new ObservableCollection<User>();
+            IncomingTransfers = new ObservableCollection<CLanFileTransfer>();
+            OutgoingTransfers = new ObservableCollection<CLanFileTransfer>();
+            SelectedFiles = new ObservableCollection<CLanFile>();
+
+            NetworkChange.NetworkAvailabilityChanged += ChangeNetworkAvailability;
+
+            StartServices();
+
+            if (mw == null)
+                mw = new MainWindow();
+            if (TransferWindow == null)
+            {
+                TransferWindow = new FileTransferWindow();
+                TransferWindow.Display += ShowTransferWindow;
+                TransferWindow.Closing += CloseTransferWindow;
+            }
+            ShowUsersWindow();
+
+            if (e.Args.Length > 0)
+            {
+                StoreParameters(e.Args.ToList());
+            }
+        }
     }
-    #endregion
 }

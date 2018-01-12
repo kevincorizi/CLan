@@ -22,12 +22,12 @@ namespace CLan
 
         public byte[] ToByteArray()
         {
-            return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(this, CLanJSON.settings()));
+            return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(this, CLanJSON.Settings()));
         }
 
         public static Message GetMessage(byte[] data)
         {
-            return JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(data), CLanJSON.settings());
+            return JsonConvert.DeserializeObject<Message>(Encoding.ASCII.GetString(data), CLanJSON.Settings());
         }
     }
 }

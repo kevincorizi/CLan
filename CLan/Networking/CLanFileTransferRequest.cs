@@ -21,7 +21,7 @@ namespace CLan.Networking
 
         public static CLanFileTransferRequest GetRequest(string data)
         {
-            return JsonConvert.DeserializeObject<CLanFileTransferRequest>(data, CLanJSON.settings());
+            return JsonConvert.DeserializeObject<CLanFileTransferRequest>(data, CLanJSON.Settings());
         }
 
         public void Prompt()

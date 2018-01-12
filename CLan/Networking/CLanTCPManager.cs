@@ -35,11 +35,9 @@ namespace CLan.Networking
             }
         }
 
-        /// <summary>
-        /// Start listening for new TCP connections
-        /// </summary>
+        #region Listen
         public void StartListening(CancellationToken ct)
-        {           
+        {
             try
             {
                 TcpListener listener = new TcpListener(App.me.Ip, tcpListeningPort);
@@ -58,23 +56,24 @@ namespace CLan.Networking
             }
             catch (SocketException se)
             {
-                if(se.SocketErrorCode == SocketError.Interrupted)
+                if (se.SocketErrorCode == SocketError.Interrupted)
                 {
                     Trace.WriteLine("Terminating TCP Listener");
-                } else
+                }
+                else
                 {
                     Trace.WriteLine("Connection error in TCP listener" + se.ErrorCode);
-                }      
+                }
             }
         }
+        #endregion
 
-        #region ACCEPT
+        #region Accept
         public void HandleAccept(Socket client)
         {
             // This method is already being executed in a separate thread
             Trace.WriteLine("New connection!");
             byte[] data = Receive(client);
-            // Trace.WriteLine(Encoding.ASCII.GetString(data));
             Message m = Message.GetMessage(data);
 
             User source = m.sender;
@@ -103,6 +102,7 @@ namespace CLan.Networking
         }
         #endregion
 
+        #region Files
         public void SendFiles(CLanFileTransfer cft)
         {
             Socket other = cft.currentSocket;
@@ -122,7 +122,7 @@ namespace CLan.Networking
                         break;
 
                     // Update the View
-                    cft.CurrentFile = "Current file: " + f.Name;
+                    cft.CurrentFile = f.Name;
                     long currentSentSize = 0;
 
                     using (NetworkStream stream = new NetworkStream(other))
@@ -141,7 +141,7 @@ namespace CLan.Networking
                                     stream.Write(buffer, 0, size);
                                     currentSentSize += size;
                                     sentSize += size;
-                                    
+
                                     int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
 
                                     long sizeUpToNow = sentSize;
@@ -175,10 +175,8 @@ namespace CLan.Networking
                             // I am the sender and the receiver stopped the transfer
                             Trace.WriteLine("The receiver stopped the transfer");
                             break;
-                        } 
+                        }
                     }
-
-                    
                 }
             }
         }
@@ -202,7 +200,7 @@ namespace CLan.Networking
                     if (bw.CancellationPending)
                         break;
                     // Update the View
-                    cft.CurrentFile = "Current file: " + f.Name;
+                    cft.CurrentFile = f.Name;
                     long currentReceivedSize = 0;
 
                     using (NetworkStream stream = new NetworkStream(other))
@@ -265,8 +263,9 @@ namespace CLan.Networking
                 }
             }
         }
+        #endregion
 
-        #region UTILITIES
+        #region Utilities
         public Socket GetConnection(User dest)
         {
             IPEndPoint i = new IPEndPoint(dest.Ip, tcpListeningPort);
@@ -295,7 +294,6 @@ namespace CLan.Networking
             }
             else
             {
-                Console.WriteLine("You cannot write data to this stream.");
                 dest.Close();
                 // Closing the socket instance does not close the network stream.
                 netStream.Close();
@@ -310,20 +308,16 @@ namespace CLan.Networking
             {
                 // Reads NetworkStream into a byte buffer.
                 byte[] bytes = new byte[source.ReceiveBufferSize];
-
                 // Read can return anything from 0 to numBytesToRead. 
                 // This method blocks until at least one byte is read.
                 netStream.Read(bytes, 0, source.ReceiveBufferSize);
                 netStream.Close();
-
                 // Returns the data received from the host to the console.
                 return bytes;
             }
             else
             {
-                Console.WriteLine("You cannot read data from this stream.");
                 source.Close();
-
                 // Closing the tcpClient instance does not close the network stream.
                 netStream.Close();
                 return null;
@@ -331,7 +325,7 @@ namespace CLan.Networking
         }
         #endregion
 
-        #region EVENTS
+        #region Events
         public event EventHandler<string[]> FileListReceived;
         public void OnFileListReceived(string[] list)
         {

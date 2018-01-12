@@ -9,18 +9,12 @@ namespace CLan.Networking
 {
     public class CLanUDPManager
     {
-        private readonly short udpPort = 20002;
-        public readonly int ADVERTISEMENT_INTERVAL;
-        public readonly int KEEP_ALIVE_TIMER_MILLIS;
+        public readonly short udpPort = 20002;
+        public readonly int ADVERTISEMENT_INTERVAL = 5000;
+        public readonly int KEEP_ALIVE_TIMER_MILLIS = 10000;
 
         private static CLanUDPManager instance = null;
         private static readonly object _lock = new object();
-
-        private CLanUDPManager()
-        {
-            ADVERTISEMENT_INTERVAL = 5000;
-            KEEP_ALIVE_TIMER_MILLIS = 2 * ADVERTISEMENT_INTERVAL;
-        }
 
         public static CLanUDPManager Instance
         {
@@ -47,7 +41,7 @@ namespace CLan.Networking
                         byte[] bytes = (new Message(App.me, MessageType.HELLO, "")).ToByteArray();
                         await outUDP.SendAsync(bytes, bytes.Length, ip);
                     }
-                    while (!ct.WaitHandle.WaitOne(ADVERTISEMENT_INTERVAL));     // Sleeps for AD_IN seconds but wakes up if token is canceled
+                    while (!ct.WaitHandle.WaitOne(ADVERTISEMENT_INTERVAL));
 
                     if(ct.IsCancellationRequested)
                     {

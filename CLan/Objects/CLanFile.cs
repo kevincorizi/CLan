@@ -12,9 +12,11 @@ namespace CLan.Objects
 
         public CLanFile(string path, string name = "", long size = -1)
         {
-            this.RelativePath = path;
-            this.Size = size == -1 ? (new FileInfo(this.RelativePath)).Length : size;
-            this.Name = name == "" ? Path.GetFileName(RelativePath) : name;
+            RelativePath = path;
+            // If size is -1, we are about to send some files. If it is not, we are receiving the size from a sender.
+            Size = size == -1 ? (new FileInfo(RelativePath)).Length : size;
+            // Similar thought applies
+            Name = name == "" ? Path.GetFileName(RelativePath) : name;
         }
 
         public static List<CLanFile> GetFiles(List<string> paths)
@@ -28,8 +30,7 @@ namespace CLan.Objects
             foreach (string p in paths)
             {
                 FileAttributes attributes = File.GetAttributes(p);
-                // now we will detect whether its a directory or file
-                if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
+                if (attributes == FileAttributes.Directory)
                 {
                     // Directory
                     String folderName = new DirectoryInfo(Path.GetDirectoryName(p)).FullName + Path.DirectorySeparatorChar;
@@ -51,60 +52,59 @@ namespace CLan.Objects
 
         public static List<CLanFile> EnforceDuplicatePolicy(List<CLanFile> files, string root)
         {
+            // Checks whether the duplicate policy is set to renaming or overwriting and acts accordingly
+
+            // If the default behaviour is to overwrite there is no need to go further, just keep the old files,
+            // don't even care about wht the root is because you will overwrite either way
+            if (!SettingsManager.DefaultRenameOnDuplicate)
+                return files;
+
             List<string> myDirectories = new List<string>();
             foreach (CLanFile f in files)
             {
                 string directoryName = Path.GetDirectoryName(f.Name);   // f.Name maintains the folders from the root on
                 // If incoming file is in folder
                 if (directoryName.Length > 0)
-                {
-                    // If there is no current folder with the same name, create it
-                    // Note that this will be always valid for subfolders
-                    // If there is a folder with that name, apply the policy selected by the user
-
+                {                   
+                    // If there is a folder with that name, rename it
                     if (Directory.Exists(root + directoryName) && !myDirectories.Contains(root + directoryName))
                     {
-                        // A folder with that name already exists
-                        if (SettingsManager.DefaultRenameOnDuplicate)
+                        string newDirectoryName = directoryName;
+                        for (int i = 1; ; i++)
                         {
-                            // Apply renaming policy
-                            // Need to change directoryName to something that does not exist
-                            string newDirectoryName = directoryName;
-                            for (int i = 1; ; i++)
-                            {
-                                newDirectoryName = directoryName + " (" + i + ")";
-                                if (!Directory.Exists(root + newDirectoryName))
-                                    break;
-                            }
-                            // If the name of the parent directory changes, this must be propagated to all CLanFiles starting from the same parent
-                            foreach (CLanFile f2 in files)
-                            {
-                                if(Path.GetDirectoryName(f2.Name).Split(Path.DirectorySeparatorChar)[0].CompareTo(directoryName) == 0)
-                                {
-                                    files[files.IndexOf(f2)].Name = newDirectoryName + f2.Name.Substring(directoryName.Length);
-                                }
-                            }
-                            directoryName = newDirectoryName;
+                            newDirectoryName = directoryName + " (" + i + ")";
+                            if (!Directory.Exists(root + newDirectoryName))
+                                break;
                         }
+                        // If the name of the parent directory changes, this must be propagated to all CLanFiles starting from the same parent
+                        foreach (CLanFile f2 in files)
+                        {
+                            if(Path.GetDirectoryName(f2.Name).Split(Path.DirectorySeparatorChar)[0].CompareTo(directoryName) == 0)
+                            {
+                                files[files.IndexOf(f2)].Name = newDirectoryName + f2.Name.Substring(directoryName.Length);
+                            }
+                        }
+                        directoryName = newDirectoryName;
                     }
+
+                    // Once the final directory name is set (either the same or modified), create it 
                     Directory.CreateDirectory(root + directoryName);
                     myDirectories.Add(root + directoryName);
                 }
 
                 // Check if the file already exists and apply duplicate policy
+                // Note that if the root folder existed and was renamed, there will never be any such
+                // existing file inside of it. Thus this part is needed only when the file comes without a containing folder.
                 if (File.Exists(root + f.Name))
                 {
-                    if (SettingsManager.DefaultRenameOnDuplicate)
+                    string newFileName = f.Name;
+                    for (int i = 1; ; i++)
                     {
-                        string newFileName = f.Name;
-                        for (int i = 1; ; i++)
-                        {
-                            newFileName = Path.GetFileNameWithoutExtension(f.Name) + " (" + i + ")" + Path.GetExtension(f.Name);
-                            if (!File.Exists(root + newFileName))
-                                break;
-                        }
-                        f.Name = newFileName;
+                        newFileName = Path.GetFileNameWithoutExtension(f.Name) + " (" + i + ")" + Path.GetExtension(f.Name);
+                        if (!File.Exists(root + newFileName))
+                            break;
                     }
+                    f.Name = newFileName;
                 }
             }
             return files;

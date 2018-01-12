@@ -6,18 +6,13 @@ using System.Windows.Media.Imaging;
 
 namespace CLan
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
     public partial class MainWindow : Window
     {
         
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
-           
+            DataContext = this;          
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -25,7 +20,6 @@ namespace CLan
             e.Cancel = true;
             this.Hide();
 
-        }
-        
+        }        
     }
 }

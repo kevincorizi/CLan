@@ -5,10 +5,6 @@ using System.Windows.Controls;
 
 namespace CLan
 {
-    /// <summary>
-    /// Interaction logic for fileTransfer.xaml
-    /// </summary>
-    /// 
     public partial class FileTransferWindow : Window
     {
         public FileTransferWindow()
@@ -17,24 +13,11 @@ namespace CLan
             this.DataContext = this;
         }
 
-        public void Open()
-        {
-            OnDisplay();
-        }
-
         void cancel_Click(object sender, RoutedEventArgs e)
         {
-            Button b = sender as Button;
-
-            // Find the specific file transfer we want to stop
-            CLanFileTransfer cft = b.DataContext as CLanFileTransfer;
+            // Find the specific file transfer we want to stop, and stop it
+            CLanFileTransfer cft = (sender as Button).DataContext as CLanFileTransfer;
             cft.Stop();
-        }
-
-        public event EventHandler Display;
-        public void OnDisplay()
-        {
-            Display?.Invoke(this, EventArgs.Empty);
         }
     }
 }

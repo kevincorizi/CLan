@@ -24,7 +24,6 @@ namespace CLan
                 }
             }
         }
-
         private Uri picture;
         public Uri Picture
         {
@@ -34,8 +33,8 @@ namespace CLan
             }
             set
             {
-                    picture = value;
-                    NotifyPropertyChanged();
+                picture = value;
+                NotifyPropertyChanged();
             }
         }
         public IPAddress Ip { get; set; }
@@ -45,46 +44,41 @@ namespace CLan
 
         public User(string n, string p = "", IPAddress i = null)
         {
-            this.Name = n;
+            Name = n;
             if (p == null || p.CompareTo("") == 0)
-                this.Picture = SettingsManager.UserPicture;
+                Picture = SettingsManager.UserPicture;
             else
-                this.Picture = new Uri(p);
-            if(i == null)
-                this.Ip = GetMyIPAddress();
-            else
-                this.Ip = i;
+                Picture = new Uri(p);
+            if(i == null)   // initializing current user
+                Ip = GetMyIPAddress();
+            else            // initializing user from message
+                Ip = i;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private static IPAddress GetMyIPAddress()
         {
             IPAddress[] hostAddresses = Dns.GetHostAddresses("");
-
             foreach (IPAddress hostAddress in hostAddresses)
             {
                 if (hostAddress.AddressFamily == AddressFamily.InterNetwork &&
-                    !IPAddress.IsLoopback(hostAddress) &&  // ignore loopback addresses
+                    !IPAddress.IsLoopback(hostAddress) &&            // ignore loopback addresses
                     !hostAddress.ToString().StartsWith("169.254."))  // ignore link-local addresses
                     return hostAddress;
             }
-            return null; // or IPAddress.None if you prefer
+            return null;
         }
 
         public bool Equals(User other)
         {
-            return this.Ip.Equals(other.Ip);
+            return Ip.Equals(other.Ip);
         }
 
         public override int GetHashCode()
         {
-            return this.Ip.GetHashCode();
+            return Ip.GetHashCode();
         }
 
-        // This method is called by the Set accessor of each property.
-        // The CallerMemberName attribute that is applied to the optional propertyName
-        // parameter causes the property name of the caller to be substituted as an argument.
+        public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

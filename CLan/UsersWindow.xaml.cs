@@ -10,36 +10,27 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+
 namespace CLan
 {
-    /// <summary>
-    /// Logica di interazione per MainWindow.xaml
-    /// </summary>
-    /// 
     public static class ExtensionMethods
     {
         private static System.Action EmptyDelegate = delegate () { };
-
         public static void Refresh(this UIElement uiElement)
         {
             uiElement.Dispatcher.Invoke(DispatcherPriority.Render, EmptyDelegate);
         }
     }
-
     public partial class UsersWindow : Page
     {
         int counter = 0;
-        bool isWindowOpen = false;
         public UsersWindow()
         {
             InitializeComponent();
 
-            this.DataContext = this;
-            this._continue.IsEnabled = false;    // Disable the "send" button until a user is selected.
-            
+            this.DataContext = this;           
         }
 
         // User list selection controller
@@ -65,9 +56,10 @@ namespace CLan
         private void ContinueClick(object sender, RoutedEventArgs e)
         {
             List<User> users = UserList.SelectedItems.OfType<User>().ToList();
+            // If any file was selected via right click
             if(FileList.Items.Count > 0)
             {
-                List<Objects.CLanFile> files = FileList.Items.OfType<Objects.CLanFile>().ToList();
+                List<CLanFile> files = FileList.Items.OfType<CLanFile>().ToList();
                 foreach (User u in users)
                 {
                     Trace.WriteLine("UW.XAML.CS - ADDING FILE TRANSFER");
@@ -75,7 +67,6 @@ namespace CLan
                     cft.Start();
                 }
                 App.SelectedFiles.Clear();
-                Trace.WriteLine(App.SelectedFiles.Count);
             }
             else
             {
@@ -133,8 +124,10 @@ namespace CLan
             if(dialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = dialog.SelectedPath;
-                if (!filePath.EndsWith("\\"))
-                    filePath += "\\";
+                // The folder selector may return a value without the trailing folder separator
+                // This would cause destination path errors
+                if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    filePath += Path.DirectorySeparatorChar;
                 PathText.Text = filePath;
             }
         }
@@ -145,9 +138,8 @@ namespace CLan
                        
             if (fd.ShowDialog() == DialogResult.OK)
             {
-                string fileName = fd.FileName;
-                SettingsManager.BackgroundPicture = new System.Uri(fileName);
-                background.Background = new ImageBrush(new BitmapImage(new System.Uri(fileName)));               
+                SettingsManager.BackgroundPicture = new System.Uri(fd.FileName);
+                background.Background = new ImageBrush(new BitmapImage(new System.Uri(fd.FileName)));               
             }
         }
         private void ChangeBGgallery_Click(object sender, RoutedEventArgs e)
@@ -174,34 +166,19 @@ namespace CLan
         {
             // Update data for current session
             App.me.Picture = SettingsManager.UserPicture;   // Set in separate window
-
-            //Properties.Settings.Default.DefaultNetworkInterface = (InterfacesList.SelectedItem as System.Net.NetworkInformation.NetworkInterface).Id;
+            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture)); // Set in separate window
 
             SettingsManager.DefaultAcceptTransfer = (AcceptAllTransfers.IsChecked == true);
             SettingsManager.DefaultRenameOnDuplicate = (RenamingPolicy.IsChecked == true);
-            // SettingsManager.DefaultHideNotifications = (HideAllNotifications.IsChecked == true);
 
             SettingsManager.SaveInDefaultPath = (UseDefaultPath.IsChecked != true);
-            SettingsManager.DefaultSavePath = (PathText.Text);
+            SettingsManager.DefaultSavePath = PathText.Text;
 
             SettingsManager.DefaultPrivateMode = (PrivateRadio.IsChecked == true);
             SettingsManager.DefaultPublicMode = !SettingsManager.DefaultPrivateMode;
 
-            //TODO: The following line gives error when we click on "save" without changing the bg.
-            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture));
-
             // Now the modifications to settings become permanent
             SettingsManager.Save();
-        }
-
-        public static bool IsValidURI(string uri)
-        {
-            if (!Uri.IsWellFormedUriString(uri, UriKind.Absolute))
-                return false;
-            Uri tmp;
-            if (!Uri.TryCreate(uri, UriKind.Absolute, out tmp))
-                return false;
-            return tmp.Scheme == Uri.UriSchemeHttp || tmp.Scheme == Uri.UriSchemeHttps;
         }
 
         private void UndoSettings_Click(object sender, RoutedEventArgs e)
@@ -209,10 +186,9 @@ namespace CLan
             // Discard pending changes to settings
             SettingsManager.Undo();
 
-            
+            // Revert the manually set values
             background.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture));
             userImage.Source = new BitmapImage(SettingsManager.UserPicture);
-            App.Current.MainWindow.Background = new ImageBrush(new BitmapImage(SettingsManager.BackgroundPicture));
         }
     }
 }

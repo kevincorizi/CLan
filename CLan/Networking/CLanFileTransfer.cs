@@ -10,7 +10,6 @@ using System.Net.Sockets;
 
 namespace CLan.Networking
 {
-    // This class will be used on both sides of the transfer, either for sending or receiving
     public enum CLanTransferType { SEND, RECEIVE };
     public class CLanFileTransfer : INotifyPropertyChanged
     {
@@ -90,7 +89,7 @@ namespace CLan.Networking
             Files = f;
             Type = t;
             IsPending = true;
-            CurrentFile = "Waiting for " + Other.Name + "...";
+            CurrentFile = "waiting for " + Other.Name + "...";
 
             bw = new BackgroundWorker();
             bw.WorkerSupportsCancellation = true;
@@ -129,17 +128,9 @@ namespace CLan.Networking
 
         private void WorkerStartSend(object sender, DoWorkEventArgs e)
         {
-            // STEPS:
-            // 0) Build request message
-            // 1) Connect to the destination
-            // 2) Ask for file transfer
-            // 3) Receive response
-            // 4) Act accordingly
             Trace.WriteLine("CTF.CS - WORKERSTARTSEND");
-
             // The sender will see the transfer window with a "waiting state" until the other answers
             Store();
-
             try
             {
                 currentSocket = TCPManager.GetConnection(Other);
@@ -149,9 +140,9 @@ namespace CLan.Networking
             }
             catch (SocketException se)
             {
-                    Trace.WriteLine("Socket exception sending request");
-                    e.Cancel = true;
-                    return;
+                Trace.WriteLine("Socket exception sending request");
+                e.Cancel = true;
+                return;
             }
             
             byte[] responseData = TCPManager.Receive(currentSocket);

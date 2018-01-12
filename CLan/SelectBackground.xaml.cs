@@ -1,7 +1,5 @@
 ﻿using CLan.Objects;
 using System;
-using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,9 +7,6 @@ using System.Windows.Media.Imaging;
 
 namespace CLan
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
     public partial class SelectBackground : Window
     {
         public SelectBackground()
@@ -24,11 +19,7 @@ namespace CLan
 
         private void listViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (Thumbnails.SelectedItems.Count > 0)
-            {
-                Uri imgname = ((sender as ListViewItem).Content as BitmapImage).UriSource;
-                SettingsManager.BackgroundPicture = imgname;
-            }
+            SettingsManager.BackgroundPicture = ((sender as ListViewItem).Content as BitmapImage).UriSource;
             this.Close();
         }
     }

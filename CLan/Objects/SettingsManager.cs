@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Reflection;
 using System.Resources;
 using System.Linq;
@@ -10,6 +8,18 @@ namespace CLan.Objects
 {
     public class SettingsManager
     {
+        #region Files
+        public static string DefaultSavePath
+        {
+            get
+            {
+                return Properties.Settings.Default.DefaultSavePath;
+            }
+            set
+            {
+                Properties.Settings.Default.DefaultSavePath = value;
+            }
+        }
         public static bool SaveInDefaultPath {
             get {
                 return !Properties.Settings.Default.DefaultAskSavePath && Properties.Settings.Default.DefaultSavePath != "";
@@ -17,24 +27,6 @@ namespace CLan.Objects
             set
             {
                 Properties.Settings.Default.DefaultAskSavePath = value;
-            }
-        }
-        public static bool DefaultAcceptTransfer {
-            get {
-                return Properties.Settings.Default.DefaultAcceptTransfer == true;
-            }
-            set
-            {
-                Properties.Settings.Default.DefaultAcceptTransfer = value;
-            }
-        }
-        public static string DefaultSavePath {
-            get {
-                return Properties.Settings.Default.DefaultSavePath;
-            }
-            set
-            {
-                Properties.Settings.Default.DefaultSavePath = value;
             }
         }
         public static bool DefaultRenameOnDuplicate
@@ -48,19 +40,9 @@ namespace CLan.Objects
                 Properties.Settings.Default.DefaultRenameFile = value;
             }
         }
+        #endregion   
 
-        public static bool DefaultHideNotifications
-        {
-            get
-            {
-                return Properties.Settings.Default.HideNotification;
-            }
-            set
-            {
-                Properties.Settings.Default.HideNotification = value;
-            }
-        }
-
+        #region Privacy
         public static bool DefaultPrivateMode
         {
             get
@@ -79,12 +61,10 @@ namespace CLan.Objects
             {
                 return !Properties.Settings.Default.DefaultPrivate;
             }
-            set
-            {
-                
-            }
         }
+        #endregion
 
+        #region Users
         public static string Username
         {
             get
@@ -94,7 +74,6 @@ namespace CLan.Objects
                 return System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
             }
         }
-
         public static Uri UserPicture
         {
             get
@@ -106,7 +85,6 @@ namespace CLan.Objects
                 Properties.Settings.Default.PicturePath = value.ToString();
             }
         }
-
         public static Uri BackgroundPicture
         {
             get
@@ -118,16 +96,23 @@ namespace CLan.Objects
                 Properties.Settings.Default.BackgroundPath = value.ToString();
             }
         }
+        #endregion
 
-        public static void Save()
+        #region Transfers
+        public static bool DefaultAcceptTransfer
         {
-            Properties.Settings.Default.Save();
+            get
+            {
+                return Properties.Settings.Default.DefaultAcceptTransfer == true;
+            }
+            set
+            {
+                Properties.Settings.Default.DefaultAcceptTransfer = value;
+            }
         }
-        public static void Undo()
-        {
-            Properties.Settings.Default.Reload();
-        }
+        #endregion
 
+        #region Resources (User pictures and backgrounds)
         public static string[] GetResourcesUnder(string folder)
         {
             folder = folder.ToLower() + "/";
@@ -145,5 +130,15 @@ namespace CLan.Objects
 
             return resources.ToArray();
         }
+        #endregion
+
+        public static void Save()
+        {
+            Properties.Settings.Default.Save();
+        }
+        public static void Undo()
+        {
+            Properties.Settings.Default.Reload();
+        }      
     }
 }
