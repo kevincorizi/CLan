@@ -137,43 +137,43 @@ namespace CLan.Networking
                 CLanFileTransferRequest req = new CLanFileTransferRequest(App.me, Other, Files);
                 byte[] requestData = new Message(App.me, MessageType.SEND, req).ToByteArray();
                 TCPManager.Send(requestData, currentSocket);
+
+                byte[] responseData = TCPManager.Receive(currentSocket);
+                if (responseData != null)
+                {
+                    Message responseMessage = Message.GetMessage(responseData);
+                    switch (responseMessage.messageType)
+                    {
+                        case MessageType.ACK:
+                            // Destination accepted the transfer
+                            // Show the window with all file transfers                      
+                            TCPManager.SendFiles(this);
+                            break;
+                        case MessageType.NACK:
+                            // Destination refused the transfer
+                            Trace.WriteLine("Destination refused the transfer");
+                            e.Cancel = true;    // Suicide
+                            break;
+                        default:
+                            Trace.WriteLine("This message should not be here, check your code");
+                            break;
+                    }
+                }
+                else
+                {
+                    Trace.WriteLine("An error occured receiving from Other");
+                    e.Cancel = true;    // Suicide
+                }
+                // CancellationPending is checked by the SendFiles, that terminates when it is set to True
+                if (bw.CancellationPending)
+                    e.Cancel = true;
             }
-            catch (SocketException se)
+            catch (Exception ex)
             {
                 Trace.WriteLine("Socket exception sending request");
                 e.Cancel = true;
                 return;
-            }
-            
-            byte[] responseData = TCPManager.Receive(currentSocket);
-            if (responseData != null)
-            {
-                Message responseMessage = Message.GetMessage(responseData);
-                switch (responseMessage.messageType)
-                {
-                    case MessageType.ACK:
-                        // Destination accepted the transfer
-                        // Show the window with all file transfers                      
-                        TCPManager.SendFiles(this);
-                        break;
-                    case MessageType.NACK:
-                        // Destination refused the transfer
-                        Trace.WriteLine("Destination refused the transfer");
-                        e.Cancel = true;    // Suicide
-                        break;
-                    default:
-                        Trace.WriteLine("This message should not be here, check your code");
-                        break;
-                }
-            }
-            else
-            {
-                Trace.WriteLine("An error occured receiving from Other");
-                e.Cancel = true;    // Suicide
-            }
-            // CancellationPending is checked by the SendFiles, that terminates when it is set to True
-            if (bw.CancellationPending)
-                e.Cancel = true;
+            } 
         }
         private void WorkerStartReceive(object sender, DoWorkEventArgs e)
         {
@@ -202,14 +202,23 @@ namespace CLan.Networking
                     root = fbd.FileName + Path.DirectorySeparatorChar;
                 });
             }
-            currentSocket = TCPManager.GetConnection(Other);
-            // Confirm the transfer
-            byte[] toSend = new Message(App.me, MessageType.ACK, "My body is ready!").ToByteArray();
-            TCPManager.Send(toSend, currentSocket);
 
-            // Receive files
-            Store();
-            TCPManager.ReceiveFiles(this, root);
+            try
+            {
+                currentSocket = TCPManager.GetConnection(Other);
+                // Confirm the transfer
+                byte[] toSend = new Message(App.me, MessageType.ACK, "My body is ready!").ToByteArray();
+                TCPManager.Send(toSend, currentSocket);
+
+                // Receive files
+                Store();
+                TCPManager.ReceiveFiles(this, root);
+            } catch (Exception ex)
+            {
+                Trace.WriteLine("Exception during file receive");
+                e.Cancel = true;
+                return;
+            }           
         }      
 
         private void WorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
