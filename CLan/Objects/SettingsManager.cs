@@ -74,7 +74,9 @@ namespace CLan.Objects
             get
             {
                 if (System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName == null)
-                    return System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                {
+                    return System.Security.Principal.WindowsIdentity.GetCurrent().Name.Split(System.IO.Path.PathSeparator)[1];
+                }
                 return System.DirectoryServices.AccountManagement.UserPrincipal.Current.DisplayName;
             }
         }
