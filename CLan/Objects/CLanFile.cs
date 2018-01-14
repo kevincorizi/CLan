@@ -51,7 +51,10 @@ namespace CLan.Objects
                 } catch (UnauthorizedAccessException uea)
                 {
                     System.Diagnostics.Trace.WriteLine(uea.Message);
-                }              
+                } catch (ArgumentNullException ane)
+                {
+                    System.Diagnostics.Trace.WriteLine(ane.Message);
+                }           
             }
             return files;
         }

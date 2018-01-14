@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+using System.Windows;
 
 namespace CLan.Networking
 {
@@ -130,12 +131,28 @@ namespace CLan.Networking
         {
             Trace.WriteLine("CTF.CS - WORKERSTARTSEND");
             // The sender will see the transfer window with a "waiting state" until the other answers
-            Store();
+            
             try
             {
                 currentSocket = TCPManager.GetConnection(Other);
                 CLanFileTransferRequest req = new CLanFileTransferRequest(App.me, Other, Files);
                 byte[] requestData = new Message(App.me, MessageType.SEND, req).ToByteArray();
+
+                if (requestData.Length > 65535)
+                {
+                    // Will not fit a UDP packet, inform the user and make him select less files
+                    MessageBoxResult result = MessageBox.Show(
+                        "You are trying to send too many files. Cannot complete transfer.",
+                        "Oops, something went wrong...",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                    e.Cancel = true;
+                    return;
+                }
+
+                Store();
+
                 TCPManager.Send(requestData, currentSocket);
 
                 byte[] responseData = TCPManager.Receive(currentSocket);
