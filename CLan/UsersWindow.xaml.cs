@@ -155,6 +155,11 @@ namespace CLan
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.DarkBackgroundPath;
             _SlidingMenu.Background = (Brush)bc.ConvertFrom("#525252");
             _StackPanel.Background = (Brush)bc.ConvertFrom("#525252");
+            UserName.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            Storage.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            Transfer.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            DefaultPrivacy.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            Customization.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
             AcceptAllTransfers.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
             RenamingPolicy.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
             UseDefaultPath.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
@@ -170,13 +175,18 @@ namespace CLan
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.SwapBackgroundPath;
             _SlidingMenu.Background = (Brush)bc.ConvertFrom("#FFEFF4F9");
             _StackPanel.Background = (Brush)bc.ConvertFrom("#FFEFF4F9");
-            AcceptAllTransfers.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
-            RenamingPolicy.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
-            UseDefaultPath.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
-            PathText.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
-            PublicRadio.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
-            PrivateRadio.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
-            Night.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
+            UserName.Foreground = (Brush)bc.ConvertFrom("#000000");
+            Storage.Foreground = (Brush)bc.ConvertFrom("#000000");
+            Transfer.Foreground = (Brush)bc.ConvertFrom("#000000");
+            DefaultPrivacy.Foreground = (Brush)bc.ConvertFrom("#000000");
+            Customization.Foreground = (Brush)bc.ConvertFrom("#000000");
+            AcceptAllTransfers.Foreground = (Brush)bc.ConvertFrom("#000000");
+            RenamingPolicy.Foreground = (Brush)bc.ConvertFrom("#000000");
+            UseDefaultPath.Foreground = (Brush)bc.ConvertFrom("#000000");
+            PathText.Foreground = (Brush)bc.ConvertFrom("#000000");
+            PublicRadio.Foreground = (Brush)bc.ConvertFrom("#000000");
+            PrivateRadio.Foreground = (Brush)bc.ConvertFrom("#000000");
+            Night.Foreground = (Brush)bc.ConvertFrom("#000000");
         }
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
         {

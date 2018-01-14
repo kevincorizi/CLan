@@ -86,7 +86,7 @@
                         </StackPanel>
                         -->
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Padding="0" Content="Transfer" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
+                            <Label x:Name="Transfer"  Padding="0" Content="Transfer" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
                             <CheckBox x:Name="AcceptAllTransfers" Content="Accept all transfers" FontSize="13">
                                 <CheckBox.IsChecked>
                                     <Binding Source="{x:Static objects:SettingsManager.DefaultAcceptTransfer}" Mode="OneWay"></Binding>
@@ -106,7 +106,7 @@
                             -->
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Padding="0" Content="Storage" FontSize="16" FontWeight="Bold"/>
+                            <Label x:Name="Storage" Padding="0" Content="Storage" FontSize="16" FontWeight="Bold"/>
                             <CheckBox x:Name="UseDefaultPath" Content="Use default path" FontSize="13">
                                 <CheckBox.IsChecked>
                                     <Binding Source="{x:Static objects:SettingsManager.SaveInDefaultPath}" Mode="OneWay"></Binding>
@@ -122,7 +122,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Content="Default privacy" Padding="0" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
+                            <Label x:Name="DefaultPrivacy" Content="Default privacy" Padding="0" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
                                 <RadioButton x:Name="PrivateRadio" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0, 0, 20, 0" Content="Private" FontSize="13">
                                     <RadioButton.IsChecked>
@@ -137,7 +137,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Margin="0, 20, 0, 0">
-                            <Label Padding="0" Content="Customization" FontSize="16" FontWeight="Bold"/>
+                            <Label x:Name="Customization" Padding="0" Content="Customization" FontSize="16" FontWeight="Bold"/>
                             <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
                                 <Button x:Name="background" Content="" Width="100" Height="100" Style="{StaticResource MyButton}" >
                                     <Button.Background>
