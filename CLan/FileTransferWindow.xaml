@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="CLan - Share instantly!" Width="620" MaxWidth="620">
     <StackPanel Margin="10, 10, 10, 10">
-        <Label Content="Incoming transfers" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+        <Label Content="Incoming transfers" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
         <ListView x:Name="IncomingProgressBar" ItemsSource="{Binding Source={x:Static local:App.IncomingTransfers}}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
@@ -23,22 +23,24 @@
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="0" Grid.Column="0">
-                            <TextBlock DockPanel.Dock="Left" Margin="0, 0, 20, 0" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name, StringFormat=From {0}}"/>
-                            <TextBlock DockPanel.Dock="Right" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding SecondsLeft, StringFormat={}{0:hh\\:mm\\:ss}}"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile, StringFormat=File: {0}}"/>
+                            <TextBlock DockPanel.Dock="Left" Margin="0, 0, 20, 0" TextWrapping="Wrap" FontSize="14" Foreground="#FF666666" Text="{Binding Other.Name, StringFormat=From: {0}}"/>
+                            <TextBlock DockPanel.Dock="Right" TextWrapping="Wrap" FontSize="14" Foreground="#FF666666" Text="{Binding SecondsLeft, StringFormat={}{0:hh\\:mm\\:ss}}"/>
+                            <TextBlock></TextBlock>
                         </DockPanel>
-                        <DockPanel Grid.Row="1" Grid.Column="0">
+                        <TextBlock Grid.Row="1" Grid.Column="0" FontSize="14" Foreground="#FF666666" Text="{Binding CurrentFile, StringFormat=File: {0}}" MaxWidth="600" TextTrimming="CharacterEllipsis"/>
+                        <DockPanel Grid.Row="2" Grid.Column="0">
                             <Button Click="cancel_Click" DockPanel.Dock="Right" Margin="20, 0, 0, 0"  Background="#FF76BFFB" Foreground="White" BorderThickness="0">Cancel</Button>
-                            <ProgressBar Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}" Foreground="#FF76BFFB" Background="#7776BFFB" BorderThickness="0" DockPanel.Dock="Left"/>
+                            <ProgressBar Height="20" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}" Foreground="#FF76BFFB" Background="#7776BFFB" BorderThickness="0" DockPanel.Dock="Left"/>
                         </DockPanel>
                        
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Label Content="Outgoing transfers" HorizontalAlignment="Left" FontSize="20" FontWeight="Bold"/>
+        <Label Content="Outgoing transfers" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold"/>
         <ListView x:Name="OutgoingProgressBar" ItemsSource="{Binding Source={x:Static local:App.OutgoingTransfers}}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
@@ -54,15 +56,17 @@
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="0" Grid.Column="0">
-                            <TextBlock DockPanel.Dock="Left" Margin="0, 0, 20, 0" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding Other.Name, StringFormat=From {0}}"/>
-                            <TextBlock DockPanel.Dock="Right" TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding SecondsLeft, StringFormat={}{0:hh\\:mm\\:ss}}"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="18" Foreground="#FF666666" Text="{Binding CurrentFile, StringFormat=File: {0}}"/>
+                            <TextBlock DockPanel.Dock="Left" Margin="0, 0, 20, 0" TextWrapping="Wrap" FontSize="14" Foreground="#FF666666" Text="{Binding Other.Name, StringFormat=To: {0}}"/>
+                            <TextBlock DockPanel.Dock="Right" TextWrapping="Wrap" FontSize="14" Foreground="#FF666666" Text="{Binding SecondsLeft, StringFormat={}{0:hh\\:mm\\:ss}}"/>
+                            <TextBlock></TextBlock>
                         </DockPanel>
-                        <DockPanel Grid.Row="1" Grid.Column="0">
+                        <TextBlock Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" FontSize="14" Foreground="#FF666666" Text="{Binding CurrentFile, StringFormat=File: {0}}"/>
+                        <DockPanel Grid.Row="2" Grid.Column="0">
                             <Button Click="cancel_Click" DockPanel.Dock="Right" Margin="20, 0, 0, 0"  Background="#FF76BFFB" Foreground="White" BorderThickness="0">Cancel</Button>
-                            <ProgressBar Height="30" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}" Foreground="#FF76BFFB" Background="#7776BFFB" BorderThickness="0" DockPanel.Dock="Left"/>
+                            <ProgressBar Height="20" Value="{Binding Progress}" IsIndeterminate="{Binding IsPending}" Foreground="#FF76BFFB" Background="#7776BFFB" BorderThickness="0" DockPanel.Dock="Left"/>
                         </DockPanel>
                     </Grid>
                 </DataTemplate>
