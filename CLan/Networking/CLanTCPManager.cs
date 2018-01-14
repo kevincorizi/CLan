@@ -134,6 +134,9 @@ namespace CLan.Networking
                             {
                                 int oldProgress = 0;
                                 long oldSecondsLeft = 0;
+                                int timeUpdateCounter = 0;
+                                int timeUpdateStep = 8092;
+                                int progressSteadyStep = 10;
                                 while (currentSentSize < f.Size && !bw.CancellationPending)
                                 {
                                     Array.Clear(buffer, 0, BUFFER_SIZE);
@@ -143,23 +146,35 @@ namespace CLan.Networking
                                     sentSize += size;
 
                                     int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(sentSize) * 100 / Convert.ToDouble(totalSize)));
-
-                                    long sizeUpToNow = sentSize;
-                                    long timeUpToNow = sw.ElapsedMilliseconds;
-                                    long sizeLeft = totalSize - sentSize;
-                                    long timeLeft = (timeUpToNow * sizeLeft) / sizeUpToNow;
-                                    long secondsLeft = timeLeft / 1000;
-
                                     if (oldProgress != progress)
                                     {
                                         oldProgress = progress;
                                         bw.ReportProgress(progress);
                                     }
-                                    if (oldSecondsLeft != secondsLeft)
+
+                                    if(progress > progressSteadyStep)
                                     {
-                                        oldSecondsLeft = secondsLeft;
-                                        cft.UpdateTimeLeft(secondsLeft);
+                                        timeUpdateStep = 1024;
+                                        timeUpdateCounter = 0;
                                     }
+
+                                    // Update the time left once any 512 packets (max 512KB) sent
+                                    if (timeUpdateCounter == 0)
+                                    {
+                                        long sizeUpToNow = sentSize;
+                                        long timeUpToNow = sw.ElapsedMilliseconds;
+                                        long sizeLeft = totalSize - sentSize;
+                                        long timeLeft = (timeUpToNow * sizeLeft) / sizeUpToNow;
+                                        long secondsLeft = timeLeft / 1000;
+
+
+                                        if (oldSecondsLeft != secondsLeft)
+                                        {
+                                            oldSecondsLeft = secondsLeft;
+                                            cft.UpdateTimeLeft(secondsLeft);
+                                        }
+                                    }
+                                    timeUpdateCounter = (timeUpdateCounter++) % timeUpdateStep;                                   
                                 }
 
                                 // I am the sender and I stopped the transfer
@@ -210,6 +225,9 @@ namespace CLan.Networking
                         {
                             int oldProgress = 0;
                             long oldSecondsLeft = 0;
+                            int timeUpdateCounter = 0;
+                            int timeUpdateStep = 8092;
+                            int progressSteadyStep = 10;
                             while (currentReceivedSize < f.Size && !bw.CancellationPending)
                             {
                                 Array.Clear(buffer, 0, BUFFER_SIZE);
@@ -221,22 +239,34 @@ namespace CLan.Networking
                                 receivedSize += size;
                                 int progress = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(receivedSize) * 100 / Convert.ToDouble(totalSize)));
 
-                                long sizeUpToNow = receivedSize;
-                                long timeUpToNow = sw.ElapsedMilliseconds;
-                                long sizeLeft = totalSize - receivedSize;
-                                long timeLeft = (timeUpToNow * sizeLeft) / sizeUpToNow;
-                                long secondsLeft = timeLeft / 1000;
-
                                 if (oldProgress != progress)
                                 {
                                     oldProgress = progress;
                                     bw.ReportProgress(progress);
                                 }
-                                if (oldSecondsLeft != secondsLeft)
+
+                                if (progress > progressSteadyStep)
                                 {
-                                    oldSecondsLeft = secondsLeft;
-                                    cft.UpdateTimeLeft(secondsLeft);
+                                    timeUpdateStep = 1024;
+                                    timeUpdateCounter = 0;
                                 }
+
+                                // Update the time left once any 512 packets (max 512KB) received
+                                if (timeUpdateCounter == 0)
+                                {
+                                    long sizeUpToNow = receivedSize;
+                                    long timeUpToNow = sw.ElapsedMilliseconds;
+                                    long sizeLeft = totalSize - receivedSize;
+                                    long timeLeft = (timeUpToNow * sizeLeft) / sizeUpToNow;
+                                    long secondsLeft = timeLeft / 1000;
+
+                                    if (oldSecondsLeft != secondsLeft)
+                                    {
+                                        oldSecondsLeft = secondsLeft;
+                                        cft.UpdateTimeLeft(secondsLeft);
+                                    }
+                                }
+                                timeUpdateCounter = (timeUpdateCounter++) % timeUpdateStep;
                             }
                         }
                     }
