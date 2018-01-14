@@ -16,7 +16,7 @@
         </ListView.ItemsPanel>
         <ListView.ItemTemplate>
             <DataTemplate>
-                <Image Source="{Binding}" Height="100" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Image Source="{Binding}" Height="100" Width="150" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"/>
             </DataTemplate>
         </ListView.ItemTemplate>
         <ListView.ItemContainerStyle>

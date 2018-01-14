@@ -236,36 +236,20 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="BackgroundImages\bg-1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\label.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="BackgroundImages\bg-1.jpg" />
     <Resource Include="BackgroundImages\bg-2.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="BackgroundImages\bg-3.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="BackgroundImages\bg-4.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="BackgroundImages\bg-5.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="BackgroundImages\bg-6.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="BackgroundImages\bg-7.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="BackgroundImages\bg-8.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="BackgroundImages\bg-9.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
