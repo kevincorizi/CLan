@@ -153,7 +153,15 @@ namespace CLan
             var bc = new BrushConverter();
             if(Properties.Settings.Default.BackgroundPath == Properties.Settings.Default.SwapBackgroundPath)
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.DarkBackgroundPath;
-            _SlidingMenu.Background = (Brush)bc.ConvertFrom("#7e8489"); 
+            _SlidingMenu.Background = (Brush)bc.ConvertFrom("#6b6b6b");
+            _StackPanel.Background = (Brush)bc.ConvertFrom("#6b6b6b");
+            AcceptAllTransfers.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            RenamingPolicy.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            UseDefaultPath.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            PathText.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            PublicRadio.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            PrivateRadio.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
+            Night.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
         }
         private void _notNightMode(object sender, RoutedEventArgs e)
         {
@@ -161,6 +169,14 @@ namespace CLan
             if (Properties.Settings.Default.BackgroundPath == Properties.Settings.Default.DarkBackgroundPath)
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.SwapBackgroundPath;
             _SlidingMenu.Background = (Brush)bc.ConvertFrom("#FFEFF4F9");
+            _StackPanel.Background = (Brush)bc.ConvertFrom("#FFEFF4F9");
+            AcceptAllTransfers.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
+            RenamingPolicy.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
+            UseDefaultPath.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
+            PathText.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
+            PublicRadio.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
+            PrivateRadio.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
+            Night.Foreground = (Brush)bc.ConvertFrom("#FF76BFFB");
         }
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
         {
