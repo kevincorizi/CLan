@@ -153,8 +153,8 @@ namespace CLan
             var bc = new BrushConverter();
             if(Properties.Settings.Default.BackgroundPath == Properties.Settings.Default.SwapBackgroundPath)
                 Properties.Settings.Default.BackgroundPath = Properties.Settings.Default.DarkBackgroundPath;
-            _SlidingMenu.Background = (Brush)bc.ConvertFrom("#6b6b6b");
-            _StackPanel.Background = (Brush)bc.ConvertFrom("#6b6b6b");
+            _SlidingMenu.Background = (Brush)bc.ConvertFrom("#525252");
+            _StackPanel.Background = (Brush)bc.ConvertFrom("#525252");
             AcceptAllTransfers.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
             RenamingPolicy.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
             UseDefaultPath.Foreground = (Brush)bc.ConvertFrom("#FFFFFF");
