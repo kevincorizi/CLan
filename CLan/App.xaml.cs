@@ -29,11 +29,13 @@ namespace CLan
             {
                 if (!OnlineUsers.Contains(u))
                 {
+                    Trace.WriteLine("Adding " + u.Ip.ToString());
                     u.lastKeepAlive = DateTime.Now;
                     OnlineUsers.Add(u);
                 }
                 else
                 {
+                    Trace.WriteLine("Refreshing " + u.Ip.ToString());
                     User target = OnlineUsers.Single(user => user.Equals(u));
                     // Refresh the timer for the user
                     target.lastKeepAlive = DateTime.Now;
@@ -48,6 +50,7 @@ namespace CLan
         {
             App.Current.Dispatcher.Invoke(() =>
             {
+                Trace.WriteLine("Removing " + u.Ip.ToString());
                 if (OnlineUsers.Contains(u))
                     OnlineUsers.Remove(u);
             });
@@ -178,15 +181,18 @@ namespace CLan
         {
             do
             {
+                Trace.WriteLine("Cleaning...");
                 DateTime now = DateTime.Now;
+                List<User> toRemove = new List<User>();
                 foreach (User u in OnlineUsers)
                 {
-                    if ((now.Subtract(u.lastKeepAlive)).Milliseconds > UDPManager.KEEP_ALIVE_TIMER_MILLIS)
+                    if ((now.Subtract(u.lastKeepAlive)).TotalMilliseconds > UDPManager.KEEP_ALIVE_TIMER_MILLIS)
                     {
+                        toRemove.Add(u);
                         Trace.WriteLine("User is too old, removing");
-                        UDPManager.OnUserLeave(u);
                     }
                 }
+                toRemove.ForEach(UDPManager.OnUserLeave);
             } while (!ct.WaitHandle.WaitOne(UDPManager.KEEP_ALIVE_TIMER_MILLIS));
 
             if (ct.IsCancellationRequested)
@@ -197,13 +203,14 @@ namespace CLan
 
         private void ActivateTCPListener()
         {
+            Trace.WriteLine("ActivateTCPListening");
             ctsTcpListener = new CancellationTokenSource();
             CancellationToken ctTcpListener = ctsTcpListener.Token;
             tcpListener = Task.Run(() => TCPManager.StartListening(ctTcpListener), ctTcpListener);
         }
         private void DeactivateTCPListener()
         {
-            Trace.WriteLine("DectivateTCPListening");
+            Trace.WriteLine("DeactivateTCPListening");
             ctsTcpListener.Cancel();
         }
         #endregion
