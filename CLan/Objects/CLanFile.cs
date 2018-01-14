@@ -19,7 +19,7 @@ namespace CLan.Objects
             Name = name == "" ? Path.GetFileName(RelativePath) : name;
         }
 
-        public static List<CLanFile> GetFiles(List<string> paths)
+        public static List<CLanFile> GetFiles(List<String> paths)
         {
             // Converts a list of paths in a sequence of CLanFiles
             List<CLanFile> files = new List<CLanFile>();
@@ -29,23 +29,29 @@ namespace CLan.Objects
             // subfolders and files
             foreach (string p in paths)
             {
-                FileAttributes attributes = File.GetAttributes(p);
-                if (attributes == FileAttributes.Directory)
+                try
                 {
-                    // Directory
-                    String folderName = new DirectoryInfo(Path.GetDirectoryName(p)).FullName + Path.DirectorySeparatorChar;
-                    foreach (string f in Directory.EnumerateFiles(p, "*", SearchOption.AllDirectories))
+                    FileAttributes attributes = File.GetAttributes(p);
+                    if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
                     {
-                        // Now i have all the possible subdirectories of that folder and all files included
-                        String relativeName = f.Replace(folderName, "");    // This maintains folder structure from the root on
-                        files.Add(new CLanFile(f, relativeName));
+                        // Directory
+                        String folderName = new DirectoryInfo(Path.GetDirectoryName(p)).FullName + Path.DirectorySeparatorChar;
+                        foreach (string f in Directory.EnumerateFiles(p, "*", SearchOption.AllDirectories))
+                        {
+                            // Now i have all the possible subdirectories of that folder and all files included
+                            String relativeName = f.Replace(folderName, "");    // This maintains folder structure from the root on
+                            files.Add(new CLanFile(f, relativeName));
+                        }
                     }
-                }
-                else
+                    else
+                    {
+                        // File
+                        files.Add(new CLanFile(p));
+                    }
+                } catch (UnauthorizedAccessException uea)
                 {
-                    // File
-                    files.Add(new CLanFile(p));
-                }
+                    System.Diagnostics.Trace.WriteLine(uea.Message);
+                }              
             }
             return files;
         }
