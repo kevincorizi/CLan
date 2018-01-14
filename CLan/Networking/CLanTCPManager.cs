@@ -285,43 +285,46 @@ namespace CLan.Networking
         public void Send(byte[] message, Socket dest)
         {
             // Uses the GetStream public method to return the NetworkStream.
-            NetworkStream netStream = new NetworkStream(dest);
-
-            if (netStream.CanWrite)
-            {
-                netStream.Write(message, 0, message.Length);
-                netStream.Close();
-            }
-            else
-            {
-                dest.Close();
-                // Closing the socket instance does not close the network stream.
-                netStream.Close();
-                return;
-            }
+            using (NetworkStream netStream = new NetworkStream(dest)) {
+                if (netStream.CanWrite)
+                {
+                    netStream.Write(message, 0, message.Length);
+                    netStream.Close();
+                }
+                else
+                {
+                    dest.Close();
+                    // Closing the socket instance does not close the network stream.
+                    netStream.Close();
+                    return;
+                }
+            }     
         }
         public byte[] Receive(Socket source)
         {
             // Uses the GetStream public method to return the NetworkStream.
-            NetworkStream netStream = new NetworkStream(source);
-            if (netStream.CanRead)
+            using (NetworkStream netStream = new NetworkStream(source))
             {
-                // Reads NetworkStream into a byte buffer.
-                byte[] bytes = new byte[source.ReceiveBufferSize];
-                // Read can return anything from 0 to numBytesToRead. 
-                // This method blocks until at least one byte is read.
-                netStream.Read(bytes, 0, source.ReceiveBufferSize);
-                netStream.Close();
-                // Returns the data received from the host to the console.
-                return bytes;
+                if (netStream.CanRead)
+                {
+                    // Reads NetworkStream into a byte buffer.
+                    byte[] bytes = new byte[source.ReceiveBufferSize];
+                    // Read can return anything from 0 to numBytesToRead. 
+                    // This method blocks until at least one byte is read.
+                    netStream.Read(bytes, 0, source.ReceiveBufferSize);
+                    netStream.Close();
+                    // Returns the data received from the host to the console.
+                    return bytes;
+                }
+                else
+                {
+                    source.Close();
+                    // Closing the tcpClient instance does not close the network stream.
+                    netStream.Close();
+                    return null;
+                }
             }
-            else
-            {
-                source.Close();
-                // Closing the tcpClient instance does not close the network stream.
-                netStream.Close();
-                return null;
-            }
+                
         }
         #endregion
 
